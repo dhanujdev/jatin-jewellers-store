@@ -1,9 +1,101 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Jatin Jewellers Store
 
-## Getting Started
+A modern e-commerce platform for Jatin Jewellers, showcasing a wide range of jewelry products including bangles, earrings, necklaces, rings, and waistbands.
 
-First, run the development server:
+![Jatin Jewellers Store](https://example.com/jatin-jewellers-preview.png)
 
+## 🌟 Features
+
+- **Responsive Design**: Fully responsive UI that works seamlessly across desktop, tablet, and mobile devices
+- **Product Catalog**: Browse through 2,900+ jewelry products across 5 categories
+- **Product Search**: Search functionality to find products quickly
+- **Category Filtering**: Filter products by category
+- **Product Details**: Detailed product pages with high-quality images and specifications
+- **Featured Products**: Showcase of featured products on the homepage
+- **Testimonials**: Customer testimonials section
+- **Store Locations**: Information about physical store locations
+- **FAQ Section**: Frequently asked questions about products and services
+- **Newsletter Subscription**: Email subscription for updates and promotions
+- **SEO Optimized**: Built with SEO best practices in mind
+- **Enhanced Mobile Experience**: Optimized mobile navigation, swipeable carousels, and touch-friendly interfaces
+
+## 📱 Mobile View Enhancements (v1.1.0)
+
+The latest release includes significant improvements to the mobile experience:
+
+- **Improved Mobile Navigation**: Enhanced drawer menu with categorized sections and better visual hierarchy
+- **Mobile Search Bar**: Dedicated search functionality optimized for mobile devices
+- **Swipeable Product Carousels**: Touch-friendly product browsing with horizontal swipe gestures
+- **Collapsible Footer**: Space-efficient accordion sections for footer content on mobile
+- **Enhanced Visual Elements**: Better text visibility, optimized spacing, and improved touch targets
+- **Responsive Typography**: Adjusted font sizes and spacing for better readability on small screens
+- **Performance Optimizations**: Improved loading and rendering for mobile devices
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **Next.js 15.2.0**: React framework for server-rendered applications
+- **React 18.3.1**: JavaScript library for building user interfaces
+- **TypeScript**: Type-safe JavaScript
+- **Tailwind CSS**: Utility-first CSS framework
+- **Radix UI**: Unstyled, accessible UI components
+- **Embla Carousel**: Lightweight carousel component
+- **Lucide React**: Beautiful & consistent icon set
+
+### Build Tools
+- **Turbopack**: Incremental bundler and build system
+- **ESLint**: JavaScript linter
+- **Prettier**: Code formatter
+- **PostCSS**: CSS transformation tool
+
+### Deployment
+- **Netlify**: Hosting and continuous deployment
+- **Static Site Generation (SSG)**: Pre-rendered static pages for optimal performance
+
+## 📊 Data Structure
+
+The application uses JSON data files to store product information:
+
+- **Total Products**: 2,901 products across 5 categories
+- **Categories**:
+  - Bangles (394 products)
+  - Earrings (689 products)
+  - Necklaces (1,722 products)
+  - Rings (53 products)
+  - Waistbands (43 products)
+
+Data files:
+- `all-products.json`: Contains all product data
+- `products-by-category.json`: Products organized by category
+- `categories.json`: Category metadata
+- Individual category files (e.g., `bangles.json`, `earrings.json`, etc.)
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+ or Bun runtime
+- npm, yarn, pnpm, or bun package manager
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/jatin-jewellers-store.git
+cd jatin-jewellers-store
+```
+
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+# or
+bun install
+```
+
+3. Run the development server:
 ```bash
 npm run dev
 # or
@@ -14,23 +106,103 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📁 Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+jatin-jewellers-store/
+├── public/            # Static assets (images, fonts, etc.)
+├── src/
+│   ├── app/           # Next.js app router pages
+│   │   ├── page.tsx   # Home page
+│   │   ├── product/   # Product pages
+│   │   ├── category/  # Category pages
+│   │   ├── search/    # Search functionality
+│   │   └── layout.tsx # Root layout
+│   ├── components/    # React components
+│   │   ├── home/      # Homepage-specific components
+│   │   ├── layout/    # Layout components (Header, Footer)
+│   │   └── ui/        # Reusable UI components
+│   ├── data/          # JSON data files
+│   ├── lib/           # Utility functions
+│   └── types/         # TypeScript type definitions
+├── tailwind.config.ts # Tailwind CSS configuration
+├── next.config.js     # Next.js configuration
+└── package.json       # Project dependencies and scripts
+```
 
-## Learn More
+## 🔧 Available Scripts
 
-To learn more about Next.js, take a look at the following resources:
+- `npm run dev` - Run development server with Turbopack
+- `npm run build` - Build for production
+- `npm run export` - Export as static site
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run fmt` - Format code with Prettier
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🚢 Deployment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The project is configured for deployment on Netlify:
 
-## Deploy on Vercel
+1. The `netlify.toml` file contains the build configuration
+2. The site is built using `bun run build`
+3. The build output is in the `build` directory
+4. The site is deployed as a static site (SSG)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🧩 Components
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Layout Components
+- **Header**: Navigation, search, and category links
+- **Footer**: Links, contact information, and social media
+
+### Home Page Components
+- **HeroSection**: Main banner with featured content
+- **CategorySection**: Display of product categories
+- **FeaturedProducts**: Showcase of featured products
+- **OurPromise**: Brand promises and guarantees
+- **Testimonials**: Customer reviews
+- **StoreLocations**: Physical store information
+- **FaqSection**: Frequently asked questions
+- **Newsletter**: Email subscription form
+
+## 🎨 Styling
+
+The project uses Tailwind CSS for styling with custom configuration:
+- Custom color palette
+- Responsive design utilities
+- Animation utilities via tailwindcss-animate
+- Component variants with class-variance-authority
+
+## 🔄 Data Processing
+
+The `processData.js` script is used to process and organize the product data into the appropriate JSON files.
+
+## 📱 Responsive Design
+
+The site is fully responsive with breakpoints for:
+- Mobile devices (< 640px)
+- Tablets (640px - 1023px)
+- Desktop screens (1024px - 1279px)
+- Large desktop screens (≥ 1280px)
+
+Custom hooks for responsive design:
+- `useMediaQuery`: Detect screen size changes
+- `useIsMounted`: Handle client-side rendering safely
+
+## 📋 Release History
+
+- **v1.1.0**: Mobile view enhancements and responsive design improvements
+- **v1.0.0**: Initial release with core functionality
+
+## 🔒 License
+
+[MIT License](LICENSE)
+
+## 👥 Contributors
+
+- [Your Name](https://github.com/yourusername)
+
+## 📞 Contact
+
+For any inquiries, please reach out to [contact@jatinjewellers.com](mailto:contact@jatinjewellers.com)
