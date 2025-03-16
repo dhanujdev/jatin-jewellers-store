@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, Search, X, ChevronDown } from "lucide-react";
+import { Menu, Search, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { getCategoryInfo } from "@/lib/products";
 import { useState, useEffect } from "react";
@@ -41,12 +41,12 @@ export default function Header() {
       {/* Main Header */}
       <header className={`sticky top-0 z-50 bg-white border-b border-gray-200 transition-all duration-300 ${isScrolled ? 'shadow-md py-2' : 'py-4'}`}>
         <div className="container mx-auto px-4">
-          {/* Logo centered */}
-          <div className="flex items-center justify-between md:justify-center relative">
+          {/* Top section with logo and search */}
+          <div className="flex items-center justify-between relative mb-2">
             {/* Mobile Menu Trigger - Left side */}
             <Sheet>
               <SheetTrigger asChild className="md:hidden">
-                <button className="absolute left-0 w-8 h-8 flex items-center justify-center text-black">
+                <button className="w-8 h-8 flex items-center justify-center text-black">
                   <Menu size={24} />
                 </button>
               </SheetTrigger>
@@ -101,47 +101,6 @@ export default function Header() {
                 </div>
               </SheetContent>
             </Sheet>
-            
-            {/* Desktop Menu - Left side */}
-            <nav className="hidden md:flex absolute left-0 space-x-8">
-              <Sheet>
-                <SheetTrigger asChild>
-                  <button className="flex items-center space-x-1 menu-link">
-                    <span>Categories</span>
-                    <ChevronDown size={16} />
-                  </button>
-                </SheetTrigger>
-                <SheetContent side="top" className="w-full p-0">
-                  <div className="flex flex-col">
-                    <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-black text-white">
-                      <span className="text-xl font-serif font-bold">
-                        Categories
-                      </span>
-                      <SheetClose className="rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-700">
-                        <X size={18} />
-                      </SheetClose>
-                    </div>
-                    
-                    <div className="p-6 bg-white">
-                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-                        {categories.map((category) => (
-                          <SheetClose asChild key={category.name}>
-                            <Link
-                              href={category.href}
-                              className="flex flex-col items-center justify-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors group"
-                            >
-                              <span className="text-lg font-medium text-gray-800 group-hover:text-gold transition-colors">
-                                {category.name}
-                              </span>
-                            </Link>
-                          </SheetClose>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </SheetContent>
-              </Sheet>
-            </nav>
 
             {/* Logo */}
             <Link href="/" className="flex items-center justify-center">
@@ -151,7 +110,7 @@ export default function Header() {
             </Link>
 
             {/* Search Button - Right side */}
-            <div className="absolute right-0">
+            <div>
               <Link 
                 href="/search" 
                 className="px-4 py-2 bg-black text-white text-sm hover:bg-gold transition-colors duration-300"
@@ -159,6 +118,24 @@ export default function Header() {
                 Search
               </Link>
             </div>
+          </div>
+          
+          {/* Categories Navigation - Below logo */}
+          <div className="hidden md:block">
+            <nav className="flex justify-center space-x-8">
+              <Link href="/" className="text-gray-700 hover:text-gold transition-colors py-2">
+                Home
+              </Link>
+              {categories.map((category) => (
+                <Link
+                  key={category.name}
+                  href={category.href}
+                  className="text-gray-700 hover:text-gold transition-colors py-2"
+                >
+                  {category.name}
+                </Link>
+              ))}
+            </nav>
           </div>
         </div>
       </header>
