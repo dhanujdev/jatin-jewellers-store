@@ -1,0 +1,37 @@
+{
+  "name": "jatin-jewellers",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -H 0.0.0.0 --turbopack",
+    "build": "next build && mkdir -p dist && cp -r build/* dist/",
+    "export": "next export",
+    "start": "next start",
+    "lint": "next lint",
+    "fmt": "prettier --write ."
+  },
+  "dependencies": {
+    "@radix-ui/react-accordion": "^1.2.3",
+    "@radix-ui/react-dialog": "^1.1.6",
+    "@radix-ui/react-slot": "^1.1.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "embla-carousel-react": "^8.5.2",
+    "lucide-react": "^0.482.0",
+    "next": "15.2.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "tailwind-merge": "^3.0.2",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.22",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "eslint": "^9.21.0",
+    "eslint-config-next": "15.1.7",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.3"
+  }
+}
