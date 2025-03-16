@@ -1,0 +1,17 @@
+{
+  "categories": [
+    "bangles",
+    "earrings",
+    "necklaces",
+    "rings",
+    "waistbands"
+  ],
+  "total_products": 2901,
+  "category_counts": {
+    "earrings": 689,
+    "bangles": 394,
+    "necklaces": 1722,
+    "waistbands": 43,
+    "rings": 53
+  }
+}

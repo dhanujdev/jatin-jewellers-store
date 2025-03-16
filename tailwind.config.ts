@@ -43,6 +43,22 @@ export default {
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',
+        gold: {
+          DEFAULT: '#D4AF37',
+          light: '#F5E7A3',
+          dark: '#A67C00',
+        },
+        cream: {
+          DEFAULT: '#FFF8E1',
+          light: '#FFFDF5',
+          dark: '#F5EAC4',
+        },
+        jewel: {
+          red: '#E0115F',
+          blue: '#0073CF',
+          green: '#50C878',
+          purple: '#800080',
+        },
   			chart: {
   				'1': 'hsl(var(--chart-1))',
   				'2': 'hsl(var(--chart-2))',
@@ -89,12 +105,31 @@ export default {
   				to: {
   					height: '0'
   				}
-  			}
+  			},
+        'shimmer': {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
+        },
+        'float': {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out'
-  		}
+  			'accordion-up': 'accordion-up 0.2s ease-out',
+        'shimmer': 'shimmer 2s linear infinite',
+        'float': 'float 3s ease-in-out infinite',
+  		},
+      fontFamily: {
+        sans: ['var(--font-inter)', 'sans-serif'],
+        playfair: ['var(--font-playfair)', 'serif'],
+        cormorant: ['Cormorant Garamond', 'serif'],
+      },
+      backgroundImage: {
+        'gold-gradient': 'linear-gradient(45deg, #D4AF37 0%, #F5E7A3 50%, #D4AF37 100%)',
+        'cream-gradient': 'linear-gradient(to right, #FFF8E1, #FFFDF5, #FFF8E1)',
+      },
   	}
   },
   plugins: [require("tailwindcss-animate")],

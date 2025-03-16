@@ -1,306 +1,195 @@
 "use client";
 
 import Link from "next/link";
-import { Facebook, Instagram, Twitter, Youtube, ChevronDown } from "lucide-react";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { useState } from "react";
+import Image from "next/image";
+import { Facebook, Instagram, Twitter, Mail, Phone, MapPin, Clock } from "lucide-react";
 
 export default function Footer() {
+  const currentYear = new Date().getFullYear();
+  
   return (
-    <footer className="bg-[#141818] text-white pt-8 md:pt-12 pb-6">
-      <div className="container mx-auto px-4">
-        {/* Mobile Accordion View */}
-        <div className="md:hidden">
-          <Accordion type="multiple" className="space-y-2">
-            <AccordionItem value="shop" className="border-b border-gray-700">
-              <AccordionTrigger className="py-3 text-base font-semibold">Shop</AccordionTrigger>
-              <AccordionContent>
-                <ul className="space-y-3 pb-2">
-                  <li>
-                    <Link href="/category/rings" className="text-gray-300 hover:text-white text-sm">
-                      Rings
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/category/earrings" className="text-gray-300 hover:text-white text-sm">
-                      Earrings
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/category/pendants" className="text-gray-300 hover:text-white text-sm">
-                      Pendants
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/category/bracelets" className="text-gray-300 hover:text-white text-sm">
-                      Bracelets & Bangles
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/category/solitaire" className="text-gray-300 hover:text-white text-sm">
-                      Solitaire
-                    </Link>
-                  </li>
-                </ul>
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="collections" className="border-b border-gray-700">
-              <AccordionTrigger className="py-3 text-base font-semibold">Collections</AccordionTrigger>
-              <AccordionContent>
-                <ul className="space-y-3 pb-2">
-                  <li>
-                    <Link href="/collections/bestsellers" className="text-gray-300 hover:text-white text-sm">
-                      Bestsellers
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/collections/new-arrivals" className="text-gray-300 hover:text-white text-sm">
-                      New Arrivals
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/collections/engagement" className="text-gray-300 hover:text-white text-sm">
-                      Engagement
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/collections/wedding" className="text-gray-300 hover:text-white text-sm">
-                      Wedding
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/collections/daily-wear" className="text-gray-300 hover:text-white text-sm">
-                      Daily Wear
-                    </Link>
-                  </li>
-                </ul>
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="learn" className="border-b border-gray-700">
-              <AccordionTrigger className="py-3 text-base font-semibold">Learn</AccordionTrigger>
-              <AccordionContent>
-                <ul className="space-y-3 pb-2">
-                  <li>
-                    <Link href="/about-us" className="text-gray-300 hover:text-white text-sm">
-                      About Us
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/about-lab-grown-diamonds" className="text-gray-300 hover:text-white text-sm">
-                      About Lab Grown Diamonds
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/faqs" className="text-gray-300 hover:text-white text-sm">
-                      FAQs
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/blog" className="text-gray-300 hover:text-white text-sm">
-                      Blog
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/contact" className="text-gray-300 hover:text-white text-sm">
-                      Contact Us
-                    </Link>
-                  </li>
-                </ul>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-
-          {/* Mobile Contact Section */}
-          <div className="mt-6 pt-4 border-t border-gray-700">
-            <h3 className="text-lg font-semibold mb-3">Contact Us</h3>
-            <address className="not-italic text-gray-300 text-sm space-y-2">
-              <p>123 Jewellery Lane</p>
-              <p>Diamond District, New Delhi</p>
-              <p>India - 110001</p>
-              <p className="mt-3">
-                <a href="tel:+919999999999" className="hover:text-white">
-                  +91 99999 99999
-                </a>
-              </p>
-              <p>
-                <a href="mailto:support@jatinjewellers.in" className="hover:text-white">
-                  support@jatinjewellers.in
-                </a>
-              </p>
-            </address>
-
-            {/* Social Media */}
-            <div className="flex space-x-5 mt-5">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white">
-                <Facebook size={20} />
-              </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white">
-                <Instagram size={20} />
-              </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white">
-                <Twitter size={20} />
-              </a>
-              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white">
-                <Youtube size={20} />
-              </a>
+    <footer className="bg-gray-900 text-white">
+      {/* Newsletter Section */}
+      <div className="bg-gold py-12">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row items-center justify-between">
+            <div className="mb-6 md:mb-0 text-center md:text-left">
+              <h3 className="text-white text-2xl md:text-3xl font-medium mb-2">Subscribe to Our Newsletter</h3>
+              <p className="text-white/80">Stay updated with our latest collections and exclusive offers</p>
+            </div>
+            <div className="w-full md:w-auto">
+              <form className="flex flex-col sm:flex-row gap-3">
+                <input 
+                  type="email" 
+                  placeholder="Your email address" 
+                  className="px-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-white/30 min-w-[250px]"
+                  required
+                />
+                <button 
+                  type="submit" 
+                  className="bg-white text-gold hover:bg-gray-100 px-6 py-3 rounded-md font-medium transition-colors"
+                >
+                  Subscribe
+                </button>
+              </form>
             </div>
           </div>
         </div>
-
-        {/* Desktop View */}
-        <div className="hidden md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Shop */}
+      </div>
+      
+      {/* Main Footer */}
+      <div className="container mx-auto px-4 py-12 md:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+          {/* Column 1: About */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Shop</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/category/rings" className="text-gray-300 hover:text-white text-sm">
-                  Rings
-                </Link>
-              </li>
-              <li>
-                <Link href="/category/earrings" className="text-gray-300 hover:text-white text-sm">
-                  Earrings
-                </Link>
-              </li>
-              <li>
-                <Link href="/category/pendants" className="text-gray-300 hover:text-white text-sm">
-                  Pendants
-                </Link>
-              </li>
-              <li>
-                <Link href="/category/bracelets" className="text-gray-300 hover:text-white text-sm">
-                  Bracelets & Bangles
-                </Link>
-              </li>
-              <li>
-                <Link href="/category/solitaire" className="text-gray-300 hover:text-white text-sm">
-                  Solitaire
-                </Link>
-              </li>
-            </ul>
+            <div className="mb-6">
+              <span className="text-xl md:text-2xl font-bold text-white" style={{ fontFamily: 'var(--font-cormorant)' }}>
+                JATIN JEWELLERS
+              </span>
+            </div>
+            <p className="text-gray-300 mb-6">
+              Jatin Jewellers has been crafting exquisite jewelry since 1985, 
+              bringing elegance and luxury to every occasion.
+            </p>
+            <div className="flex space-x-4">
+              <a href="https://facebook.com" className="text-gray-300 hover:text-gold transition-colors">
+                <Facebook size={20} />
+              </a>
+              <a href="https://instagram.com" className="text-gray-300 hover:text-gold transition-colors">
+                <Instagram size={20} />
+              </a>
+              <a href="https://twitter.com" className="text-gray-300 hover:text-gold transition-colors">
+                <Twitter size={20} />
+              </a>
+            </div>
           </div>
-
-          {/* Collections */}
+          
+          {/* Column 2: Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Collections</h3>
-            <ul className="space-y-2">
+            <h3 className="text-lg font-medium mb-6 relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-12 after:h-0.5 after:bg-gold">
+              Quick Links
+            </h3>
+            <ul className="space-y-3">
               <li>
-                <Link href="/collections/bestsellers" className="text-gray-300 hover:text-white text-sm">
-                  Bestsellers
-                </Link>
-              </li>
-              <li>
-                <Link href="/collections/new-arrivals" className="text-gray-300 hover:text-white text-sm">
-                  New Arrivals
-                </Link>
-              </li>
-              <li>
-                <Link href="/collections/engagement" className="text-gray-300 hover:text-white text-sm">
-                  Engagement
-                </Link>
-              </li>
-              <li>
-                <Link href="/collections/wedding" className="text-gray-300 hover:text-white text-sm">
-                  Wedding
-                </Link>
-              </li>
-              <li>
-                <Link href="/collections/daily-wear" className="text-gray-300 hover:text-white text-sm">
-                  Daily Wear
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Learn */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Learn</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/about-us" className="text-gray-300 hover:text-white text-sm">
+                <Link href="/about" className="text-gray-300 hover:text-gold transition-colors">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="/about-lab-grown-diamonds" className="text-gray-300 hover:text-white text-sm">
-                  About Lab Grown Diamonds
+                <Link href="/collections/new-arrivals" className="text-gray-300 hover:text-gold transition-colors">
+                  New Arrivals
                 </Link>
               </li>
               <li>
-                <Link href="/faqs" className="text-gray-300 hover:text-white text-sm">
-                  FAQs
+                <Link href="/collections/bestsellers" className="text-gray-300 hover:text-gold transition-colors">
+                  Bestsellers
                 </Link>
               </li>
               <li>
-                <Link href="/blog" className="text-gray-300 hover:text-white text-sm">
-                  Blog
+                <Link href="/collections/wedding" className="text-gray-300 hover:text-gold transition-colors">
+                  Wedding Collection
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-gray-300 hover:text-white text-sm">
+                <Link href="/contact" className="text-gray-300 hover:text-gold transition-colors">
                   Contact Us
                 </Link>
               </li>
             </ul>
           </div>
-
-          {/* Contact */}
+          
+          {/* Column 3: Categories */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
-            <address className="not-italic text-gray-300 text-sm space-y-2">
-              <p>123 Jewellery Lane</p>
-              <p>Diamond District, New Delhi</p>
-              <p>India - 110001</p>
-              <p className="mt-4">
-                <a href="tel:+919999999999" className="hover:text-white">
-                  +91 99999 99999
+            <h3 className="text-lg font-medium mb-6 relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-12 after:h-0.5 after:bg-gold">
+              Categories
+            </h3>
+            <ul className="space-y-3">
+              <li>
+                <Link href="/category/rings" className="text-gray-300 hover:text-gold transition-colors">
+                  Rings
+                </Link>
+              </li>
+              <li>
+                <Link href="/category/necklaces" className="text-gray-300 hover:text-gold transition-colors">
+                  Necklaces
+                </Link>
+              </li>
+              <li>
+                <Link href="/category/earrings" className="text-gray-300 hover:text-gold transition-colors">
+                  Earrings
+                </Link>
+              </li>
+              <li>
+                <Link href="/category/bracelets" className="text-gray-300 hover:text-gold transition-colors">
+                  Bracelets
+                </Link>
+              </li>
+              <li>
+                <Link href="/category/waistbands" className="text-gray-300 hover:text-gold transition-colors">
+                  Waistbands
+                </Link>
+              </li>
+            </ul>
+          </div>
+          
+          {/* Column 4: Contact */}
+          <div>
+            <h3 className="text-lg font-medium mb-6 relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-12 after:h-0.5 after:bg-gold">
+              Contact Us
+            </h3>
+            <ul className="space-y-4">
+              <li className="flex items-start">
+                <MapPin size={20} className="text-gold mr-3 mt-1 flex-shrink-0" />
+                <span className="text-gray-300">
+                  123 Jewelry Lane, Diamond District<br />
+                  Hyderabad, 500001
+                </span>
+              </li>
+              <li className="flex items-center">
+                <Phone size={20} className="text-gold mr-3 flex-shrink-0" />
+                <a href="tel:+919876543210" className="text-gray-300 hover:text-gold transition-colors">
+                  +91 98765 43210
                 </a>
-              </p>
-              <p>
-                <a href="mailto:support@jatinjewellers.in" className="hover:text-white">
-                  support@jatinjewellers.in
+              </li>
+              <li className="flex items-center">
+                <Mail size={20} className="text-gold mr-3 flex-shrink-0" />
+                <a href="mailto:info@jatinjewellers.com" className="text-gray-300 hover:text-gold transition-colors">
+                  info@jatinjewellers.com
                 </a>
-              </p>
-            </address>
-
-            {/* Social Media */}
-            <div className="flex space-x-4 mt-6">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white">
-                <Facebook size={18} />
-              </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white">
-                <Instagram size={18} />
-              </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white">
-                <Twitter size={18} />
-              </a>
-              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white">
-                <Youtube size={18} />
-              </a>
-            </div>
+              </li>
+              <li className="flex items-start">
+                <Clock size={20} className="text-gold mr-3 mt-1 flex-shrink-0" />
+                <span className="text-gray-300">
+                  Mon - Sat: 10:00 AM - 8:00 PM<br />
+                  Sunday: 11:00 AM - 6:00 PM
+                </span>
+              </li>
+            </ul>
           </div>
         </div>
-
-        {/* Bottom Footer */}
-        <div className="border-t border-gray-700 mt-8 md:mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
-          <div className="text-center md:text-left mb-4 md:mb-0">
-            <p className="text-sm text-gray-400">
-              Copyright &copy; {new Date().getFullYear()} Jatin Jewellers - All Rights Reserved.
+      </div>
+      
+      {/* Bottom Bar */}
+      <div className="border-t border-gray-800 py-6">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <p className="text-gray-400 text-sm mb-4 md:mb-0">
+              © {currentYear} Jatin Jewellers. All rights reserved.
             </p>
-          </div>
-          <div className="flex flex-wrap justify-center gap-4 md:gap-6">
-            <Link href="/privacy-policy" className="text-xs text-gray-400 hover:text-white">
-              Privacy Policy
-            </Link>
-            <Link href="/terms-of-service" className="text-xs text-gray-400 hover:text-white">
-              Terms of Service
-            </Link>
-            <Link href="/shipping-policy" className="text-xs text-gray-400 hover:text-white">
-              Shipping Policy
-            </Link>
+            <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-400">
+              <Link href="/privacy-policy" className="hover:text-gold transition-colors">
+                Privacy Policy
+              </Link>
+              <Link href="/terms-of-service" className="hover:text-gold transition-colors">
+                Terms of Service
+              </Link>
+              <Link href="/shipping-policy" className="hover:text-gold transition-colors">
+                Shipping Policy
+              </Link>
+              <Link href="/refund-policy" className="hover:text-gold transition-colors">
+                Refund Policy
+              </Link>
+            </div>
           </div>
         </div>
       </div>
