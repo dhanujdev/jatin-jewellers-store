@@ -192,6 +192,7 @@ Custom hooks for responsive design:
 
 ## 📋 Release History
 
+- **v1.1.1**: Fix: Add 'use client' directives for Next.js components using client-side functionality
 - **v1.1.0**: Mobile view enhancements and responsive design improvements
 - **v1.0.0**: Initial release with core functionality
 
