@@ -1,28 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
+    --background: 45 70% 98%;
+    --foreground: 40 13% 23%;
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+    --card-foreground: 40 13% 23%;
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
+    --popover-foreground: 40 13% 23%;
+    --primary: 43 77% 52%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 45 100% 96%;
+    --secondary-foreground: 40 13% 23%;
+    --muted: 45 10% 96%;
+    --muted-foreground: 40 8% 52%;
+    --accent: 43 77% 52%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
+    --border: 45 12% 92%;
+    --input: 45 12% 92%;
+    --ring: 43 77% 52%;
     --radius: 0.5rem;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
@@ -32,25 +34,25 @@
   }
 
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
+    --background: 40 13% 10%;
+    --foreground: 45 10% 96%;
+    --card: 40 13% 15%;
+    --card-foreground: 45 10% 96%;
+    --popover: 40 13% 15%;
+    --popover-foreground: 45 10% 96%;
+    --primary: 43 77% 52%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 40 13% 20%;
+    --secondary-foreground: 45 10% 96%;
+    --muted: 40 13% 20%;
+    --muted-foreground: 45 10% 70%;
+    --accent: 43 77% 52%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
+    --border: 40 13% 25%;
+    --input: 40 13% 25%;
+    --ring: 43 77% 52%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
@@ -65,5 +67,89 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-playfair;
+  }
+}
+
+@layer components {
+  .gold-text {
+    @apply text-gold;
+  }
+  
+  .gold-button {
+    @apply inline-block bg-gold hover:bg-gold/90 text-white px-8 py-3 rounded-md transition-colors shadow-sm;
+  }
+  
+  .gold-outline-button {
+    @apply border-2 border-gold text-gold px-6 py-3 rounded-md hover:bg-gold hover:text-white transition-colors duration-300 font-medium;
+  }
+  
+  .section-title {
+    @apply text-3xl md:text-4xl font-medium text-center mb-4 relative pb-4 mx-auto;
+    font-family: var(--font-cormorant);
+  }
+  
+  .section-title::after {
+    content: '';
+    @apply absolute bottom-0 left-1/2 w-16 h-0.5 bg-gold -translate-x-1/2;
+  }
+  
+  .product-card {
+    @apply group bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow h-full flex flex-col;
+  }
+  
+  .product-card-image {
+    @apply relative h-64 overflow-hidden;
+  }
+  
+  .product-card-content {
+    @apply p-4 flex flex-col flex-grow;
+  }
+  
+  .product-title {
+    @apply text-gray-800 font-medium mb-1 line-clamp-2;
+  }
+  
+  .product-price {
+    @apply text-gold font-semibold mt-auto;
+  }
+  
+  .category-card {
+    @apply relative overflow-hidden rounded-lg shadow-md h-80 block;
+  }
+  
+  .category-card-image {
+    @apply relative h-full w-full;
+  }
+  
+  .category-card-content {
+    @apply absolute inset-0 flex flex-col justify-end p-6 z-10;
+  }
+  
+  .shimmer {
+    @apply relative overflow-hidden bg-gray-200;
+  }
+  
+  .shimmer::after {
+    content: '';
+    @apply absolute top-0 left-0 w-full h-full;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.2) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    animation: shimmer 1.5s infinite;
+  }
+  
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
   }
 }

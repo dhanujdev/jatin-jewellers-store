@@ -1,23 +1,17 @@
 import HeroSection from "@/components/home/HeroSection";
 import CategorySection from "@/components/home/CategorySection";
 import FeaturedProducts from "@/components/home/FeaturedProducts";
-import OurPromise from "@/components/home/OurPromise";
-import Testimonials from "@/components/home/Testimonials";
-import StoreLocations from "@/components/home/StoreLocations";
-import FaqSection from "@/components/home/FaqSection";
-import Newsletter from "@/components/home/Newsletter";
+import TestimonialsSection from "@/components/home/TestimonialsSection";
+import FeatureSection from "@/components/home/FeatureSection";
 
 export default function Home() {
   return (
-    <>
+    <main>
       <HeroSection />
+      <FeatureSection />
       <CategorySection />
       <FeaturedProducts />
-      <OurPromise />
-      <Testimonials />
-      <StoreLocations />
-      <FaqSection />
-      <Newsletter />
-    </>
+      <TestimonialsSection />
+    </main>
   );
 }

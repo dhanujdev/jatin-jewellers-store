@@ -1,71 +1,117 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { getCategoryInfo } from '@/lib/products';
 
-// Get category information from our dataset
-const categoryInfo = getCategoryInfo();
-
-// Map category names to display names and sample images
-const categoryMap = {
-  rings: {
-    name: "Rings",
-    image: "/products/rings/rings-001/image.jpg",
-    link: "/category/rings",
+// Define the categories with updated images and styling
+const categories = [
+  {
+    id: 'rings',
+    name: 'Rings',
+    description: 'Elegant solitaires and statement pieces',
+    image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
+    link: '/category/rings',
   },
-  earrings: {
-    name: "Earrings",
-    image: "/products/earrings/earrings-001/image.jpg",
-    link: "/category/earrings",
+  {
+    id: 'necklaces',
+    name: 'Necklaces',
+    description: 'Timeless pendants and chains',
+    image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
+    link: '/category/necklaces',
   },
-  necklaces: {
-    name: "Necklaces",
-    image: "/products/necklaces/necklaces-001/image.jpg",
-    link: "/category/necklaces",
+  {
+    id: 'earrings',
+    name: 'Earrings',
+    description: 'Stunning studs and drops',
+    image: 'https://images.unsplash.com/photo-1629224316810-9d8805b95e76?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
+    link: '/category/earrings',
   },
-  bangles: {
-    name: "Bangles",
-    image: "/products/bangles/bangles-001/image.jpg",
-    link: "/category/bangles",
+  {
+    id: 'bracelets',
+    name: 'Bracelets',
+    description: 'Elegant bangles and tennis bracelets',
+    image: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
+    link: '/category/bracelets',
   },
-  waistbands: {
-    name: "Waistbands",
-    image: "/products/waistbands/waistbands-001/image.jpg",
-    link: "/category/waistbands",
-  }
-};
-
-// Create categories array from our dataset categories
-const categories = categoryInfo.categories.map(categoryId => categoryMap[categoryId as keyof typeof categoryMap]);
+];
 
 export default function CategorySection() {
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 md:py-24 bg-white">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-playfair text-center mb-12 text-gray-800">
+        <h2 className="section-title">
           Shop by Category
         </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <p className="text-gray-600 max-w-2xl mx-auto text-center mb-12">
+          Explore our curated collections of fine jewelry for every occasion
+        </p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {categories.map((category) => (
-            <Link
+            <Link 
+              key={category.id}
               href={category.link}
-              key={category.name}
-              className="group relative overflow-hidden rounded-lg shadow-md transition-transform duration-300 hover:scale-105"
+              className="category-card group"
             >
-              <div className="relative h-64 w-full">
+              <div className="category-card-image">
                 <Image
                   src={category.image}
                   alt={category.name}
-                  width={300}
-                  height={300}
-                  className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
+                  width={500}
+                  height={500}
+                  className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                <div className="absolute bottom-0 w-full p-4 text-center">
-                  <h3 className="text-xl font-playfair text-white">{category.name}</h3>
-                </div>
+                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors duration-300"></div>
+              </div>
+              <div className="category-card-content">
+                <h3 className="text-xl md:text-2xl font-medium mb-1 text-white">
+                  {category.name}
+                </h3>
+                <p className="text-white/90 text-sm md:text-base">
+                  {category.description}
+                </p>
+                <span className="mt-4 inline-block text-white border-b border-white/70 pb-0.5 text-sm group-hover:border-white transition-colors">
+                  Shop Now
+                </span>
               </div>
             </Link>
           ))}
+        </div>
+        
+        <div className="mt-16 md:mt-24">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="collection-feature relative h-[400px] md:h-[500px] overflow-hidden rounded-lg">
+              <Image
+                src="https://images.unsplash.com/photo-1601821765780-754fa98637c1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                alt="Wedding Collection"
+                fill
+                className="object-cover transition-transform duration-700 hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+              <div className="absolute bottom-0 left-0 p-8 md:p-10">
+                <h3 className="text-2xl md:text-3xl font-medium mb-2 text-white">Wedding Collection</h3>
+                <p className="text-white/90 mb-4 max-w-md">Timeless pieces for your special day and beyond</p>
+                <Link href="/collections/wedding" className="inline-block bg-white text-black px-6 py-2 rounded-full hover:bg-gold hover:text-white transition-colors">
+                  Explore Collection
+                </Link>
+              </div>
+            </div>
+            
+            <div className="collection-feature relative h-[400px] md:h-[500px] overflow-hidden rounded-lg">
+              <Image
+                src="https://images.unsplash.com/photo-1589674781759-c21c37956a44?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+                alt="Festive Collection"
+                fill
+                className="object-cover transition-transform duration-700 hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+              <div className="absolute bottom-0 left-0 p-8 md:p-10">
+                <h3 className="text-2xl md:text-3xl font-medium mb-2 text-white">Festive Collection</h3>
+                <p className="text-white/90 mb-4 max-w-md">Celebrate special occasions with our festive jewelry</p>
+                <Link href="/collections/festive" className="inline-block bg-white text-black px-6 py-2 rounded-full hover:bg-gold hover:text-white transition-colors">
+                  Explore Collection
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
