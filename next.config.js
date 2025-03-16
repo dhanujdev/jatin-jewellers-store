@@ -1,14 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    // Configure image loader
-    unoptimized: true,
-    // Allow domains for external images if needed
-    domains: [],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
-  // Indicate the output directory to Same.dev
-  distDir: 'build',
-  // Fix Same.dev deployment paths
+  // Fix deployment paths
   basePath: '',
   trailingSlash: true,
   typescript: {
