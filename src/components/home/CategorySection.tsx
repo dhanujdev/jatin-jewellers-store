@@ -33,24 +33,6 @@ const categories = [
   },
 ];
 
-// Define collection features with local images
-const collectionFeatures = [
-  {
-    id: 'wedding',
-    name: 'Wedding Collection',
-    description: 'Timeless pieces for your special day',
-    image: '/products/rings/rings-020/image.jpg',
-    link: '/collections/wedding',
-  },
-  {
-    id: 'bespoke',
-    name: 'Bespoke Collection',
-    description: 'Custom-designed jewelry for unique occasions',
-    image: '/products/necklaces/necklaces-020/image.jpg',
-    link: '/collections/bespoke',
-  },
-];
-
 export default function CategorySection() {
   return (
     <section className="py-16 md:py-24 bg-white text-center">
@@ -84,43 +66,6 @@ export default function CategorySection() {
               </div>
             </Link>
           ))}
-        </div>
-        
-        {/* Collection Features */}
-        <div className="mt-20">
-          <h2 className="section-title text-center">
-            Featured Collections
-          </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto text-center mb-12">
-            Discover our specially curated collections for every occasion
-          </p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {collectionFeatures.map((collection) => (
-              <Link 
-                key={collection.id}
-                href={collection.link}
-                className="group relative overflow-hidden rounded-lg shadow-md transition-transform duration-300 hover:scale-105"
-              >
-                <div className="relative h-80 w-full">
-                  <Image
-                    src={collection.image}
-                    alt={collection.name}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                  <div className="absolute bottom-0 w-full p-6 text-center">
-                    <h3 className="text-2xl font-playfair text-white mb-2">{collection.name}</h3>
-                    <p className="text-white/80 mb-4">{collection.description}</p>
-                    <span className="inline-block text-gold border border-gold px-4 py-2 rounded-sm text-sm font-medium group-hover:bg-gold group-hover:text-white transition-colors">
-                      Explore Collection
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
         </div>
       </div>
     </section>

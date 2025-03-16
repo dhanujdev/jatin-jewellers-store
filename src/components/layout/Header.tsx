@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, Search, X, ChevronDown, Phone, MapPin } from "lucide-react";
+import { Menu, Search, X, ChevronDown } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { getCategoryInfo } from "@/lib/products";
 import { useState, useEffect } from "react";
@@ -39,26 +39,6 @@ export default function Header() {
 
   return (
     <>
-      {/* Top Bar */}
-      <div className="hidden md:block bg-black text-white py-2">
-        <div className="container mx-auto px-4 flex justify-between items-center text-sm">
-          <div className="flex items-center space-x-6">
-            <div className="flex items-center">
-              <Phone size={14} className="mr-2" />
-              <span>+91 99999 99999</span>
-            </div>
-            <div className="flex items-center">
-              <MapPin size={14} className="mr-2" />
-              <span>Road No.36, Jubilee Hills, Hyderabad</span>
-            </div>
-          </div>
-          <div className="flex items-center space-x-4">
-            <Link href="/about-us" className="hover:text-gold transition-colors">About Us</Link>
-            <Link href="/contact" className="hover:text-gold transition-colors">Contact</Link>
-          </div>
-        </div>
-      </div>
-
       {/* Main Header */}
       <header className={`sticky top-0 z-50 bg-white border-b border-gray-200 transition-all duration-300 ${isScrolled ? 'shadow-md py-2' : 'py-4'}`}>
         <div className="container mx-auto px-4">
@@ -109,22 +89,6 @@ export default function Header() {
                             </Link>
                           </SheetClose>
                         ))}
-                        <SheetClose asChild>
-                          <Link
-                            href="/collections/bestsellers"
-                            className="menu-link-mobile"
-                          >
-                            Bestsellers
-                          </Link>
-                        </SheetClose>
-                        <SheetClose asChild>
-                          <Link
-                            href="/collections/new-arrivals"
-                            className="menu-link-mobile"
-                          >
-                            New Arrivals
-                          </Link>
-                        </SheetClose>
                       </div>
                     </div>
                     
@@ -147,12 +111,6 @@ export default function Header() {
                   
                   {/* Footer */}
                   <div className="p-4 border-t border-gray-200">
-                    <div className="flex items-center justify-center space-x-4 mb-4">
-                      <a href="tel:+919999999999" className="flex items-center text-sm text-black">
-                        <Phone size={16} className="mr-2" />
-                        +91 99999 99999
-                      </a>
-                    </div>
                     <Link href="/contact" className="block w-full py-3 px-4 bg-black text-white text-center font-medium">
                       Contact Us
                     </Link>
@@ -193,35 +151,17 @@ export default function Header() {
                             </Link>
                           </SheetClose>
                         ))}
-                        <div className="border-t border-gray-200 pt-4 mt-6">
-                          <SheetClose asChild>
-                            <Link
-                              href="/collections/bestsellers"
-                              className="block text-lg font-medium text-black hover:text-gold transition-colors mb-4"
-                            >
-                              Bestsellers
-                            </Link>
-                          </SheetClose>
-                          <SheetClose asChild>
-                            <Link
-                              href="/collections/new-arrivals"
-                              className="block text-lg font-medium text-black hover:text-gold transition-colors"
-                            >
-                              New Arrivals
-                            </Link>
-                          </SheetClose>
-                        </div>
                       </div>
                     </nav>
                   </div>
                 </SheetContent>
               </Sheet>
               
-              <Link href="/collections/bestsellers" className="menu-link">
-                Bestsellers
+              <Link href="/about-us" className="menu-link">
+                About Us
               </Link>
-              <Link href="/collections/new-arrivals" className="menu-link">
-                New Arrivals
+              <Link href="/contact" className="menu-link">
+                Contact
               </Link>
             </nav>
 

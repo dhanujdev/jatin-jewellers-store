@@ -1,11 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { Facebook, Instagram, Twitter, Mail, Phone, MapPin, Clock } from "lucide-react";
+import { Mail, Phone, MapPin, Clock } from "lucide-react";
 
 export default function Footer() {
-  const currentYear = new Date().getFullYear();
-  
   return (
     <footer className="bg-black text-white">
       {/* Social Media Section */}
@@ -21,8 +19,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="flex items-center justify-center bg-white text-gold hover:bg-gray-100 px-6 py-3 font-medium transition-colors"
               >
-                <Instagram size={20} className="mr-2" />
-                Follow @jatinjewellershyd
+                <span>Follow @jatinjewellershyd</span>
               </a>
             </div>
           </div>
@@ -38,17 +35,6 @@ export default function Footer() {
               <span className="text-xl md:text-2xl font-bold text-white font-serif">
                 JATIN JEWELLERS
               </span>
-            </div>
-            <div className="flex justify-center space-x-4">
-              <a href="https://facebook.com" className="social-icon">
-                <Facebook size={20} />
-              </a>
-              <a href="https://instagram.com/jatinjewellershyd" className="social-icon">
-                <Instagram size={20} />
-              </a>
-              <a href="https://twitter.com" className="social-icon">
-                <Twitter size={20} />
-              </a>
             </div>
           </div>
           
@@ -120,31 +106,6 @@ export default function Footer() {
                 </span>
               </li>
             </ul>
-          </div>
-        </div>
-      </div>
-      
-      {/* Bottom Bar */}
-      <div className="border-t border-gray-800 py-6">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col items-center justify-center text-center">
-            <p className="text-white/60 text-sm mb-4">
-              © {currentYear} Jatin Jewellers. All rights reserved.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4 text-sm text-white/60">
-              <Link href="/privacy-policy" className="hover:text-gold transition-colors">
-                Privacy Policy
-              </Link>
-              <Link href="/terms-of-service" className="hover:text-gold transition-colors">
-                Terms of Service
-              </Link>
-              <Link href="/shipping-policy" className="hover:text-gold transition-colors">
-                Shipping Policy
-              </Link>
-              <Link href="/refund-policy" className="hover:text-gold transition-colors">
-                Refund Policy
-              </Link>
-            </div>
           </div>
         </div>
       </div>
