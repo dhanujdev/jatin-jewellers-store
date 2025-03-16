@@ -11,7 +11,7 @@ const testimonials = [
     id: 1,
     name: "Priya Sharma",
     location: "Hyderabad",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&q=80",
+    image: "/products/rings/rings-015/image.jpg",
     rating: 5,
     text: "The craftsmanship of my engagement ring is absolutely stunning. The attention to detail and the quality of the diamonds exceeded my expectations. I've received countless compliments!"
   },
@@ -19,7 +19,7 @@ const testimonials = [
     id: 2,
     name: "Rahul Patel",
     location: "Mumbai",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&q=80",
+    image: "/products/rings/rings-020/image.jpg",
     rating: 5,
     text: "I purchased a necklace for my wife's anniversary, and she was overjoyed. The design is elegant and timeless. The customer service was exceptional, helping me choose the perfect piece."
   },
@@ -27,7 +27,7 @@ const testimonials = [
     id: 3,
     name: "Ananya Reddy",
     location: "Bangalore",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&q=80",
+    image: "/products/earrings/earrings-020/image.jpg",
     rating: 5,
     text: "Jatin Jewellers has been our family jeweler for generations. Their wedding collection is unmatched in quality and design. I recently purchased my wedding set, and it's absolutely perfect."
   },
@@ -35,7 +35,7 @@ const testimonials = [
     id: 4,
     name: "Vikram Singh",
     location: "Delhi",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&q=80",
+    image: "/products/necklaces/necklaces-010/image.jpg",
     rating: 4,
     text: "The custom-designed earrings I ordered for my daughter's wedding were exquisite. The team worked closely with me to bring my vision to life, and the result was beyond my expectations."
   },
@@ -43,7 +43,7 @@ const testimonials = [
     id: 5,
     name: "Meera Kapoor",
     location: "Chennai",
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&q=80",
+    image: "/products/bangles/bangles-010/image.jpg",
     rating: 5,
     text: "I've been a loyal customer for years. Their pieces are not just jewelry; they're heirlooms that tell stories. The quality and craftsmanship are consistently outstanding."
   }
