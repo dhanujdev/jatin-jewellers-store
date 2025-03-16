@@ -11,12 +11,10 @@ export default function Footer() {
       {/* Social Media Section */}
       <div className="bg-gold py-12">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between">
-            <div className="mb-6 md:mb-0 text-center md:text-left">
-              <h3 className="text-white text-2xl md:text-3xl font-medium mb-2">Follow Us on Instagram</h3>
-              <p className="text-white/80">Stay updated with our latest collections and exclusive designs</p>
-            </div>
-            <div className="w-full md:w-auto">
+          <div className="flex flex-col items-center justify-center text-center">
+            <h3 className="text-white text-2xl md:text-3xl font-medium mb-4">Follow Us on Instagram</h3>
+            <p className="text-white/80 mb-6">Stay updated with our latest collections and exclusive designs</p>
+            <div>
               <a 
                 href="https://www.instagram.com/jatinjewellershyd" 
                 target="_blank" 
@@ -35,17 +33,13 @@ export default function Footer() {
       <div className="container mx-auto px-4 py-12 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {/* Column 1: About */}
-          <div>
+          <div className="text-center">
             <div className="mb-6">
               <span className="text-xl md:text-2xl font-bold text-white font-serif">
                 JATIN JEWELLERS
               </span>
             </div>
-            <p className="text-white/80 mb-6">
-              Jatin Jewellers has been crafting exquisite custom diamond jewelry since 1985, 
-              bringing elegance and luxury to every occasion.
-            </p>
-            <div className="flex space-x-4">
+            <div className="flex justify-center space-x-4">
               <a href="https://facebook.com" className="social-icon">
                 <Facebook size={20} />
               </a>
@@ -59,8 +53,8 @@ export default function Footer() {
           </div>
           
           {/* Column 2: Quick Links */}
-          <div>
-            <h3 className="text-lg font-medium mb-6 relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-12 after:h-0.5 after:bg-gold">
+          <div className="text-center">
+            <h3 className="text-lg font-medium mb-6 relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-12 after:h-0.5 after:bg-gold">
               Quick Links
             </h3>
             <ul className="space-y-3">
@@ -93,12 +87,12 @@ export default function Footer() {
           </div>
           
           {/* Column 3: Contact */}
-          <div>
-            <h3 className="text-lg font-medium mb-6 relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-12 after:h-0.5 after:bg-gold">
+          <div className="text-center">
+            <h3 className="text-lg font-medium mb-6 relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-12 after:h-0.5 after:bg-gold">
               Visit Our Store
             </h3>
             <ul className="space-y-4">
-              <li className="flex items-start">
+              <li className="flex items-start justify-center">
                 <MapPin size={20} className="text-gold mr-3 mt-1 flex-shrink-0" />
                 <span className="text-white/80">
                   Jatin Jewellers, Road No.36,<br />
@@ -106,19 +100,19 @@ export default function Footer() {
                   Hyderabad, Telangana, 500033
                 </span>
               </li>
-              <li className="flex items-center">
+              <li className="flex items-center justify-center">
                 <Phone size={20} className="text-gold mr-3 flex-shrink-0" />
                 <a href="tel:+919876543210" className="text-white/80 hover:text-gold transition-colors">
                   +91 98765 43210
                 </a>
               </li>
-              <li className="flex items-center">
+              <li className="flex items-center justify-center">
                 <Mail size={20} className="text-gold mr-3 flex-shrink-0" />
                 <a href="mailto:info@jatinjewellers.com" className="text-white/80 hover:text-gold transition-colors">
                   info@jatinjewellers.com
                 </a>
               </li>
-              <li className="flex items-start">
+              <li className="flex items-start justify-center">
                 <Clock size={20} className="text-gold mr-3 mt-1 flex-shrink-0" />
                 <span className="text-white/80">
                   Mon - Sat: 10:00 AM - 8:00 PM<br />
@@ -133,8 +127,8 @@ export default function Footer() {
       {/* Bottom Bar */}
       <div className="border-t border-gray-800 py-6">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-white/60 text-sm mb-4 md:mb-0">
+          <div className="flex flex-col items-center justify-center text-center">
+            <p className="text-white/60 text-sm mb-4">
               © {currentYear} Jatin Jewellers. All rights reserved.
             </p>
             <div className="flex flex-wrap justify-center gap-4 text-sm text-white/60">

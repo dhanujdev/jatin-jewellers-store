@@ -43,7 +43,7 @@ export default function FeaturedProducts() {
   const ProductCard = ({ product }: { product: typeof featuredProducts[0] }) => (
     <Link
       href={`/product/${product.category}/${product.slug}`}
-      className="product-card group"
+      className="product-card group text-center"
     >
       <div className="product-card-image">
         <Image
@@ -53,60 +53,65 @@ export default function FeaturedProducts() {
           height={300}
           className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
         />
-        <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        <div className="absolute bottom-4 left-0 right-0 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0">
-          <span className="bg-gold text-white text-xs px-4 py-2">View Details</span>
-        </div>
       </div>
-      <div className="product-card-content">
-        <h3 className="product-title group-hover:text-gold transition-colors">
-          {product.name}
-        </h3>
-        <p className="product-price">{formatPrice(product.price)}</p>
+      <div className="p-4">
+        <h3 className="text-lg font-medium text-gray-900 mb-1">{product.name}</h3>
+        <p className="text-gold font-medium">{formatPrice(product.price)}</p>
       </div>
     </Link>
   );
 
   return (
-    <section className="py-16 md:py-20 bg-white">
+    <section className="py-16 md:py-24 bg-cream-light text-center">
       <div className="container mx-auto px-4">
-        <h2 className="section-title">
-          Bestsellers
+        <h2 className="section-title text-center">
+          Featured Products
         </h2>
         <p className="text-gray-600 max-w-2xl mx-auto text-center mb-12">
-          Discover our most popular custom diamond jewelry pieces, crafted with precision and elegance
+          Discover our most popular and exquisite jewelry pieces
         </p>
 
-        {/* Mobile Carousel View */}
-        <div className="md:hidden">
-          <Carousel className="w-full" opts={{ loop: true, align: "start" }}>
-            <CarouselContent className="-ml-4">
-              {featuredProducts.map((product) => (
-                <CarouselItem key={product.id} className="pl-4 basis-[85%] sm:basis-[45%]">
-                  <ProductCard product={product} />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <div className="flex justify-center mt-8 gap-2">
-              <CarouselPrevious className="static relative transform-none mx-1 bg-white border-gray-200 text-gray-500 hover:bg-gold hover:text-white hover:border-gold" />
-              <CarouselNext className="static relative transform-none mx-1 bg-white border-gray-200 text-gray-500 hover:bg-gold hover:text-white hover:border-gold" />
+        {isMounted ? (
+          <>
+            {/* Mobile Carousel View */}
+            <div className="block md:hidden">
+              <Carousel className="w-full" opts={{ loop: true }}>
+                <CarouselContent>
+                  {featuredProducts.map((product) => (
+                    <CarouselItem key={product.id} className="basis-full sm:basis-1/2">
+                      <ProductCard product={product} />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <div className="flex justify-center mt-6 gap-2">
+                  <CarouselPrevious className="static relative transform-none mx-1" />
+                  <CarouselNext className="static relative transform-none mx-1" />
+                </div>
+              </Carousel>
             </div>
-          </Carousel>
-        </div>
 
-        {/* Desktop Grid View */}
-        <div className="hidden md:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {featuredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+            {/* Desktop Grid View */}
+            <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {featuredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </>
+        ) : (
+          // Placeholder for SSR
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {Array(4).fill(0).map((_, i) => (
+              <div key={i} className="bg-gray-100 h-80 rounded-lg animate-pulse"></div>
+            ))}
+          </div>
+        )}
 
-        <div className="text-center mt-12">
-          <Link
-            href="/collections/bestsellers"
-            className="gold-button"
+        <div className="mt-12 text-center">
+          <Link 
+            href="/collections/new-arrivals" 
+            className="inline-block bg-gold hover:bg-gold-dark text-white px-8 py-3 rounded transition-colors"
           >
-            View All Bestsellers
+            View All Products
           </Link>
         </div>
       </div>

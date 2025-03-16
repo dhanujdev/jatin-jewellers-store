@@ -53,9 +53,9 @@ const collectionFeatures = [
 
 export default function CategorySection() {
   return (
-    <section className="py-16 md:py-24 bg-white">
+    <section className="py-16 md:py-24 bg-white text-center">
       <div className="container mx-auto px-4">
-        <h2 className="section-title">
+        <h2 className="section-title text-center">
           Shop by Category
         </h2>
         <p className="text-gray-600 max-w-2xl mx-auto text-center mb-12">
@@ -88,7 +88,7 @@ export default function CategorySection() {
         
         {/* Collection Features */}
         <div className="mt-20">
-          <h2 className="section-title">
+          <h2 className="section-title text-center">
             Featured Collections
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto text-center mb-12">

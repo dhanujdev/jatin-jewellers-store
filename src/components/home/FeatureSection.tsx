@@ -1,4 +1,4 @@
-import { Award, Gem, Truck, RotateCcw, Shield } from 'lucide-react';
+import { Award, Gem, Truck, RotateCcw, Star } from 'lucide-react';
 
 const features = [
   {
@@ -15,9 +15,9 @@ const features = [
   },
   {
     id: 3,
-    icon: <Shield className="h-10 w-10 text-gold" />,
-    title: "Lifetime Warranty",
-    description: "We stand behind our quality with a lifetime warranty on all our fine jewelry pieces."
+    icon: <Star className="h-10 w-10 text-gold" />,
+    title: "Premium Quality",
+    description: "We use only the finest materials to ensure exceptional quality in every piece we create."
   },
   {
     id: 4,
@@ -29,7 +29,7 @@ const features = [
 
 export default function FeatureSection() {
   return (
-    <section className="py-16 bg-white border-t border-b border-gray-200">
+    <section className="py-16 bg-white border-t border-b border-gray-200 text-center">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature) => (
