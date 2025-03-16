@@ -17,6 +17,7 @@ export interface Product {
   original_id?: string;
   collection?: string;
   original_type?: string;
+  slug: string;
 }
 
 export interface CategoryInfo {
@@ -38,6 +39,11 @@ export interface PaginatedResult<T> {
     to: number;
     hasMorePages: boolean;
   };
+}
+
+export interface Material {
+  name: string;
+  description: string;
 }
 
 // Get all products

@@ -1,12 +1,14 @@
 "use client";
 
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Product } from '@/lib/products';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import customImageLoader from '@/lib/imageLoader';
 
-interface FormattedProduct extends Product {
-  formattedPrice: string;
+interface Material {
+  name: string;
+  description: string;
 }
 
 interface RelatedProduct {
@@ -20,14 +22,45 @@ interface RelatedProduct {
 }
 
 interface ProductClientProps {
-  product: FormattedProduct;
+  product: {
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    formattedPrice: string;
+    image: string;
+    category: string;
+    materials: Material[];
+    slug: string;
+  };
   relatedProducts: RelatedProduct[];
+  categoryDisplayName: string;
 }
 
-export default function ProductClient({ 
-  product, 
-  relatedProducts
+export default function ProductClient({
+  product,
+  relatedProducts,
+  categoryDisplayName
 }: ProductClientProps) {
+  const [selectedImage, setSelectedImage] = useState(product.image);
+  const [quantity, setQuantity] = useState(1);
+
+  // Generate additional images for demo purposes
+  const additionalImages = [
+    product.image,
+    `/images/${product.category}/additional-1.jpg`,
+    `/images/${product.category}/additional-2.jpg`,
+  ];
+
+  const handleQuantityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setQuantity(parseInt(e.target.value));
+  };
+
+  const handleAddToCart = () => {
+    alert(`Added ${quantity} ${product.name} to cart!`);
+    // Implement actual cart functionality here
+  };
+
   return (
     <div className="container mx-auto px-4 py-12">
       {/* Breadcrumb */}
@@ -41,72 +74,151 @@ export default function ProductClient({
           <li className="mx-2 text-gray-500">/</li>
           <li className="mr-2">
             <Link href={`/category/${product.category}`} className="text-gray-500 hover:text-gold">
-              {product.category.charAt(0).toUpperCase() + product.category.slice(1)}
+              {categoryDisplayName}
             </Link>
           </li>
           <li className="mx-2 text-gray-500">/</li>
-          <li className="text-gray-800">{product.title}</li>
+          <li className="text-gray-800">{product.name}</li>
         </ol>
       </nav>
 
       {/* Product Details */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-        {/* Product Image */}
-        <div className="relative h-[500px] rounded-lg overflow-hidden">
-          <Image
-            src={product.imagePath}
-            alt={product.title}
-            fill
-            className="object-contain"
-            priority
-            loader={customImageLoader}
-          />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
+        {/* Product Images */}
+        <div>
+          <div className="mb-4 bg-gray-50 rounded-lg overflow-hidden">
+            <Image
+              src={selectedImage}
+              alt={product.name}
+              width={600}
+              height={600}
+              className="w-full h-auto object-contain"
+              loader={customImageLoader}
+            />
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            {additionalImages.map((img, index) => (
+              <button
+                key={index}
+                onClick={() => setSelectedImage(img)}
+                className={`bg-gray-50 rounded-lg overflow-hidden border-2 ${
+                  selectedImage === img ? 'border-gold' : 'border-transparent'
+                }`}
+              >
+                <Image
+                  src={img}
+                  alt={`${product.name} view ${index + 1}`}
+                  width={100}
+                  height={100}
+                  className="w-full h-auto object-contain"
+                  loader={customImageLoader}
+                />
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Product Info */}
         <div>
-          <h1 className="text-3xl font-playfair text-gray-800 mb-4">{product.title}</h1>
+          <h1 className="text-3xl font-playfair text-gray-800 mb-4">{product.name}</h1>
           <p className="text-2xl text-gold font-semibold mb-6">{product.formattedPrice}</p>
           
-          <div className="mb-6">
-            <h2 className="text-lg font-medium text-gray-800 mb-2">Description</h2>
-            <p className="text-gray-600">{product.description}</p>
+          <div className="mb-8">
+            <p className="text-gray-600 leading-relaxed">{product.description}</p>
           </div>
           
-          {product.materials && product.materials.length > 0 && (
-            <div className="mb-6">
-              <h2 className="text-lg font-medium text-gray-800 mb-2">Materials</h2>
-              <ul className="list-disc list-inside text-gray-600">
-                {product.materials.map((material, index) => (
-                  <li key={index}>{material}</li>
+          <div className="mb-8">
+            <div className="flex items-center mb-4">
+              <label htmlFor="quantity" className="mr-4 text-gray-700">
+                Quantity:
+              </label>
+              <select
+                id="quantity"
+                value={quantity}
+                onChange={handleQuantityChange}
+                className="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-gold"
+              >
+                {[1, 2, 3, 4, 5].map((num) => (
+                  <option key={num} value={num}>
+                    {num}
+                  </option>
                 ))}
-              </ul>
+              </select>
             </div>
-          )}
+            
+            <button
+              onClick={handleAddToCart}
+              className="w-full bg-gold text-white py-3 px-6 rounded-md hover:bg-gold-dark transition-colors focus:outline-none focus:ring-2 focus:ring-gold focus:ring-opacity-50"
+            >
+              Add to Cart
+            </button>
+          </div>
           
-          {product.features && (
-            <div className="mb-6">
-              <h2 className="text-lg font-medium text-gray-800 mb-2">Features</h2>
-              <p className="text-gray-600">{product.features}</p>
-            </div>
-          )}
-          
-          {/* Add to Cart Button */}
-          <button className="w-full bg-gold hover:bg-gold-dark text-white py-3 px-6 rounded transition-colors mb-4">
-            Add to Cart
-          </button>
-          
-          {/* Wishlist Button */}
-          <button className="w-full border border-gray-300 text-gray-800 hover:bg-gray-50 py-3 px-6 rounded transition-colors">
-            Add to Wishlist
-          </button>
+          <div className="border-t border-gray-200 pt-6">
+            <h3 className="text-lg font-medium text-gray-800 mb-4">Product Details</h3>
+            <ul className="text-gray-600 space-y-2">
+              <li>
+                <span className="font-medium">Category:</span> {categoryDisplayName}
+              </li>
+              <li>
+                <span className="font-medium">Product ID:</span> {product.id}
+              </li>
+            </ul>
+          </div>
         </div>
+      </div>
+
+      {/* Product Tabs */}
+      <div className="mb-16">
+        <Tabs defaultValue="description">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="description">Description</TabsTrigger>
+            <TabsTrigger value="materials">Materials</TabsTrigger>
+            <TabsTrigger value="care">Care Instructions</TabsTrigger>
+          </TabsList>
+          <TabsContent value="description" className="p-6 bg-gray-50 rounded-b-lg">
+            <h3 className="text-lg font-medium text-gray-800 mb-4">Product Description</h3>
+            <p className="text-gray-600 leading-relaxed">
+              {product.description}
+              <br /><br />
+              Each piece is meticulously crafted by our skilled artisans, ensuring exceptional quality and attention to detail.
+              Our jewelry is designed to be timeless, allowing you to cherish it for years to come.
+            </p>
+          </TabsContent>
+          <TabsContent value="materials" className="p-6 bg-gray-50 rounded-b-lg">
+            <h3 className="text-lg font-medium text-gray-800 mb-4">Materials Used</h3>
+            <div className="space-y-4">
+              {product.materials && product.materials.length > 0 ? (
+                product.materials.map((material, index) => (
+                  <div key={index}>
+                    <h4 className="font-medium text-gray-700">{material.name}</h4>
+                    <p className="text-gray-600">{material.description}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-600">
+                  This product is crafted using the finest materials, including premium metals and ethically sourced gemstones.
+                </p>
+              )}
+            </div>
+          </TabsContent>
+          <TabsContent value="care" className="p-6 bg-gray-50 rounded-b-lg">
+            <h3 className="text-lg font-medium text-gray-800 mb-4">Care Instructions</h3>
+            <ul className="text-gray-600 space-y-2 list-disc pl-5">
+              <li>Store your jewelry in a cool, dry place away from direct sunlight.</li>
+              <li>Clean with a soft, lint-free cloth to maintain its shine.</li>
+              <li>Avoid contact with perfumes, lotions, and chemicals.</li>
+              <li>Remove jewelry before swimming, bathing, or engaging in physical activities.</li>
+              <li>Have your jewelry professionally cleaned and inspected periodically.</li>
+            </ul>
+          </TabsContent>
+        </Tabs>
       </div>
 
       {/* Related Products */}
       {relatedProducts.length > 0 && (
-        <div className="mt-16">
-          <h2 className="text-2xl font-playfair text-gray-800 mb-8">You May Also Like</h2>
+        <div>
+          <h2 className="text-2xl font-playfair text-gray-800 mb-8 text-center">You May Also Like</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {relatedProducts.map((relatedProduct) => (
               <Link
@@ -122,7 +234,6 @@ export default function ProductClient({
                     height={300}
                     className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
                     loader={customImageLoader}
-                    priority={false}
                   />
                 </div>
                 <div className="p-4">

@@ -37,8 +37,9 @@ export default function CategoryClient({
 }: CategoryClientProps) {
   const [currentPage, setCurrentPage] = useState(paginationData.currentPage);
   const [currentSort, setCurrentSort] = useState(initialSort);
-  const [sortedProducts, setSortedProducts] = useState<FormattedProduct[]>([]);
+  const [sortedProducts, setSortedProducts] = useState<FormattedProduct[]>(allProducts);
   const [displayedProducts, setDisplayedProducts] = useState<FormattedProduct[]>([]);
+  const [totalPages, setTotalPages] = useState(Math.ceil(allProducts.length / paginationData.pageSize));
   
   // Apply sorting and pagination whenever sort or page changes
   useEffect(() => {
@@ -56,11 +57,16 @@ export default function CategoryClient({
     }
     
     setSortedProducts(sorted);
+    setTotalPages(Math.ceil(sorted.length / paginationData.pageSize));
     
     // Apply pagination
     const startIndex = (currentPage - 1) * paginationData.pageSize;
     const endIndex = startIndex + paginationData.pageSize;
     setDisplayedProducts(sorted.slice(startIndex, endIndex));
+    
+    // Log for debugging
+    console.log(`Displaying products ${startIndex + 1}-${Math.min(endIndex, sorted.length)} of ${sorted.length}`);
+    console.log(`Current page: ${currentPage}, Total pages: ${Math.ceil(sorted.length / paginationData.pageSize)}`);
   }, [allProducts, currentSort, currentPage, paginationData.pageSize]);
 
   // Handle sort change
@@ -71,6 +77,7 @@ export default function CategoryClient({
 
   // Handle pagination
   const handlePageChange = (page: number) => {
+    console.log(`Changing to page ${page}`);
     setCurrentPage(page);
     // Scroll to top of products
     window.scrollTo({
@@ -81,7 +88,8 @@ export default function CategoryClient({
 
   // Generate pagination links
   const renderPaginationLinks = () => {
-    const totalPages = Math.ceil(allProducts.length / paginationData.pageSize);
+    if (totalPages <= 1) return null;
+    
     const links = [];
 
     // Previous button
@@ -90,11 +98,12 @@ export default function CategoryClient({
         key="prev"
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className={`px-3 py-1 rounded ${
+        className={`px-3 py-2 rounded-md ${
           currentPage === 1
             ? 'text-gray-400 cursor-not-allowed'
             : 'text-gray-700 hover:bg-gray-100'
         }`}
+        aria-label="Previous page"
       >
         &laquo; Prev
       </button>
@@ -104,18 +113,63 @@ export default function CategoryClient({
     const startPage = Math.max(1, currentPage - 2);
     const endPage = Math.min(totalPages, startPage + 4);
 
+    // First page
+    if (startPage > 1) {
+      links.push(
+        <button
+          key={1}
+          onClick={() => handlePageChange(1)}
+          className="px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100"
+        >
+          1
+        </button>
+      );
+      
+      // Ellipsis if needed
+      if (startPage > 2) {
+        links.push(
+          <span key="ellipsis-start" className="px-2 py-2">
+            ...
+          </span>
+        );
+      }
+    }
+
+    // Page numbers in range
     for (let i = startPage; i <= endPage; i++) {
       links.push(
         <button
           key={i}
           onClick={() => handlePageChange(i)}
-          className={`px-3 py-1 rounded ${
+          className={`px-3 py-2 rounded-md ${
             i === currentPage
-              ? 'bg-gold text-white'
+              ? 'bg-gold text-white font-medium'
               : 'text-gray-700 hover:bg-gray-100'
           }`}
         >
           {i}
+        </button>
+      );
+    }
+    
+    // Ellipsis if needed
+    if (endPage < totalPages - 1) {
+      links.push(
+        <span key="ellipsis-end" className="px-2 py-2">
+          ...
+        </span>
+      );
+    }
+    
+    // Last page
+    if (endPage < totalPages) {
+      links.push(
+        <button
+          key={totalPages}
+          onClick={() => handlePageChange(totalPages)}
+          className="px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100"
+        >
+          {totalPages}
         </button>
       );
     }
@@ -126,11 +180,12 @@ export default function CategoryClient({
         key="next"
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className={`px-3 py-1 rounded ${
+        className={`px-3 py-2 rounded-md ${
           currentPage === totalPages
             ? 'text-gray-400 cursor-not-allowed'
             : 'text-gray-700 hover:bg-gray-100'
         }`}
+        aria-label="Next page"
       >
         Next &raquo;
       </button>
@@ -163,9 +218,14 @@ export default function CategoryClient({
       </div>
 
       {/* Filters and Sort */}
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-8 gap-4">
         <div className="text-gray-600">
-          Showing {displayedProducts.length} of {allProducts.length} products
+          Showing {displayedProducts.length} of {sortedProducts.length} products
+          {totalPages > 1 && (
+            <span className="ml-2">
+              (Page {currentPage} of {totalPages})
+            </span>
+          )}
         </div>
         <div className="flex items-center">
           <label htmlFor="sort" className="mr-2 text-gray-600">
@@ -188,35 +248,41 @@ export default function CategoryClient({
 
       {/* Products Grid */}
       <div id="products-grid" className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-12">
-        {displayedProducts.map((product) => (
-          <Link
-            href={`/product/${product.category}/${product.slug}`}
-            key={product.id}
-            className="group bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow"
-          >
-            <div className="relative h-64 overflow-hidden">
-              <Image
-                src={product.image}
-                alt={product.name}
-                width={300}
-                height={300}
-                className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
-                loader={customImageLoader}
-              />
-            </div>
-            <div className="p-4">
-              <h3 className="text-gray-800 font-medium mb-1 group-hover:text-gold-dark transition-colors">
-                {product.name}
-              </h3>
-              <p className="text-gold font-semibold">{product.formattedPrice}</p>
-            </div>
-          </Link>
-        ))}
+        {displayedProducts.length > 0 ? (
+          displayedProducts.map((product: FormattedProduct) => (
+            <Link
+              href={`/product/${product.category}/${product.slug}`}
+              key={product.id}
+              className="group bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow"
+            >
+              <div className="relative h-64 overflow-hidden">
+                <Image
+                  src={product.image}
+                  alt={product.name}
+                  width={300}
+                  height={300}
+                  className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
+                  loader={customImageLoader}
+                />
+              </div>
+              <div className="p-4">
+                <h3 className="text-gray-800 font-medium mb-1 group-hover:text-gold-dark transition-colors">
+                  {product.name}
+                </h3>
+                <p className="text-gold font-semibold">{product.formattedPrice}</p>
+              </div>
+            </Link>
+          ))
+        ) : (
+          <div className="col-span-full text-center py-12">
+            <p className="text-gray-600">No products found. Please try a different category or filter.</p>
+          </div>
+        )}
       </div>
 
       {/* Pagination */}
-      {Math.ceil(allProducts.length / paginationData.pageSize) > 1 && (
-        <div className="flex justify-center space-x-2">
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center space-x-2 border-t border-gray-200 pt-8">
           {renderPaginationLinks()}
         </div>
       )}
