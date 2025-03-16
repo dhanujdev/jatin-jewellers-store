@@ -111,8 +111,8 @@ export default function Header() {
                     <ChevronDown size={16} />
                   </button>
                 </SheetTrigger>
-                <SheetContent side="left" className="w-[350px] p-0">
-                  <div className="flex flex-col h-full">
+                <SheetContent side="top" className="w-full p-0">
+                  <div className="flex flex-col">
                     <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-black text-white">
                       <span className="text-xl font-serif font-bold">
                         Categories
@@ -122,17 +122,21 @@ export default function Header() {
                       </SheetClose>
                     </div>
                     
-                    <div className="flex-1 overflow-y-auto p-4">
-                      {categories.map((category) => (
-                        <SheetClose asChild key={category.name}>
-                          <Link
-                            href={category.href}
-                            className="block text-lg font-medium text-black hover:text-gold transition-colors mb-4"
-                          >
-                            {category.name}
-                          </Link>
-                        </SheetClose>
-                      ))}
+                    <div className="p-6 bg-white">
+                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                        {categories.map((category) => (
+                          <SheetClose asChild key={category.name}>
+                            <Link
+                              href={category.href}
+                              className="flex flex-col items-center justify-center p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors group"
+                            >
+                              <span className="text-lg font-medium text-gray-800 group-hover:text-gold transition-colors">
+                                {category.name}
+                              </span>
+                            </Link>
+                          </SheetClose>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </SheetContent>
