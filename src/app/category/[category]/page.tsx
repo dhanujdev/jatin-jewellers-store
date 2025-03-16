@@ -1,5 +1,6 @@
-import { getCategoryInfo, getProductsByCategory, Product } from '@/lib/products';
+import { getCategoryInfo, getProductsByCategory, Product, getAllProducts } from '@/lib/products';
 import CategoryClient from './client';
+import productsByCategory from '@/data/products-by-category.json';
 
 // Function to generate a random price between 10000 and 200000
 function generateRandomPrice(): number {
@@ -54,22 +55,22 @@ export default function CategoryPage({
   // Get category display name
   const categoryName = categoryDisplayNames[category] || category.charAt(0).toUpperCase() + category.slice(1);
   
-  // Get products for this category
-  const productsResult = getProductsByCategory(category);
-  let products = productsResult.data;
+  // Get ALL products for this category (not just the first page)
+  const allCategoryProducts = (productsByCategory as any)[category] || [];
   
   // Format all products for display
-  const formattedProducts = formatProductsForDisplay(products);
+  const formattedProducts = formatProductsForDisplay(allCategoryProducts);
   
   // Calculate pagination data for initial view
-  const totalProducts = productsResult.pagination.total;
-  const totalPages = productsResult.pagination.pageCount;
+  const totalProducts = allCategoryProducts.length;
+  const pageSize = 12;
+  const totalPages = Math.ceil(totalProducts / pageSize);
   
   const paginationData = {
     currentPage: 1,
     totalPages,
     totalProducts,
-    pageSize: 12
+    pageSize
   };
   
   return (
