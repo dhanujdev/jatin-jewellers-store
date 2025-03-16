@@ -84,12 +84,8 @@ export default function CategoryClient({
         {categoryDisplayName}
       </h1>
       
-      {/* Sort Options and Product Count */}
-      <div className="flex justify-between items-center mb-6">
-        <div className="text-gray-700">
-          Showing {((paginationData.currentPage - 1) * paginationData.pageSize) + 1}-
-          {Math.min(paginationData.currentPage * paginationData.pageSize, paginationData.totalItems)} of {paginationData.totalItems} products
-        </div>
+      {/* Sort Options */}
+      <div className="flex justify-end items-center mb-6">
         <div className="flex items-center">
           <label htmlFor="sort-select" className="mr-2 text-gray-700">
             Sort by:
