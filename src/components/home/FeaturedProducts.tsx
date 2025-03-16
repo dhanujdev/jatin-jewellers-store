@@ -4,7 +4,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getFeaturedProducts } from '@/lib/products';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { useMediaQuery } from '@/lib/hooks';
 import { useEffect, useState } from 'react';
 
 // Format price to Indian Rupees
