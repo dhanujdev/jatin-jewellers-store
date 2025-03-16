@@ -47,8 +47,6 @@ export default function ProductClient({
   // Generate additional images for demo purposes
   const additionalImages = [
     product.image,
-    `/images/${product.category}/additional-1.jpg`,
-    `/images/${product.category}/additional-2.jpg`,
   ];
 
   return (

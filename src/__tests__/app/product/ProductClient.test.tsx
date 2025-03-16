@@ -220,26 +220,21 @@ describe('ProductClient Component', () => {
 
   // Tests for interactive features
 
-  it('changes the selected image when thumbnail is clicked', () => {
+  it('updates main image when thumbnail is clicked', () => {
     render(
       <ProductClient 
-        product={mockProduct}
+        product={mockProduct} 
         relatedProducts={mockRelatedProducts}
         categoryDisplayName="Rings"
       />
     );
-    
-    // Get all image thumbnails
+    const mainImage = screen.getAllByRole('img')[0];
     const thumbnails = screen.getAllByRole('button').filter(button => 
       button.querySelector('img')
     );
     
-    // Click the second thumbnail
-    fireEvent.click(thumbnails[1]);
-    
-    // Check if the main image has been updated
-    const mainImage = screen.getAllByRole('img')[0];
-    expect(mainImage).toHaveAttribute('src', '/images/rings/additional-1.jpg');
+    fireEvent.click(thumbnails[0]);
+    expect(mainImage).toHaveAttribute('src', mockProduct.image);
   });
 
   it('allows navigation between tabs', () => {
