@@ -45,19 +45,15 @@ export default {
   			ring: 'hsl(var(--ring))',
         gold: {
           DEFAULT: '#D4AF37',
-          light: '#F5E7A3',
-          dark: '#A67C00',
+          light: '#E9D58A',
+          dark: '#B38728',
         },
-        cream: {
-          DEFAULT: '#FFF8E1',
-          light: '#FFFDF5',
-          dark: '#F5EAC4',
-        },
-        jewel: {
-          red: '#E0115F',
-          blue: '#0073CF',
-          green: '#50C878',
-          purple: '#800080',
+        luxury: {
+          black: '#000000',
+          white: '#FFFFFF',
+          offwhite: '#F8F8F8',
+          gray: '#333333',
+          lightgray: '#E5E5E5',
         },
   			chart: {
   				'1': 'hsl(var(--chart-1))',
@@ -127,8 +123,8 @@ export default {
         cormorant: ['Cormorant Garamond', 'serif'],
       },
       backgroundImage: {
-        'gold-gradient': 'linear-gradient(45deg, #D4AF37 0%, #F5E7A3 50%, #D4AF37 100%)',
-        'cream-gradient': 'linear-gradient(to right, #FFF8E1, #FFFDF5, #FFF8E1)',
+        'gold-gradient': 'linear-gradient(45deg, #B38728 0%, #D4AF37 50%, #B38728 100%)',
+        'black-gradient': 'linear-gradient(to right, rgba(0,0,0,0.8), rgba(0,0,0,0.4))',
       },
   	}
   },
