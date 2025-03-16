@@ -4,9 +4,9 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Breadcrumb } from '@/components/ui/breadcrumb';
-import { Pagination } from '@/components/ui/pagination';
-import { Select } from '@/components/ui/select';
+import { Breadcrumb } from '../../../components/ui/breadcrumb';
+import { Pagination } from '../../../components/ui/pagination';
+import { Select } from '../../../components/ui/select';
 
 interface FormattedProduct {
   id: string;

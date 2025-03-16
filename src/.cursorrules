@@ -1,0 +1,133 @@
+Before diving into the best practices, please note that you may need to adapt the globs depending on your project's specific file structure and requirements.
+
+---
+name: nextjs-best-practices.mdc
+description: Best practices for Next.js applications and routing
+globs: **/*.{ts,tsx}
+---
+
+- Utilize the App Router for improved performance and easier routing
+- Implement error boundaries to handle and display errors gracefully
+- Leverage Next.js data fetching methods like `getStaticProps` and `getServerSideProps` for optimal performance
+- Use `next/image` for optimized image loading and better performance
+- Implement internationalization using `next-i18next` for multi-language support
+
+---
+name: react-best-practices.mdc
+description: Best practices for React component development and state management
+globs: **/*.{ts,tsx,js,jsx}
+---
+
+- Use functional components with hooks instead of class components
+- Implement proper state management using Context API or external libraries like Redux
+- Utilize memoization with `useMemo` and `useCallback` to optimize performance
+- Follow the single responsibility principle for components
+- Use `React.lazy` and `Suspense` for code-splitting and lazy loading
+
+---
+name: typescript-best-practices.mdc
+description: TypeScript coding standards and type safety guidelines
+globs: **/*.{ts,tsx}
+---
+
+- Enable strict type checking with `strict: true` in `tsconfig.json`
+- Use interfaces for object shapes and types for unions or more complex types
+- Leverage type guards and type assertions for runtime type checking
+- Implement generics for reusable components and functions
+- Use enums for a set of named constants
+
+---
+name: tailwindcss-best-practices.mdc
+description: Best practices for using Tailwind CSS in your project
+globs: **/*.{ts,tsx,css}
+---
+
+- Use utility classes directly in your JSX for faster development
+- Create custom components with reusable class combinations
+- Utilize the `@apply` directive in custom CSS to maintain consistency
+- Keep your `tailwind.config.js` organized and use plugins for extended functionality
+- Ensure responsive design by using Tailwind's responsive utility classes
+
+---
+name: radix-ui-best-practices.mdc
+description: Best practices for using Radix UI components
+globs: **/*.{ts,tsx}
+---
+
+- Use Radix UI primitives as the foundation for custom components
+- Customize Radix components using the `asChild` prop for better accessibility
+- Implement proper state management with Radix's built-in hooks
+- Ensure accessibility by following Radix UI's guidelines and using ARIA attributes
+- Use Radix UI's composition patterns for complex UI elements
+
+---
+name: embla-carousel-best-practices.mdc
+description: Best practices for implementing Embla Carousel
+globs: **/*.{ts,tsx}
+---
+
+- Use the `useEmblaCarousel` hook for easy integration with React
+- Implement lazy loading for carousel items to improve performance
+- Customize the carousel's appearance using Embla's options and plugins
+- Ensure accessibility by adding proper ARIA attributes and keyboard navigation
+- Optimize for mobile by using touch events and responsive breakpoints
+
+---
+name: lucide-react-best-practices.mdc
+description: Best practices for using Lucide React icons
+globs: **/*.{ts,tsx}
+---
+
+- Use Lucide icons consistently across your application for a unified design
+- Customize icon size and color using Lucide's props
+- Implement icon accessibility by adding appropriate `aria-label` attributes
+- Use icon components as part of your UI kit for easy reuse
+- Optimize icon loading by importing only the icons you need
+
+---
+name: turbopack-best-practices.mdc
+description: Best practices for using Turbopack in your build process
+globs: **/package.json
+---
+
+- Use Turbopack for faster builds and incremental updates
+- Configure Turbopack to cache frequently used dependencies
+- Optimize your `turbopack.config.js` for your specific project needs
+- Use Turbopack's watch mode for development to speed up iterations
+- Ensure compatibility with your project's dependencies by checking Turbopack's documentation
+
+---
+name: eslint-best-practices.mdc
+description: Best practices for using ESLint in your project
+globs: **/.eslintrc.js
+---
+
+- Configure ESLint to enforce coding standards and catch common errors
+- Use ESLint plugins specific to your tech stack (e.g., `@typescript-eslint`)
+- Implement custom rules to fit your project's specific needs
+- Integrate ESLint with your IDE for real-time feedback
+- Use ESLint in your CI/CD pipeline to ensure code quality
+
+---
+name: prettier-best-practices.mdc
+description: Best practices for using Prettier in your project
+globs: **/.prettierrc.js
+---
+
+- Use Prettier to maintain consistent code formatting across your project
+- Configure Prettier to work alongside ESLint for a seamless development experience
+- Integrate Prettier with your IDE for automatic formatting on save
+- Use Prettier in your CI/CD pipeline to ensure consistent formatting
+- Customize Prettier's configuration to fit your project's style preferences
+
+---
+name: postcss-best-practices.mdc
+description: Best practices for using PostCSS in your project
+globs: **/postcss.config.js
+---
+
+- Use PostCSS to transform and optimize your CSS
+- Implement PostCSS plugins like `autoprefixer` for cross-browser compatibility
+- Use PostCSS to implement custom CSS features or polyfills
+- Optimize your `postcss.config.js` for your specific project needs
+- Ensure compatibility with your CSS framework (e.g., Tailwind CSS)

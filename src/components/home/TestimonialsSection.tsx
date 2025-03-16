@@ -91,7 +91,7 @@ export default function TestimonialsSection() {
                         <Image
                           src={testimonial.image}
                           alt={testimonial.name}
-                          fill
+                          fill="true"
                           className="object-cover"
                         />
                       </div>

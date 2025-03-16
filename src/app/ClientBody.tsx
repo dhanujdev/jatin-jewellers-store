@@ -7,10 +7,11 @@ export default function ClientBody({
 }: {
   children: React.ReactNode;
 }) {
-  // Remove any extension-added classes during hydration
+  // Preserve existing classes while adding antialiased during hydration
   useEffect(() => {
     // This runs only on the client after hydration
-    document.body.className = "antialiased";
+    const existingClasses = document.body.className.split(' ').filter(c => c && c !== 'antialiased');
+    document.body.className = [...existingClasses, 'antialiased'].join(' ').trim();
   }, []);
 
   return (

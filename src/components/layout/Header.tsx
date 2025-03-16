@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Menu, Search, X } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { getCategoryInfo } from "@/lib/products";
 import { useState, useEffect } from "react";
 
@@ -50,16 +50,20 @@ export default function Header() {
                   <Menu size={24} />
                 </button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[85%] sm:w-[350px] p-0">
+              <SheetContent side="left" className="w-[85%] sm:w-[350px] p-0" aria-label="Navigation Menu">
                 <div className="flex flex-col h-full">
                   <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-black text-white">
-                    <span className="text-xl font-serif font-bold">
+                    <SheetTitle className="text-xl font-serif font-bold text-white">
                       JATIN JEWELLERS
-                    </span>
+                    </SheetTitle>
                     <SheetClose className="rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-700">
                       <X size={18} />
                     </SheetClose>
                   </div>
+                  
+                  <SheetDescription className="sr-only">
+                    Navigation menu for mobile devices with search and category links
+                  </SheetDescription>
                   
                   {/* Mobile Search */}
                   <div className="px-4 py-3 border-b border-gray-200">
