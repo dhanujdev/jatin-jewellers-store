@@ -72,10 +72,14 @@ export default async function CategoryPage({
   params: { category: string },
   searchParams: { page?: string, sort?: string }
 }) {
-  // Await the parameters
+  // Properly await the parameters
   const { category } = await Promise.resolve(params);
-  const page = parseInt(await Promise.resolve(searchParams.page || '1'), 10);
-  const sort = await Promise.resolve(searchParams.sort || 'default');
+  const { page: pageParam = '1', sort: sortParam = 'default' } = await Promise.resolve(searchParams);
+  
+  // Parse page number after awaiting and handle invalid values
+  const parsedPage = parseInt(pageParam, 10);
+  const page = isNaN(parsedPage) ? 1 : parsedPage;
+  const sort = sortParam;
   
   // Get category display name
   const categoryName = categoryDisplayNames[category] || category.charAt(0).toUpperCase() + category.slice(1);
@@ -92,7 +96,7 @@ export default async function CategoryPage({
   // Calculate pagination data
   const pageSize = 12;
   const totalProducts = sortedProducts.length;
-  const totalPages = Math.ceil(totalProducts / pageSize);
+  const totalPages = Math.max(1, Math.ceil(totalProducts / pageSize));
   
   // Ensure page is within valid range
   const validPage = Math.max(1, Math.min(page, totalPages));

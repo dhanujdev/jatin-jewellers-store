@@ -24,8 +24,17 @@ export function Pagination({
     return null;
   }
 
-  const startItem = (currentPage - 1) * pageSize + 1;
-  const endItem = Math.min(currentPage * pageSize, totalItems);
+  // Ensure currentPage is within valid range
+  const validCurrentPage = Math.max(1, Math.min(currentPage, totalPages));
+  
+  // Calculate item range
+  const startItem = totalItems === 0 ? 0 : (validCurrentPage - 1) * pageSize + 1;
+  const endItem = Math.min(validCurrentPage * pageSize, totalItems);
+
+  // If the range is invalid, don't render pagination
+  if (isNaN(startItem) || isNaN(endItem) || startItem > endItem || startItem > totalItems) {
+    return null;
+  }
 
   const getPageUrl = (page: number) => {
     return `${basePath}?sort=${currentSort}&page=${page}`;
@@ -45,16 +54,16 @@ export function Pagination({
       // Always show first page
       pages.push(1);
 
-      if (currentPage > 3) {
+      if (validCurrentPage > 3) {
         pages.push('...');
       }
 
       // Show pages around current page
-      for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+      for (let i = Math.max(2, validCurrentPage - 1); i <= Math.min(totalPages - 1, validCurrentPage + 1); i++) {
         pages.push(i);
       }
 
-      if (currentPage < totalPages - 2) {
+      if (validCurrentPage < totalPages - 2) {
         pages.push('...');
       }
 
@@ -72,7 +81,7 @@ export function Pagination({
       </div>
       <ul className="flex items-center space-x-1">
         <li>
-          {currentPage > 1 ? (
+          {validCurrentPage > 1 ? (
             <a
               href={getPageUrl(1)}
               aria-label="Go to first page"
@@ -90,9 +99,9 @@ export function Pagination({
           )}
         </li>
         <li>
-          {currentPage > 1 ? (
+          {validCurrentPage > 1 ? (
             <a
-              href={getPageUrl(currentPage - 1)}
+              href={getPageUrl(validCurrentPage - 1)}
               aria-label="Go to previous page"
               className="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-100"
             >
@@ -117,7 +126,7 @@ export function Pagination({
           }
           return (
             <li key={page}>
-              {page === currentPage ? (
+              {page === validCurrentPage ? (
                 <span className="flex items-center justify-center w-10 h-10 rounded-md bg-gold text-white font-medium">
                   {page}
                 </span>
@@ -133,9 +142,9 @@ export function Pagination({
           );
         })}
         <li>
-          {currentPage < totalPages ? (
+          {validCurrentPage < totalPages ? (
             <a
-              href={getPageUrl(currentPage + 1)}
+              href={getPageUrl(validCurrentPage + 1)}
               aria-label="Go to next page"
               className="flex items-center justify-center w-10 h-10 rounded-md hover:bg-gray-100"
             >
@@ -151,7 +160,7 @@ export function Pagination({
           )}
         </li>
         <li>
-          {currentPage < totalPages ? (
+          {validCurrentPage < totalPages ? (
             <a
               href={getPageUrl(totalPages)}
               aria-label="Go to last page"

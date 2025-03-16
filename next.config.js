@@ -19,6 +19,16 @@ const nextConfig = {
     // Disable ESLint checking during builds
     ignoreDuringBuilds: true,
   },
+  // Add experimental features
+  experimental: {
+    optimizeCss: true, // Enable CSS optimization now that we have critters
+    scrollRestoration: true,
+  },
+  // Improve module resolution
+  webpack: (config, { isServer }) => {
+    // Add any necessary webpack configurations
+    return config;
+  },
 };
 
 module.exports = nextConfig;
