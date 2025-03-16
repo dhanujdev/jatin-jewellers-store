@@ -1,4 +1,4 @@
-import { ArrowLeftRight, Award, Package, Shield, Truck } from 'lucide-react';
+import { ArrowLeftRight, Award, Package, Shield, Truck, Lock } from 'lucide-react';
 
 const promises = [
   {
@@ -17,9 +17,9 @@ const promises = [
     icon: Award,
   },
   {
-    title: "Free Shipping & Insurance",
-    description: "Enjoy free, fully insured shipping on all orders.",
-    icon: Truck,
+    title: "Secure Packaging",
+    description: "Every piece is carefully packaged to ensure it reaches you in perfect condition.",
+    icon: Lock,
   },
   {
     title: "Hallmarked Gold",
@@ -61,7 +61,7 @@ export default function OurPromise() {
         <div className="mt-12 text-center">
           <p className="text-gray-600 max-w-3xl mx-auto">
             At Jatin Jewellers, we take pride in our commitment to quality, transparency, and customer satisfaction.
-            Our lab-grown diamonds are ethically sourced, environmentally friendly, and indistinguishable from mined diamonds.
+            Our fine diamond jewelry is crafted with precision and care, ensuring each piece is a timeless treasure to be cherished for generations.
           </p>
         </div>
       </div>

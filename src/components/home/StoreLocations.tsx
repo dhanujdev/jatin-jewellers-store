@@ -31,7 +31,7 @@ export default function StoreLocations() {
       <div
         className="absolute inset-0 bg-cover bg-center z-0 opacity-20"
         style={{
-          backgroundImage: "url('https://ext.same-assets.com/402991632/1540291210.jpeg')"
+          backgroundImage: "url('/products/rings/rings-030/image.jpg')"
         }}
       ></div>
       <div className="container mx-auto px-4 relative z-10">

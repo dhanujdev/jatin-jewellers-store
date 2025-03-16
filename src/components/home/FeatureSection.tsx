@@ -1,4 +1,4 @@
-import { Award, Gem, Truck, RotateCcw } from 'lucide-react';
+import { Award, Gem, Truck, RotateCcw, Shield } from 'lucide-react';
 
 const features = [
   {
@@ -15,9 +15,9 @@ const features = [
   },
   {
     id: 3,
-    icon: <Truck className="h-10 w-10 text-gold" />,
-    title: "Free Shipping",
-    description: "Enjoy complimentary shipping on all orders within India, securely packaged."
+    icon: <Shield className="h-10 w-10 text-gold" />,
+    title: "Lifetime Warranty",
+    description: "We stand behind our quality with a lifetime warranty on all our fine jewelry pieces."
   },
   {
     id: 4,
