@@ -166,8 +166,8 @@ export default function Header() {
               <Sheet>
                 <SheetTrigger asChild>
                   <button className="flex items-center space-x-1 menu-link">
-                    <Menu size={18} />
-                    <span className="ml-1">Categories</span>
+                    <span>Categories</span>
+                    <ChevronDown size={16} />
                   </button>
                 </SheetTrigger>
                 <SheetContent side="left" className="w-[350px] p-0">
