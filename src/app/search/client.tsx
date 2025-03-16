@@ -15,7 +15,6 @@ interface SearchResult {
   category: string;
   slug: string;
   description: string;
-  tags: string[];
 }
 
 interface PaginationData {
@@ -29,74 +28,36 @@ interface PaginationData {
 }
 
 interface SearchClientProps {
-  allProducts: SearchResult[];
-  initialPagination: PaginationData;
+  initialQuery: string;
+  results: SearchResult[];
+  pagination: PaginationData;
 }
 
 export default function SearchClient({
-  allProducts,
-  initialPagination
+  initialQuery = '',
+  results = [],
+  pagination = {
+    total: 0,
+    pageCount: 1,
+    currentPage: 1,
+    perPage: 12,
+    from: 0,
+    to: 0,
+    hasMorePages: false
+  }
 }: SearchClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const queryFromParams = searchParams?.get('q') || '';
+  const effectiveInitialQuery = initialQuery || queryFromParams;
   
-  const initialQuery = searchParams.get('q') || '';
-  const initialPage = parseInt(searchParams.get('page') || '1', 10);
-  
-  const [query, setQuery] = useState(initialQuery);
-  const [currentPage, setCurrentPage] = useState(initialPage);
-  const [results, setResults] = useState<SearchResult[]>([]);
+  const [query, setQuery] = useState(effectiveInitialQuery);
   const [isSearching, setIsSearching] = useState(false);
-  const [pagination, setPagination] = useState({
-    ...initialPagination,
-    currentPage: initialPage
-  });
-
-  // Perform client-side search when query or page changes
+  
+  // Update query when initialQuery or search params change
   useEffect(() => {
-    if (query.trim().length > 2) {
-      setIsSearching(true);
-      
-      // Search products
-      const searchTerm = query.toLowerCase();
-      const filteredProducts = allProducts.filter(product => {
-        return (
-          product.name.toLowerCase().includes(searchTerm) ||
-          product.description.toLowerCase().includes(searchTerm) ||
-          product.tags.some(tag => tag.toLowerCase().includes(searchTerm))
-        );
-      });
-      
-      // Calculate pagination
-      const perPage = 12;
-      const total = filteredProducts.length;
-      const pageCount = Math.ceil(total / perPage);
-      const from = (currentPage - 1) * perPage;
-      const to = Math.min(from + perPage, total);
-      
-      // Get paginated results
-      const paginatedResults = filteredProducts.slice(from, to);
-      
-      setResults(paginatedResults);
-      setPagination({
-        total,
-        pageCount,
-        currentPage,
-        perPage,
-        from: from + 1,
-        to,
-        hasMorePages: currentPage < pageCount
-      });
-      
-      setIsSearching(false);
-    } else {
-      setResults([]);
-      setPagination({
-        ...initialPagination,
-        currentPage
-      });
-    }
-  }, [query, currentPage, allProducts, initialPagination]);
+    setQuery(effectiveInitialQuery);
+  }, [effectiveInitialQuery]);
 
   // Handle search form submission
   const handleSearch = (e: React.FormEvent) => {
@@ -104,9 +65,7 @@ export default function SearchClient({
     
     if (query.trim().length > 2) {
       setIsSearching(true);
-      setCurrentPage(1);
-      
-      // Update URL with search query
+      // Update URL with search query and reset to page 1
       const params = new URLSearchParams();
       params.set('q', query);
       params.set('page', '1');
@@ -117,20 +76,10 @@ export default function SearchClient({
 
   // Handle pagination
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    
-    // Update URL with page
     const params = new URLSearchParams();
-    params.set('q', query);
+    params.set('q', effectiveInitialQuery);
     params.set('page', page.toString());
-    
     router.push(`/search?${params.toString()}`);
-    
-    // Scroll to top of results
-    window.scrollTo({
-      top: document.getElementById('search-results')?.offsetTop || 0,
-      behavior: 'smooth'
-    });
   };
 
   // Generate pagination links
@@ -223,64 +172,65 @@ export default function SearchClient({
             Search
           </button>
         </div>
-        {query.trim().length > 0 && query.trim().length < 3 && (
+        {query && query.trim().length > 0 && query.trim().length < 3 && (
           <p className="mt-2 text-sm text-gray-500">Please enter at least 3 characters to search</p>
         )}
       </form>
       
       {/* Search Results */}
-      <div id="search-results">
-        {isSearching ? (
-          <div className="text-center py-12">
-            <p className="text-gray-600">Searching...</p>
+      {isSearching ? (
+        <div className="text-center py-12">
+          <p className="text-gray-600">Searching...</p>
+        </div>
+      ) : results && results.length > 0 ? (
+        <div>
+          <p className="mb-6 text-gray-600">
+            Showing {pagination.from}-{pagination.to} of {pagination.total} results for "{effectiveInitialQuery}"
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+            {results.map((product: SearchResult) => (
+              <Link
+                href={`/product/${product.category}/${product.slug}`}
+                key={product.id}
+                className="group bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow"
+              >
+                <div className="relative h-64 overflow-hidden">
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    width={300}
+                    height={300}
+                    className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
+                    loader={customImageLoader}
+                  />
+                </div>
+                <div className="p-4">
+                  <h3 className="text-gray-800 font-medium mb-1 group-hover:text-gold-dark transition-colors">
+                    {product.name}
+                  </h3>
+                  <p className="text-gold font-semibold mb-2">{product.formattedPrice}</p>
+                  <p className="text-gray-600 text-sm line-clamp-2">{product.description}</p>
+                </div>
+              </Link>
+            ))}
           </div>
-        ) : results.length > 0 ? (
-          <div>
-            <p className="mb-6 text-gray-600">
-              Showing {pagination.from}-{pagination.to} of {pagination.total} results for "{query}"
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
-              {results.map((product: SearchResult) => (
-                <Link
-                  href={`/product/${product.category}/${product.slug}`}
-                  key={product.id}
-                  className="group bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow"
-                >
-                  <div className="relative h-64 overflow-hidden">
-                    <Image
-                      src={product.image}
-                      alt={product.name}
-                      width={300}
-                      height={300}
-                      className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
-                      loader={customImageLoader}
-                    />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="text-gray-800 font-medium mb-1 group-hover:text-gold-dark transition-colors">
-                      {product.name}
-                    </h3>
-                    <p className="text-gold font-semibold mb-2">{product.formattedPrice}</p>
-                    <p className="text-gray-600 text-sm line-clamp-2">{product.description}</p>
-                  </div>
-                </Link>
-              ))}
+          
+          {/* Pagination */}
+          {pagination.pageCount > 1 && (
+            <div className="flex justify-center space-x-2">
+              {renderPaginationLinks()}
             </div>
-            
-            {/* Pagination */}
-            {pagination.pageCount > 1 && (
-              <div className="flex justify-center space-x-2">
-                {renderPaginationLinks()}
-              </div>
-            )}
-          </div>
-        ) : query.trim().length >= 3 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-600">No results found for "{query}"</p>
-            <p className="mt-2 text-gray-500">Try different keywords or browse our categories</p>
-          </div>
-        ) : null}
-      </div>
+          )}
+        </div>
+      ) : effectiveInitialQuery ? (
+        <div className="text-center py-12">
+          <p className="text-gray-600">No results found for "{effectiveInitialQuery}"</p>
+        </div>
+      ) : (
+        <div className="text-center py-12">
+          <p className="text-gray-600">Enter a search term to find products</p>
+        </div>
+      )}
     </div>
   );
 } 
