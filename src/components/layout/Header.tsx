@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
-import { Menu, Search, ShoppingBag, User, Heart, X, ChevronDown, Phone, MapPin } from "lucide-react";
+import { Menu, Search, X, ChevronDown, Phone, MapPin } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { getCategoryInfo } from "@/lib/products";
 import { useState, useEffect } from "react";
@@ -26,6 +25,7 @@ const categories = categoryInfo.categories.map(categoryId =>
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Handle scroll event to change header appearance
   useEffect(() => {
@@ -40,7 +40,7 @@ export default function Header() {
   return (
     <>
       {/* Top Bar */}
-      <div className="hidden md:block bg-gold text-white py-2">
+      <div className="hidden md:block bg-luxury-black text-luxury-white py-2">
         <div className="container mx-auto px-4 flex justify-between items-center text-sm">
           <div className="flex items-center space-x-6">
             <div className="flex items-center">
@@ -49,101 +49,61 @@ export default function Header() {
             </div>
             <div className="flex items-center">
               <MapPin size={14} className="mr-2" />
-              <span>Diamond District, New Delhi</span>
+              <span>Road No.36, Jubilee Hills, Hyderabad</span>
             </div>
           </div>
           <div className="flex items-center space-x-4">
-            <Link href="/about-us" className="hover:underline">About Us</Link>
-            <Link href="/contact" className="hover:underline">Contact</Link>
-            <Link href="/faqs" className="hover:underline">FAQs</Link>
+            <Link href="/about-us" className="hover:text-gold transition-colors">About Us</Link>
+            <Link href="/contact" className="hover:text-gold transition-colors">Contact</Link>
           </div>
         </div>
       </div>
 
       {/* Main Header */}
-      <header className={`sticky top-0 z-50 bg-white border-b border-gray-200 transition-all duration-300 ${isScrolled ? 'shadow-md py-2' : 'py-4'}`}>
-        <div className="container mx-auto px-4 flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center">
-            <span className="text-xl md:text-2xl font-bold text-gold" style={{ fontFamily: 'var(--font-cormorant)' }}>
-              JATIN JEWELLERS
-            </span>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
-            {categories.map((category) => (
-              <Link
-                key={category.name}
-                href={category.href}
-                className="text-sm font-medium text-gray-700 hover:text-gold transition-colors"
-              >
-                {category.name}
-              </Link>
-            ))}
-            <Link href="/collections/bestsellers" className="text-sm font-medium text-gray-700 hover:text-gold transition-colors">
-              Bestsellers
-            </Link>
-            <Link href="/collections/new-arrivals" className="text-sm font-medium text-gray-700 hover:text-gold transition-colors">
-              New Arrivals
-            </Link>
-          </nav>
-
-          {/* Utility Icons */}
-          <div className="flex items-center space-x-3 md:space-x-4">
-            <Link href="/search" className="hidden md:flex w-8 h-8 items-center justify-center text-gray-700 hover:text-gold transition-colors">
-              <Search size={20} />
-            </Link>
-            <Link href="/wishlist" className="hidden md:flex w-8 h-8 items-center justify-center text-gray-700 hover:text-gold transition-colors">
-              <Heart size={20} />
-            </Link>
-            <Link href="/account" className="w-8 h-8 flex items-center justify-center text-gray-700 hover:text-gold transition-colors">
-              <User size={20} />
-            </Link>
-            <Link href="/cart" className="w-8 h-8 flex items-center justify-center text-gray-700 hover:text-gold transition-colors">
-              <ShoppingBag size={20} />
-            </Link>
-
-            {/* Mobile Menu */}
+      <header className={`sticky top-0 z-50 bg-luxury-white border-b border-luxury-lightgray transition-all duration-300 ${isScrolled ? 'shadow-md py-2' : 'py-4'}`}>
+        <div className="container mx-auto px-4">
+          {/* Logo centered */}
+          <div className="flex items-center justify-between md:justify-center relative">
+            {/* Mobile Menu Trigger - Left side */}
             <Sheet>
               <SheetTrigger asChild className="md:hidden">
-                <button className="w-8 h-8 flex items-center justify-center text-gray-700">
-                  <Menu size={20} />
+                <button className="absolute left-0 w-8 h-8 flex items-center justify-center text-luxury-black">
+                  <Menu size={24} />
                 </button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[85%] sm:w-[350px] p-0">
+              <SheetContent side="left" className="w-[85%] sm:w-[350px] p-0">
                 <div className="flex flex-col h-full">
-                  <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-gold text-white">
-                    <Link href="/" className="text-xl font-playfair font-bold">
+                  <div className="p-4 border-b border-luxury-lightgray flex items-center justify-between bg-luxury-black text-luxury-white">
+                    <span className="text-xl font-cormorant font-bold">
                       JATIN JEWELLERS
-                    </Link>
-                    <SheetClose className="rounded-full w-8 h-8 flex items-center justify-center hover:bg-gold-dark">
+                    </span>
+                    <SheetClose className="rounded-full w-8 h-8 flex items-center justify-center hover:bg-luxury-gray">
                       <X size={18} />
                     </SheetClose>
                   </div>
                   
                   {/* Mobile Search */}
-                  <div className="px-4 py-3 border-b border-gray-200">
+                  <div className="px-4 py-3 border-b border-luxury-lightgray">
                     <div className="relative">
                       <input 
                         type="text" 
                         placeholder="Search for jewelry..." 
-                        className="w-full py-2 pl-10 pr-4 bg-gray-100 rounded-full text-sm focus:outline-none focus:ring-1 focus:ring-gold"
+                        className="w-full py-2 pl-10 pr-4 bg-luxury-lightgray rounded-none text-sm focus:outline-none focus:ring-1 focus:ring-gold"
                       />
-                      <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+                      <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-luxury-gray" />
                     </div>
                   </div>
                   
                   {/* Mobile Navigation */}
                   <nav className="flex-1 overflow-y-auto">
                     <div className="py-2">
-                      <h3 className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Categories</h3>
+                      <h3 className="px-4 py-2 text-xs font-semibold text-luxury-gray uppercase tracking-wider">Categories</h3>
                       <div className="space-y-1">
                         {categories.map((category) => (
                           <SheetClose asChild key={category.name}>
                             <Link
                               href={category.href}
-                              className="block px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gold transition-colors"
+                              className="menu-link-mobile"
                             >
                               {category.name}
                             </Link>
@@ -152,7 +112,7 @@ export default function Header() {
                         <SheetClose asChild>
                           <Link
                             href="/collections/bestsellers"
-                            className="block px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gold transition-colors"
+                            className="menu-link-mobile"
                           >
                             Bestsellers
                           </Link>
@@ -160,7 +120,7 @@ export default function Header() {
                         <SheetClose asChild>
                           <Link
                             href="/collections/new-arrivals"
-                            className="block px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gold transition-colors"
+                            className="menu-link-mobile"
                           >
                             New Arrivals
                           </Link>
@@ -168,46 +128,17 @@ export default function Header() {
                       </div>
                     </div>
                     
-                    <div className="py-2 border-t border-gray-200">
-                      <h3 className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Account</h3>
+                    <div className="py-2 border-t border-luxury-lightgray">
+                      <h3 className="px-4 py-2 text-xs font-semibold text-luxury-gray uppercase tracking-wider">Information</h3>
                       <div className="space-y-1">
                         <SheetClose asChild>
-                          <Link href="/wishlist" className="flex items-center px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gold">
-                            <Heart size={18} className="mr-3" />
-                            Wishlist
-                          </Link>
-                        </SheetClose>
-                        <SheetClose asChild>
-                          <Link href="/account" className="flex items-center px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gold">
-                            <User size={18} className="mr-3" />
-                            My Account
-                          </Link>
-                        </SheetClose>
-                        <SheetClose asChild>
-                          <Link href="/cart" className="flex items-center px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gold">
-                            <ShoppingBag size={18} className="mr-3" />
-                            Shopping Bag
-                          </Link>
-                        </SheetClose>
-                      </div>
-                    </div>
-
-                    <div className="py-2 border-t border-gray-200">
-                      <h3 className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Information</h3>
-                      <div className="space-y-1">
-                        <SheetClose asChild>
-                          <Link href="/about-us" className="block px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gold">
+                          <Link href="/about-us" className="menu-link-mobile">
                             About Us
                           </Link>
                         </SheetClose>
                         <SheetClose asChild>
-                          <Link href="/contact" className="block px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gold">
+                          <Link href="/contact" className="menu-link-mobile">
                             Contact
-                          </Link>
-                        </SheetClose>
-                        <SheetClose asChild>
-                          <Link href="/faqs" className="block px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gold">
-                            FAQs
                           </Link>
                         </SheetClose>
                       </div>
@@ -215,20 +146,101 @@ export default function Header() {
                   </nav>
                   
                   {/* Footer */}
-                  <div className="p-4 border-t border-gray-200">
+                  <div className="p-4 border-t border-luxury-lightgray">
                     <div className="flex items-center justify-center space-x-4 mb-4">
-                      <a href="tel:+919999999999" className="flex items-center text-sm text-gray-700">
+                      <a href="tel:+919999999999" className="flex items-center text-sm text-luxury-black">
                         <Phone size={16} className="mr-2" />
                         +91 99999 99999
                       </a>
                     </div>
-                    <Link href="/contact" className="block w-full py-3 px-4 bg-gold text-white text-center rounded-md font-medium">
+                    <Link href="/contact" className="block w-full py-3 px-4 bg-luxury-black text-luxury-white text-center font-medium">
                       Contact Us
                     </Link>
                   </div>
                 </div>
               </SheetContent>
             </Sheet>
+            
+            {/* Desktop Menu - Left side */}
+            <nav className="hidden md:flex absolute left-0 space-x-8">
+              <Sheet>
+                <SheetTrigger asChild>
+                  <button className="flex items-center space-x-1 menu-link">
+                    <Menu size={18} />
+                    <span className="ml-1">Categories</span>
+                  </button>
+                </SheetTrigger>
+                <SheetContent side="left" className="w-[350px] p-0">
+                  <div className="flex flex-col h-full">
+                    <div className="p-4 border-b border-luxury-lightgray flex items-center justify-between bg-luxury-black text-luxury-white">
+                      <span className="text-xl font-cormorant font-bold">
+                        Categories
+                      </span>
+                      <SheetClose className="rounded-full w-8 h-8 flex items-center justify-center hover:bg-luxury-gray">
+                        <X size={18} />
+                      </SheetClose>
+                    </div>
+                    
+                    <nav className="flex-1 overflow-y-auto p-4">
+                      <div className="space-y-4">
+                        {categories.map((category) => (
+                          <SheetClose asChild key={category.name}>
+                            <Link
+                              href={category.href}
+                              className="block text-lg font-medium text-luxury-black hover:text-gold transition-colors"
+                            >
+                              {category.name}
+                            </Link>
+                          </SheetClose>
+                        ))}
+                        <div className="border-t border-luxury-lightgray pt-4 mt-6">
+                          <SheetClose asChild>
+                            <Link
+                              href="/collections/bestsellers"
+                              className="block text-lg font-medium text-luxury-black hover:text-gold transition-colors mb-4"
+                            >
+                              Bestsellers
+                            </Link>
+                          </SheetClose>
+                          <SheetClose asChild>
+                            <Link
+                              href="/collections/new-arrivals"
+                              className="block text-lg font-medium text-luxury-black hover:text-gold transition-colors"
+                            >
+                              New Arrivals
+                            </Link>
+                          </SheetClose>
+                        </div>
+                      </div>
+                    </nav>
+                  </div>
+                </SheetContent>
+              </Sheet>
+              
+              <Link href="/collections/bestsellers" className="menu-link">
+                Bestsellers
+              </Link>
+              <Link href="/collections/new-arrivals" className="menu-link">
+                New Arrivals
+              </Link>
+            </nav>
+
+            {/* Logo */}
+            <Link href="/" className="flex items-center justify-center">
+              <span className="text-xl md:text-3xl font-bold text-gold" style={{ fontFamily: 'var(--font-cormorant)' }}>
+                JATIN JEWELLERS
+              </span>
+            </Link>
+
+            {/* Search Button - Right side */}
+            <div className="absolute right-0">
+              <Link 
+                href="/search" 
+                className="px-4 py-2 bg-luxury-black text-luxury-white text-sm hover:bg-gold transition-colors duration-300"
+              >
+                Search
+              </Link>
+            </div>
           </div>
         </div>
       </header>
