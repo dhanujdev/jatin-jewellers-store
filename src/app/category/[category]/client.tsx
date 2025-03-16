@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import type { ChangeEvent } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -45,7 +46,6 @@ export default function CategoryClient({
   const searchParams = useSearchParams();
   
   const [sortValue, setSortValue] = useState(currentSort);
-  const [currentPage, setCurrentPage] = useState(paginationData.currentPage);
   
   // Sort options
   const sortOptions = [
@@ -57,24 +57,13 @@ export default function CategoryClient({
   ];
   
   // Handle sort change
-  const handleSortChange = (value: string) => {
-    setSortValue(value);
+  const handleSortChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setSortValue(e.target.value);
     
     // Update URL with new sort parameter
     const params = new URLSearchParams(searchParams.toString());
-    params.set('sort', value);
+    params.set('sort', e.target.value);
     params.set('page', '1'); // Reset to page 1 when sorting changes
-    
-    router.replace(`/category/${categoryName}?${params.toString()}`);
-  };
-  
-  // Handle page change
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    
-    // Update URL with new page parameter
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('page', page.toString());
     
     router.replace(`/category/${categoryName}?${params.toString()}`);
   };
@@ -104,7 +93,7 @@ export default function CategoryClient({
           <select
             id="sort-select"
             value={sortValue}
-            onChange={(e) => handleSortChange(e.target.value)}
+            onChange={handleSortChange}
             data-testid="sort-select"
           >
             {sortOptions.map((option) => (
@@ -152,43 +141,11 @@ export default function CategoryClient({
       {/* Pagination */}
       {paginationData.totalPages > 1 && (
         <div data-testid="pagination">
-          <div className="border-t border-b border-gray-200 mb-8">
-            <div className="flex justify-center items-center space-x-2 py-4">
-              <button
-                disabled={currentPage === 1}
-                className={`px-3 py-2 rounded-md ${
-                  currentPage === 1 ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-100'
-                }`}
-                onClick={() => handlePageChange(currentPage - 1)}
-                aria-label="Previous page"
-                key="pagination-prev"
-              >
-                « Prev
-              </button>
-              {Array.from({ length: paginationData.totalPages }, (_, i) => i + 1).map((page) => (
-                <button
-                  key={`pagination-page-${page}`}
-                  className={`px-3 py-2 rounded-md ${
-                    page === currentPage ? 'bg-gold text-white font-medium' : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                  onClick={() => handlePageChange(page)}
-                >
-                  {page}
-                </button>
-              ))}
-              <button
-                disabled={currentPage === paginationData.totalPages}
-                className={`px-3 py-2 rounded-md ${
-                  currentPage === paginationData.totalPages ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-100'
-                }`}
-                onClick={() => handlePageChange(currentPage + 1)}
-                aria-label="Next page"
-                key="pagination-next"
-              >
-                Next »
-              </button>
-            </div>
-          </div>
+          <Pagination
+            totalPages={paginationData.totalPages}
+            currentPage={paginationData.currentPage}
+            baseUrl={`/category/${categoryName}`}
+          />
         </div>
       )}
     </div>
