@@ -18,6 +18,8 @@ A modern e-commerce platform for Jatin Jewellers, showcasing a wide range of jew
 - **Newsletter Subscription**: Email subscription for updates and promotions
 - **SEO Optimized**: Built with SEO best practices in mind
 - **Enhanced Mobile Experience**: Optimized mobile navigation, swipeable carousels, and touch-friendly interfaces
+- **Pagination**: Browse products with easy-to-use pagination controls
+- **Redis Caching**: Fast image loading with Redis-based caching system
 
 ## 📱 Mobile View Enhancements (v1.1.0)
 
@@ -31,6 +33,15 @@ The latest release includes significant improvements to the mobile experience:
 - **Responsive Typography**: Adjusted font sizes and spacing for better readability on small screens
 - **Performance Optimizations**: Improved loading and rendering for mobile devices
 
+## 🚀 New Features (v1.6.0)
+
+The latest release includes significant improvements to performance and user experience:
+
+- **Pagination**: Browse through large product collections with intuitive pagination controls
+- **Redis Image Caching**: Faster image loading with Redis-based caching system
+- **Improved Search**: Enhanced search functionality with pagination support
+- **Performance Optimizations**: Reduced page load times and improved overall responsiveness
+
 ## 🛠️ Tech Stack
 
 ### Frontend
@@ -41,6 +52,11 @@ The latest release includes significant improvements to the mobile experience:
 - **Radix UI**: Unstyled, accessible UI components
 - **Embla Carousel**: Lightweight carousel component
 - **Lucide React**: Beautiful & consistent icon set
+
+### Backend & Infrastructure
+- **Redis**: In-memory data store for caching
+- **Docker**: Containerization for development environment
+- **Docker Compose**: Multi-container Docker applications
 
 ### Build Tools
 - **Turbopack**: Incremental bundler and build system
@@ -75,6 +91,7 @@ Data files:
 ### Prerequisites
 - Node.js 18+ or Bun runtime
 - npm, yarn, pnpm, or bun package manager
+- Docker and Docker Compose (for Redis)
 
 ### Installation
 
@@ -95,7 +112,12 @@ pnpm install
 bun install
 ```
 
-3. Run the development server:
+3. Start Redis using Docker Compose:
+```bash
+docker-compose up -d
+```
+
+4. Run the development server:
 ```bash
 npm run dev
 # or
@@ -106,7 +128,7 @@ pnpm dev
 bun dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## 📁 Project Structure
 
@@ -119,6 +141,8 @@ jatin-jewellers-store/
 │   │   ├── product/   # Product pages
 │   │   ├── category/  # Category pages
 │   │   ├── search/    # Search functionality
+│   │   ├── api/       # API routes
+│   │   │   └── image/ # Image caching API
 │   │   └── layout.tsx # Root layout
 │   ├── components/    # React components
 │   │   ├── home/      # Homepage-specific components
@@ -126,7 +150,12 @@ jatin-jewellers-store/
 │   │   └── ui/        # Reusable UI components
 │   ├── data/          # JSON data files
 │   ├── lib/           # Utility functions
+│   │   ├── redis.ts   # Redis client and caching utilities
+│   │   ├── imageLoader.ts # Custom image loader with caching
+│   │   └── products.ts # Product data utilities with pagination
 │   └── types/         # TypeScript type definitions
+├── docker-compose.yml # Docker Compose configuration for Redis
+├── .env.local         # Environment variables
 ├── tailwind.config.ts # Tailwind CSS configuration
 ├── next.config.js     # Next.js configuration
 └── package.json       # Project dependencies and scripts
@@ -150,6 +179,12 @@ The project is configured for deployment on Netlify:
 3. The build output is in the `build` directory
 4. The site is deployed as a static site (SSG)
 
+### Redis Configuration for Production
+
+For production deployment, you'll need to:
+1. Set up a Redis instance (e.g., Redis Cloud, AWS ElastiCache)
+2. Configure the `REDIS_URL` environment variable in your deployment platform
+
 ## 🧩 Components
 
 ### Layout Components
@@ -165,6 +200,9 @@ The project is configured for deployment on Netlify:
 - **StoreLocations**: Physical store information
 - **FaqSection**: Frequently asked questions
 - **Newsletter**: Email subscription form
+
+### UI Components
+- **Pagination**: Component for navigating through paginated content
 
 ## 🎨 Styling
 
@@ -191,6 +229,7 @@ Custom hooks for responsive design:
 
 ## 📋 Release History
 
+- **v1.6.0**: Added pagination and Redis caching for improved performance
 - **v1.1.2**: Fix: Remove unused hooks and imports for cleaner code
 - **v1.1.1**: Fix: Add 'use client' directives for Next.js components using client-side functionality
 - **v1.1.0**: Mobile view enhancements and responsive design improvements

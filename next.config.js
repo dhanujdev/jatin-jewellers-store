@@ -2,8 +2,10 @@
 const nextConfig = {
   output: 'export',
   images: {
-    // All images are now stored locally in the public directory
+    // Configure image loader
     unoptimized: true,
+    // Allow domains for external images if needed
+    domains: [],
   },
   // Indicate the output directory to Same.dev
   distDir: 'build',
