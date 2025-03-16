@@ -35,12 +35,12 @@ const categories = [
 
 export default function CategorySection() {
   return (
-    <section className="py-16 md:py-24 bg-luxury-white">
+    <section className="py-16 md:py-24 bg-white">
       <div className="container mx-auto px-4">
         <h2 className="section-title">
           Shop by Category
         </h2>
-        <p className="text-luxury-gray max-w-2xl mx-auto text-center mb-12">
+        <p className="text-gray-600 max-w-2xl mx-auto text-center mb-12">
           Explore our curated collections of fine diamond jewelry for every occasion
         </p>
         
@@ -59,16 +59,16 @@ export default function CategorySection() {
                   height={500}
                   className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-luxury-black/20 group-hover:bg-luxury-black/30 transition-colors duration-300"></div>
+                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors duration-300"></div>
               </div>
               <div className="category-card-content">
-                <h3 className="text-xl md:text-2xl font-medium mb-1 text-luxury-white">
+                <h3 className="text-xl md:text-2xl font-medium mb-1 text-white">
                   {category.name}
                 </h3>
-                <p className="text-luxury-white/90 text-sm md:text-base">
+                <p className="text-white/90 text-sm md:text-base">
                   {category.description}
                 </p>
-                <span className="mt-4 inline-block text-luxury-white border-b border-luxury-white/70 pb-0.5 text-sm group-hover:border-luxury-white transition-colors">
+                <span className="mt-4 inline-block text-white border-b border-white/70 pb-0.5 text-sm group-hover:border-white transition-colors">
                   Shop Now
                 </span>
               </div>
@@ -87,9 +87,9 @@ export default function CategorySection() {
               />
               <div className="absolute inset-0 bg-black-gradient"></div>
               <div className="absolute bottom-0 left-0 p-8 md:p-10">
-                <h3 className="text-2xl md:text-3xl font-medium mb-2 text-luxury-white">Wedding Collection</h3>
-                <p className="text-luxury-white/90 mb-4 max-w-md">Timeless pieces for your special day and beyond</p>
-                <Link href="/collections/wedding" className="inline-block bg-luxury-white text-luxury-black px-6 py-2 hover:bg-gold hover:text-luxury-white transition-colors">
+                <h3 className="text-2xl md:text-3xl font-medium mb-2 text-white">Wedding Collection</h3>
+                <p className="text-white/90 mb-4 max-w-md">Timeless pieces for your special day and beyond</p>
+                <Link href="/collections/wedding" className="inline-block bg-white text-black px-6 py-2 hover:bg-gold hover:text-white transition-colors">
                   Explore Collection
                 </Link>
               </div>
@@ -104,9 +104,9 @@ export default function CategorySection() {
               />
               <div className="absolute inset-0 bg-black-gradient"></div>
               <div className="absolute bottom-0 left-0 p-8 md:p-10">
-                <h3 className="text-2xl md:text-3xl font-medium mb-2 text-luxury-white">Bespoke Collection</h3>
-                <p className="text-luxury-white/90 mb-4 max-w-md">Custom-designed jewelry for your unique style</p>
-                <Link href="/collections/bespoke" className="inline-block bg-luxury-white text-luxury-black px-6 py-2 hover:bg-gold hover:text-luxury-white transition-colors">
+                <h3 className="text-2xl md:text-3xl font-medium mb-2 text-white">Bespoke Collection</h3>
+                <p className="text-white/90 mb-4 max-w-md">Custom-designed jewelry for your unique style</p>
+                <Link href="/collections/bespoke" className="inline-block bg-white text-black px-6 py-2 hover:bg-gold hover:text-white transition-colors">
                   Explore Collection
                 </Link>
               </div>

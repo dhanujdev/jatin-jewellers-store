@@ -118,9 +118,8 @@ export default {
         'float': 'float 3s ease-in-out infinite',
   		},
       fontFamily: {
-        sans: ['var(--font-inter)', 'sans-serif'],
-        playfair: ['var(--font-playfair)', 'serif'],
-        cormorant: ['Cormorant Garamond', 'serif'],
+        sans: ['Inter', 'sans-serif'],
+        serif: ['Cormorant Garamond', 'serif'],
       },
       backgroundImage: {
         'gold-gradient': 'linear-gradient(45deg, #B38728 0%, #D4AF37 50%, #B38728 100%)',
