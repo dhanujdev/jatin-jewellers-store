@@ -48,7 +48,7 @@ export default function HeroSection() {
                   className="object-cover"
                 />
                 <div className="absolute inset-0 bg-black-gradient" />
-                <div className={`absolute inset-0 flex flex-col justify-center text-luxury-white px-6 md:px-16 ${
+                <div className={`absolute inset-0 flex flex-col justify-center text-white px-6 md:px-16 ${
                   slide.position === 'left' 
                     ? 'items-start text-left md:ml-12' 
                     : slide.position === 'right' 
@@ -64,7 +64,7 @@ export default function HeroSection() {
                     </p>
                     <Link
                       href={slide.buttonLink}
-                      className="inline-block bg-gold hover:bg-gold-dark text-luxury-white px-8 py-3 transition-colors shadow-md"
+                      className="inline-block bg-gold hover:bg-gold-dark text-white px-8 py-3 transition-colors shadow-md"
                     >
                       {slide.buttonText}
                     </Link>
@@ -78,13 +78,13 @@ export default function HeroSection() {
           {heroSlides.map((_, index) => (
             <button
               key={index}
-              className="w-3 h-3 rounded-full bg-luxury-white/50 hover:bg-luxury-white/80 transition-colors"
+              className="w-3 h-3 rounded-full bg-white/50 hover:bg-white/80 transition-colors"
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}
         </div>
-        <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 text-luxury-white bg-luxury-black/20 hover:bg-gold border-none" />
-        <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 text-luxury-white bg-luxury-black/20 hover:bg-gold border-none" />
+        <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 text-white bg-black/20 hover:bg-gold border-none" />
+        <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 text-white bg-black/20 hover:bg-gold border-none" />
       </Carousel>
     </section>
   );

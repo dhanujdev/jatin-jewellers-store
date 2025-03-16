@@ -59,40 +59,39 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
-}
-
-@layer base {
+  
   * {
     @apply border-border;
-  }
-  body {
-    @apply bg-luxury-white text-luxury-black;
-  }
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-cormorant;
   }
 }
 
 @layer components {
+  body {
+    @apply bg-white text-black;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+  
   .gold-text {
     @apply text-gold;
   }
   
   .gold-button {
-    @apply inline-block bg-gold hover:bg-gold-dark text-luxury-white px-8 py-3 rounded-none transition-colors shadow-sm;
+    @apply inline-block bg-gold hover:bg-gold-dark text-white px-8 py-3 rounded-none transition-colors shadow-sm;
   }
   
   .gold-outline-button {
-    @apply border-2 border-gold text-gold px-6 py-3 rounded-none hover:bg-gold hover:text-luxury-white transition-colors duration-300 font-medium;
+    @apply border-2 border-gold text-gold px-6 py-3 rounded-none hover:bg-gold hover:text-white transition-colors duration-300 font-medium;
   }
   
   .black-button {
-    @apply inline-block bg-luxury-black hover:bg-luxury-gray text-luxury-white px-8 py-3 rounded-none transition-colors shadow-sm;
+    @apply inline-block bg-black hover:bg-luxury-gray text-white px-8 py-3 rounded-none transition-colors shadow-sm;
   }
   
   .section-title {
-    @apply text-3xl md:text-4xl font-medium text-center mb-4 relative pb-4 mx-auto;
-    font-family: var(--font-cormorant);
+    @apply text-3xl md:text-4xl font-medium text-center mb-4 relative pb-4 mx-auto font-serif;
   }
   
   .section-title::after {
@@ -101,7 +100,7 @@
   }
   
   .product-card {
-    @apply group bg-luxury-white rounded-none overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full flex flex-col border border-luxury-lightgray;
+    @apply bg-white rounded-none overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full flex flex-col border border-gray-200;
   }
   
   .product-card-image {
@@ -113,7 +112,7 @@
   }
   
   .product-title {
-    @apply text-luxury-black font-medium mb-1 line-clamp-2;
+    @apply text-black font-medium mb-1 line-clamp-2;
   }
   
   .product-price {
@@ -133,7 +132,7 @@
   }
   
   .shimmer {
-    @apply relative overflow-hidden bg-luxury-lightgray;
+    @apply relative overflow-hidden bg-gray-200;
   }
   
   .shimmer::after {
@@ -162,14 +161,14 @@
   }
   
   .menu-link {
-    @apply text-sm font-medium text-luxury-black hover:text-gold transition-colors;
+    @apply text-sm font-medium text-black hover:text-gold transition-colors;
   }
   
   .menu-link-mobile {
-    @apply block px-4 py-3 text-base font-medium text-luxury-black hover:bg-luxury-lightgray hover:text-gold transition-colors;
+    @apply block px-4 py-3 text-base font-medium text-black hover:bg-gray-100 hover:text-gold transition-colors;
   }
   
   .social-icon {
-    @apply text-luxury-white hover:text-gold transition-colors;
+    @apply text-white hover:text-gold transition-colors;
   }
 }

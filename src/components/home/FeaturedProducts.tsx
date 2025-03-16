@@ -53,9 +53,9 @@ export default function FeaturedProducts() {
           height={300}
           className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
         />
-        <div className="absolute inset-0 bg-luxury-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         <div className="absolute bottom-4 left-0 right-0 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0">
-          <span className="bg-gold text-luxury-white text-xs px-4 py-2">View Details</span>
+          <span className="bg-gold text-white text-xs px-4 py-2">View Details</span>
         </div>
       </div>
       <div className="product-card-content">
@@ -68,12 +68,12 @@ export default function FeaturedProducts() {
   );
 
   return (
-    <section className="py-16 md:py-20 bg-luxury-white">
+    <section className="py-16 md:py-20 bg-white">
       <div className="container mx-auto px-4">
         <h2 className="section-title">
           Bestsellers
         </h2>
-        <p className="text-luxury-gray max-w-2xl mx-auto text-center mb-12">
+        <p className="text-gray-600 max-w-2xl mx-auto text-center mb-12">
           Discover our most popular custom diamond jewelry pieces, crafted with precision and elegance
         </p>
 
@@ -88,8 +88,8 @@ export default function FeaturedProducts() {
               ))}
             </CarouselContent>
             <div className="flex justify-center mt-8 gap-2">
-              <CarouselPrevious className="static relative transform-none mx-1 bg-luxury-white border-luxury-lightgray text-luxury-gray hover:bg-gold hover:text-luxury-white hover:border-gold" />
-              <CarouselNext className="static relative transform-none mx-1 bg-luxury-white border-luxury-lightgray text-luxury-gray hover:bg-gold hover:text-luxury-white hover:border-gold" />
+              <CarouselPrevious className="static relative transform-none mx-1 bg-white border-gray-200 text-gray-500 hover:bg-gold hover:text-white hover:border-gold" />
+              <CarouselNext className="static relative transform-none mx-1 bg-white border-gray-200 text-gray-500 hover:bg-gold hover:text-white hover:border-gold" />
             </div>
           </Carousel>
         </div>
