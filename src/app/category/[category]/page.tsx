@@ -47,29 +47,62 @@ export function generateStaticParams() {
   }));
 }
 
+// Sort products based on sort parameter
+function sortProducts(products: any[], sortBy: string = 'default') {
+  const sortedProducts = [...products];
+  
+  switch (sortBy) {
+    case 'price-asc':
+      return sortedProducts.sort((a, b) => a.price - b.price);
+    case 'price-desc':
+      return sortedProducts.sort((a, b) => b.price - a.price);
+    case 'name-asc':
+      return sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
+    case 'name-desc':
+      return sortedProducts.sort((a, b) => b.name.localeCompare(a.name));
+    default:
+      return sortedProducts;
+  }
+}
+
 export default function CategoryPage({ 
-  params
+  params,
+  searchParams
 }: { 
-  params: { category: string }
+  params: { category: string },
+  searchParams: { page?: string, sort?: string }
 }) {
   const { category } = params;
+  const page = parseInt(searchParams.page || '1', 10);
+  const sort = searchParams.sort || 'default';
   
   // Get category display name
   const categoryName = categoryDisplayNames[category] || category.charAt(0).toUpperCase() + category.slice(1);
   
-  // Get ALL products for this category (not just the first page)
+  // Get ALL products for this category
   const allCategoryProducts = (productsByCategory as any)[category] || [];
   
   // Format all products for display
   const formattedProducts = formatProductsForDisplay(allCategoryProducts);
   
-  // Calculate pagination data for initial view
-  const totalProducts = allCategoryProducts.length;
+  // Sort products
+  const sortedProducts = sortProducts(formattedProducts, sort);
+  
+  // Calculate pagination data
   const pageSize = 12;
+  const totalProducts = sortedProducts.length;
   const totalPages = Math.ceil(totalProducts / pageSize);
   
+  // Ensure page is within valid range
+  const validPage = Math.max(1, Math.min(page, totalPages));
+  
+  // Get products for current page
+  const startIndex = (validPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const paginatedProducts = sortedProducts.slice(startIndex, endIndex);
+  
   const paginationData = {
-    currentPage: 1,
+    currentPage: validPage,
     totalPages,
     totalItems: totalProducts,
     pageSize
@@ -80,9 +113,9 @@ export default function CategoryPage({
       <CategoryClient
         categoryName={category}
         categoryDisplayName={categoryName}
-        products={formattedProducts}
+        products={paginatedProducts}
         paginationData={paginationData}
-        currentSort="default"
+        currentSort={sort}
       />
     </Suspense>
   );
