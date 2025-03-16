@@ -25,7 +25,6 @@ const categories = categoryInfo.categories.map(categoryId =>
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Handle scroll event to change header appearance
   useEffect(() => {
@@ -124,18 +123,16 @@ export default function Header() {
                     </div>
                     
                     <div className="flex-1 overflow-y-auto p-4">
-                      <div className="space-y-4">
-                        {categories.map((category) => (
-                          <SheetClose asChild key={category.name}>
-                            <Link
-                              href={category.href}
-                              className="block text-lg font-medium text-black hover:text-gold transition-colors"
-                            >
-                              {category.name}
-                            </Link>
-                          </SheetClose>
-                        ))}
-                      </div>
+                      {categories.map((category) => (
+                        <SheetClose asChild key={category.name}>
+                          <Link
+                            href={category.href}
+                            className="block text-lg font-medium text-black hover:text-gold transition-colors mb-4"
+                          >
+                            {category.name}
+                          </Link>
+                        </SheetClose>
+                      ))}
                     </div>
                   </div>
                 </SheetContent>
