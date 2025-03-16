@@ -1,6 +1,7 @@
 import { getCategoryInfo, getProductsByCategory, Product, getAllProducts } from '@/lib/products';
 import CategoryClient from './client';
 import productsByCategory from '@/data/products-by-category.json';
+import { Suspense } from 'react';
 
 // Function to generate a random price between 10000 and 200000
 function generateRandomPrice(): number {
@@ -19,6 +20,7 @@ function formatProductsForDisplay(products: Product[]) {
     return {
       id: product.id,
       name: product.title,
+      description: product.description || '',
       price,
       formattedPrice: formatPrice(price),
       image: product.imagePath,
@@ -69,16 +71,19 @@ export default function CategoryPage({
   const paginationData = {
     currentPage: 1,
     totalPages,
-    totalProducts,
+    totalItems: totalProducts,
     pageSize
   };
   
   return (
-    <CategoryClient
-      categoryName={categoryName}
-      allProducts={formattedProducts}
-      paginationData={paginationData}
-      currentSort="default"
-    />
+    <Suspense fallback={<div className="container mx-auto px-4 py-12 text-center">Loading category...</div>}>
+      <CategoryClient
+        categoryName={category}
+        categoryDisplayName={categoryName}
+        products={formattedProducts}
+        paginationData={paginationData}
+        currentSort="default"
+      />
+    </Suspense>
   );
 } 
