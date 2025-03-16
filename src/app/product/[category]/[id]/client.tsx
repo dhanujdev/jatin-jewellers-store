@@ -121,7 +121,7 @@ export default function ProductClient({
         {/* Product Info */}
         <div>
           <h1 className="text-3xl font-playfair text-gray-800 mb-4">{product.name}</h1>
-          <p className="text-2xl text-gold font-semibold mb-6">{product.formattedPrice}</p>
+          <p className="text-2xl text-gold font-semibold mb-6">Product ID: {product.id}</p>
           
           <div className="mb-8">
             <p className="text-gray-600 leading-relaxed">{product.description}</p>
@@ -237,10 +237,9 @@ export default function ProductClient({
                   />
                 </div>
                 <div className="p-4">
-                  <h3 className="text-gray-800 font-medium mb-1 group-hover:text-gold-dark transition-colors">
+                  <h3 className="text-gray-800 font-medium group-hover:text-gold-dark transition-colors">
                     {relatedProduct.name}
                   </h3>
-                  <p className="text-gold font-semibold">{relatedProduct.formattedPrice}</p>
                 </div>
               </Link>
             ))}
