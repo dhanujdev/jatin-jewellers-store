@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import customImageLoader from '@/lib/imageLoader';
+import { MessageCircle, Instagram } from 'lucide-react';
 
 interface Material {
   name: string;
@@ -56,9 +57,14 @@ export default function ProductClient({
     setQuantity(parseInt(e.target.value));
   };
 
-  const handleAddToCart = () => {
-    alert(`Added ${quantity} ${product.name} to cart!`);
-    // Implement actual cart functionality here
+  const handleWhatsAppInquiry = () => {
+    const message = `Hello, I'm interested in ${product.name} (Product ID: ${product.id}). I would like to inquire about ${quantity} piece(s).`;
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/+919999999999?text=${encodedMessage}`, '_blank');
+  };
+
+  const handleInstagramDM = () => {
+    window.open('https://www.instagram.com/direct/t/jatinjewellers', '_blank');
   };
 
   return (
@@ -146,12 +152,23 @@ export default function ProductClient({
               </select>
             </div>
             
-            <button
-              onClick={handleAddToCart}
-              className="w-full bg-gold text-white py-3 px-6 rounded-md hover:bg-gold-dark transition-colors focus:outline-none focus:ring-2 focus:ring-gold focus:ring-opacity-50"
-            >
-              Add to Cart
-            </button>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <button
+                onClick={handleWhatsAppInquiry}
+                className="flex items-center justify-center bg-green-600 text-white py-3 px-6 rounded-md hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+              >
+                <MessageCircle className="mr-2 h-5 w-5" />
+                WhatsApp Inquiry
+              </button>
+              
+              <button
+                onClick={handleInstagramDM}
+                className="flex items-center justify-center bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white py-3 px-6 rounded-md hover:from-purple-600 hover:via-pink-600 hover:to-orange-600 transition-colors focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50"
+              >
+                <Instagram className="mr-2 h-5 w-5" />
+                Instagram DM
+              </button>
+            </div>
           </div>
           
           <div className="border-t border-gray-200 pt-6">
