@@ -3,9 +3,15 @@
 ## Recent Enhancements (March 2024)
 
 ### Performance and Stability Improvements
+- **Enhanced Pagination**: 
+  - Added "First" and "Last" page navigation buttons with improved accessibility
+  - Implemented page number truncation for better UX with large page counts
+  - Added item range display showing current items and total count
+  - Improved handling of edge cases (single page, no items)
+  - Enhanced URL generation with custom base path support
 - **Suspense Boundaries**: Added Suspense boundaries around components using client-side hooks like `useSearchParams()` to improve rendering and prevent build errors
 - **Pagination Component**: Fixed duplicate key warnings in pagination components by implementing unique keys for each button
-- **Test Suite Improvements**: Updated test files to match the latest component implementations, ensuring all 270 tests pass successfully
+- **Test Suite Improvements**: Updated test files to match the latest component implementations, ensuring all tests pass successfully
 - **Build Process**: Resolved build errors related to client-side navigation and data fetching
 - **Code Quality**: Enhanced type safety and component props consistency across the application
 
@@ -31,6 +37,7 @@ A modern e-commerce platform for Jatin Jewellers, showcasing a wide range of jew
 - **Enhanced Mobile Experience**: Optimized mobile navigation, swipeable carousels, and touch-friendly interfaces
 - **Pagination**: Browse products with easy-to-use pagination controls
 - **Redis Caching**: Fast image loading with Redis-based caching system
+- **Advanced Pagination**: Intuitive navigation with First, Previous, Next, and Last page controls, along with page numbers and product count display
 
 ## 📱 Mobile View Enhancements (v1.1.0)
 
@@ -44,11 +51,15 @@ The latest release includes significant improvements to the mobile experience:
 - **Responsive Typography**: Adjusted font sizes and spacing for better readability on small screens
 - **Performance Optimizations**: Improved loading and rendering for mobile devices
 
-## 🚀 New Features (v1.6.0)
+## 🚀 New Features (v1.6.1)
 
-The latest release includes significant improvements to performance and user experience:
+The latest release includes significant improvements to navigation and user experience:
 
-- **Pagination**: Browse through large product collections with intuitive pagination controls
+- **Enhanced Pagination**: 
+  - First and Last page navigation buttons for quick jumps
+  - Improved visual feedback for current page
+  - Product count display showing items per page
+  - Optimized for both desktop and mobile views
 - **Redis Image Caching**: Faster image loading with Redis-based caching system
 - **Improved Search**: Enhanced search functionality with pagination support
 - **Performance Optimizations**: Reduced page load times and improved overall responsiveness
@@ -236,6 +247,7 @@ Custom hooks for responsive design:
 
 ## 📋 Release History
 
+- **v1.6.1**: Enhanced pagination with First/Last page navigation and improved UX
 - **v1.6.0**: Added pagination and Redis caching for improved performance
 - **v1.1.2**: Fix: Remove unused hooks and imports for cleaner code
 - **v1.1.1**: Fix: Add 'use client' directives for Next.js components using client-side functionality

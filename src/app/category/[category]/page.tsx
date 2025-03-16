@@ -65,16 +65,17 @@ function sortProducts(products: any[], sortBy: string = 'default') {
   }
 }
 
-export default function CategoryPage({ 
+export default async function CategoryPage({ 
   params,
   searchParams
 }: { 
   params: { category: string },
   searchParams: { page?: string, sort?: string }
 }) {
-  const { category } = params;
-  const page = parseInt(searchParams.page || '1', 10);
-  const sort = searchParams.sort || 'default';
+  // Await the parameters
+  const { category } = await Promise.resolve(params);
+  const page = parseInt(await Promise.resolve(searchParams.page || '1'), 10);
+  const sort = await Promise.resolve(searchParams.sort || 'default');
   
   // Get category display name
   const categoryName = categoryDisplayNames[category] || category.charAt(0).toUpperCase() + category.slice(1);

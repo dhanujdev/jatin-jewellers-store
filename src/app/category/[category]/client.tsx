@@ -84,8 +84,12 @@ export default function CategoryClient({
         {categoryDisplayName}
       </h1>
       
-      {/* Sort Options */}
-      <div className="flex justify-end mb-6">
+      {/* Sort Options and Product Count */}
+      <div className="flex justify-between items-center mb-6">
+        <div className="text-gray-700">
+          Showing {((paginationData.currentPage - 1) * paginationData.pageSize) + 1}-
+          {Math.min(paginationData.currentPage * paginationData.pageSize, paginationData.totalItems)} of {paginationData.totalItems} products
+        </div>
         <div className="flex items-center">
           <label htmlFor="sort-select" className="mr-2 text-gray-700">
             Sort by:
@@ -104,6 +108,17 @@ export default function CategoryClient({
           </select>
         </div>
       </div>
+      
+      {/* Top Pagination */}
+      {paginationData.totalPages > 1 && (
+        <div className="mb-6" data-testid="pagination-top">
+          <Pagination
+            totalPages={paginationData.totalPages}
+            currentPage={paginationData.currentPage}
+            baseUrl={`/category/${categoryName}`}
+          />
+        </div>
+      )}
       
       {/* Products Grid */}
       <div id="products-grid" className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8" data-testid="products-grid">

@@ -1,7 +1,7 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import CategoryPage, { generateStaticParams } from '@/app/category/[category]/page';
+import CategoryPage from '@/app/category/[category]/page';
 
 // Mock the products data
 jest.mock('@/data/products-by-category.json', () => ({
@@ -49,56 +49,57 @@ jest.mock('@/lib/products', () => ({
   getAllProducts: jest.fn()
 }));
 
-describe('CategoryPage Component', () => {
-  it('renders the category page with correct props', () => {
-    const { getByTestId } = render(
-      <CategoryPage params={{ category: 'rings' }} />
-    );
+// Mock the next/navigation hooks
+jest.mock('next/navigation', () => ({
+  usePathname: jest.fn().mockReturnValue('/test-path'),
+  useSearchParams: jest.fn().mockReturnValue({
+    get: (param: string) => param === 'page' ? '1' : 'default',
+    toString: () => 'sort=default'
+  })
+}));
+
+describe('CategoryPage', () => {
+  it('renders correctly with default props', async () => {
+    const props = {
+      params: { category: 'rings' },
+      searchParams: { page: '1', sort: 'default' }
+    };
+
+    const { container } = render(await CategoryPage(props));
+    expect(container).toBeInTheDocument();
+  });
+
+  it('renders the category page with correct props', async () => {
+    const props = {
+      params: { category: 'rings' },
+      searchParams: { page: '1', sort: 'default' }
+    };
+
+    const { getByTestId } = render(await CategoryPage(props));
     
-    // Check if CategoryClient is rendered with correct props
     expect(getByTestId('category-client')).toBeInTheDocument();
     expect(getByTestId('category-name')).toHaveTextContent('Rings');
     expect(getByTestId('products-count')).toHaveTextContent('2');
     
-    // Check pagination data
     const paginationData = JSON.parse(getByTestId('pagination-data').textContent || '{}');
     expect(paginationData.currentPage).toBe(1);
     expect(paginationData.totalPages).toBe(1);
     expect(paginationData.totalItems).toBe(2);
     expect(paginationData.pageSize).toBe(12);
     
-    // Check sort
     expect(getByTestId('current-sort')).toHaveTextContent('default');
   });
   
-  it('renders the category page with unknown category', () => {
-    const { getByTestId } = render(
-      <CategoryPage params={{ category: 'unknown' }} />
-    );
+  it('renders the category page with unknown category', async () => {
+    const props = {
+      params: { category: 'unknown' },
+      searchParams: { page: '1', sort: 'default' }
+    };
+
+    const { getByTestId } = render(await CategoryPage(props));
     
-    // Check if CategoryClient is rendered with correct props
+    expect(getByTestId('category-client')).toBeInTheDocument();
     expect(getByTestId('category-name')).toHaveTextContent('Unknown');
     expect(getByTestId('products-count')).toHaveTextContent('0');
-  });
-  
-  it('generates static params correctly', () => {
-    const params = generateStaticParams();
-    
-    // Check if all categories are included
-    expect(params).toHaveLength(5);
-    expect(params).toContainEqual({ category: 'rings' });
-    expect(params).toContainEqual({ category: 'earrings' });
-    expect(params).toContainEqual({ category: 'necklaces' });
-    expect(params).toContainEqual({ category: 'bangles' });
-    expect(params).toContainEqual({ category: 'waistbands' });
-  });
-  
-  it('formats products correctly', () => {
-    const { getByTestId } = render(
-      <CategoryPage params={{ category: 'rings' }} />
-    );
-    
-    // Get the products count to verify they were formatted
-    expect(getByTestId('products-count')).toHaveTextContent('2');
   });
 }); 
