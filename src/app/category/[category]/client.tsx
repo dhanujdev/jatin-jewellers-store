@@ -289,10 +289,9 @@ export default function CategoryClient({
                 />
               </div>
               <div className="p-4">
-                <h3 className="text-gray-800 font-medium mb-1 group-hover:text-gold-dark transition-colors">
+                <h3 className="text-gray-800 font-medium group-hover:text-gold-dark transition-colors">
                   {product.name}
                 </h3>
-                <p className="text-gold font-semibold">{product.formattedPrice}</p>
               </div>
             </Link>
           ))
