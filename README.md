@@ -26,10 +26,7 @@ A modern e-commerce platform for Jatin Jewellers, showcasing a wide range of jew
 - **Category Filtering**: Filter products by category
 - **Product Details**: Detailed product pages with high-quality images and specifications
 - **Featured Products**: Showcase of featured products on the homepage
-- **Testimonials**: Customer testimonials section
 - **Store Locations**: Information about physical store locations
-- **FAQ Section**: Frequently asked questions about products and services
-- **Newsletter Subscription**: Email subscription for updates and promotions
 - **SEO Optimized**: Built with SEO best practices in mind
 - **Enhanced Mobile Experience**: Optimized mobile navigation, swipeable carousels, and touch-friendly interfaces
 - **Pagination**: Browse products with easy-to-use pagination controls
@@ -209,11 +206,7 @@ For production deployment, you'll need to:
 - **HeroSection**: Main banner with featured content
 - **CategorySection**: Display of product categories
 - **FeaturedProducts**: Showcase of featured products
-- **OurPromise**: Brand promises and guarantees
-- **Testimonials**: Customer reviews
 - **StoreLocations**: Physical store information
-- **FaqSection**: Frequently asked questions
-- **Newsletter**: Email subscription form
 
 ### UI Components
 - **Pagination**: Component for navigating through paginated content

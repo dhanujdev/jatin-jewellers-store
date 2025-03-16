@@ -26,7 +26,15 @@
       "@/*": [
         "./src/*"
       ]
-    }
+    },
+    "types": ["react", "react-dom", "node"],
+    "baseUrl": ".",
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "alwaysStrict": true
   },
   "include": [
     "**/*.ts",

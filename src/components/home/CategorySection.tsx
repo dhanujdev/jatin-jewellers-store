@@ -35,7 +35,11 @@ const categories = [
 
 export default function CategorySection() {
   return (
-    <section className="py-16 md:py-24 bg-white text-center">
+    <section 
+      className="py-16 md:py-24 bg-white text-center"
+      role="region"
+      aria-label="Product Categories"
+    >
       <div className="container mx-auto px-4">
         <h2 className="section-title text-center">
           Shop by Category

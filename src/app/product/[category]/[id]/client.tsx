@@ -43,7 +43,6 @@ export default function ProductClient({
   categoryDisplayName
 }: ProductClientProps) {
   const [selectedImage, setSelectedImage] = useState(product.image);
-  const [quantity, setQuantity] = useState(1);
 
   // Generate additional images for demo purposes
   const additionalImages = [
@@ -51,15 +50,6 @@ export default function ProductClient({
     `/images/${product.category}/additional-1.jpg`,
     `/images/${product.category}/additional-2.jpg`,
   ];
-
-  const handleQuantityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setQuantity(parseInt(e.target.value));
-  };
-
-  const handleAddToCart = () => {
-    alert(`Added ${quantity} ${product.name} to cart!`);
-    // Implement actual cart functionality here
-  };
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -123,33 +113,6 @@ export default function ProductClient({
           
           <div className="mb-8">
             <p className="text-gray-600 leading-relaxed">{product.description}</p>
-          </div>
-          
-          <div className="mb-8">
-            <div className="flex items-center mb-4">
-              <label htmlFor="quantity" className="mr-4 text-gray-700">
-                Quantity:
-              </label>
-              <select
-                id="quantity"
-                value={quantity}
-                onChange={handleQuantityChange}
-                className="border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-gold"
-              >
-                {[1, 2, 3, 4, 5].map((num) => (
-                  <option key={num} value={num}>
-                    {num}
-                  </option>
-                ))}
-              </select>
-            </div>
-            
-            <button
-              onClick={handleAddToCart}
-              className="w-full bg-gold text-white py-3 px-6 rounded-md hover:bg-gold-dark transition-colors focus:outline-none focus:ring-2 focus:ring-gold focus:ring-opacity-50"
-            >
-              Add to Cart
-            </button>
           </div>
           
           <div className="border-t border-gray-200 pt-6">

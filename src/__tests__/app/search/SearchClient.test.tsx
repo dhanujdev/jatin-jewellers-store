@@ -35,7 +35,7 @@ jest.mock('@/lib/imageLoader', () => ({
 }));
 
 // Mock product data
-const mockProducts = [
+const mockResults = [
   { 
     id: '1', 
     name: 'Diamond Ring', 
@@ -44,8 +44,7 @@ const mockProducts = [
     image: '/images/rings/diamond-ring.jpg', 
     category: 'rings', 
     slug: 'diamond-ring',
-    description: 'A beautiful diamond ring',
-    tags: ['diamond', 'ring', 'wedding']
+    description: 'A beautiful diamond ring'
   },
   { 
     id: '2', 
@@ -55,8 +54,7 @@ const mockProducts = [
     image: '/images/necklaces/gold-necklace.jpg', 
     category: 'necklaces', 
     slug: 'gold-necklace',
-    description: 'An elegant gold necklace',
-    tags: ['gold', 'necklace', 'luxury']
+    description: 'An elegant gold necklace'
   },
   { 
     id: '3', 
@@ -66,8 +64,7 @@ const mockProducts = [
     image: '/images/bracelets/silver-bracelet.jpg', 
     category: 'bracelets', 
     slug: 'silver-bracelet',
-    description: 'A stylish silver bracelet',
-    tags: ['silver', 'bracelet', 'casual']
+    description: 'A stylish silver bracelet'
   },
   { 
     id: '4', 
@@ -77,19 +74,18 @@ const mockProducts = [
     image: '/images/earrings/pearl-earrings.jpg', 
     category: 'earrings', 
     slug: 'pearl-earrings',
-    description: 'Classic pearl earrings',
-    tags: ['pearl', 'earrings', 'elegant']
+    description: 'Classic pearl earrings'
   },
 ];
 
 // Default pagination data
 const defaultPagination = {
-  total: mockProducts.length,
+  total: mockResults.length,
   pageCount: 1,
   currentPage: 1,
   perPage: 12,
   from: 1,
-  to: mockProducts.length,
+  to: mockResults.length,
   hasMorePages: false,
 };
 
@@ -108,7 +104,7 @@ describe('SearchClient', () => {
   });
   
   it('renders search input correctly', () => {
-    render(<SearchClient allProducts={mockProducts} initialPagination={defaultPagination} />);
+    render(<SearchClient initialQuery="" results={[]} pagination={defaultPagination} />);
     
     // Check for search input
     expect(screen.getByPlaceholderText('Search for jewelry...')).toBeInTheDocument();
@@ -118,7 +114,7 @@ describe('SearchClient', () => {
   });
   
   it('displays no results initially when search query is empty', () => {
-    render(<SearchClient allProducts={mockProducts} initialPagination={defaultPagination} />);
+    render(<SearchClient initialQuery="" results={[]} pagination={defaultPagination} />);
     
     // Should not show any results initially
     expect(screen.queryByText('Showing')).not.toBeInTheDocument();
@@ -132,7 +128,7 @@ describe('SearchClient', () => {
       toString: () => 'q=Diamond&page=1'
     });
     
-    render(<SearchClient allProducts={mockProducts} initialPagination={defaultPagination} />);
+    render(<SearchClient initialQuery="Diamond" results={mockResults.filter(p => p.name.includes('Diamond'))} pagination={defaultPagination} />);
     
     // Check that the search input has the correct value
     expect(screen.getByPlaceholderText('Search for jewelry...')).toHaveValue('Diamond');
@@ -149,7 +145,7 @@ describe('SearchClient', () => {
       toString: () => 'q=Platinum&page=1'
     });
     
-    render(<SearchClient allProducts={mockProducts} initialPagination={defaultPagination} />);
+    render(<SearchClient initialQuery="Platinum" results={[]} pagination={defaultPagination} />);
     
     // Check that the search input has the correct value
     expect(screen.getByPlaceholderText('Search for jewelry...')).toHaveValue('Platinum');
@@ -160,7 +156,7 @@ describe('SearchClient', () => {
   });
   
   it('updates URL when search is performed', () => {
-    render(<SearchClient allProducts={mockProducts} initialPagination={defaultPagination} />);
+    render(<SearchClient initialQuery="" results={[]} pagination={defaultPagination} />);
     
     // Enter search term
     const searchInput = screen.getByPlaceholderText('Search for jewelry...');
@@ -177,7 +173,7 @@ describe('SearchClient', () => {
   });
   
   it('shows message for short search terms', () => {
-    render(<SearchClient allProducts={mockProducts} initialPagination={defaultPagination} />);
+    render(<SearchClient initialQuery="" results={[]} pagination={defaultPagination} />);
     
     // Enter a short search term
     const searchInput = screen.getByPlaceholderText('Search for jewelry...');
@@ -188,7 +184,7 @@ describe('SearchClient', () => {
   });
   
   it('clears search input when clear button is clicked', () => {
-    render(<SearchClient allProducts={mockProducts} initialPagination={defaultPagination} />);
+    render(<SearchClient initialQuery="" results={[]} pagination={defaultPagination} />);
     
     // Enter search term
     const searchInput = screen.getByPlaceholderText('Search for jewelry...');

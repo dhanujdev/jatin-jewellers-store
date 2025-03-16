@@ -13,21 +13,22 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
-// Mock the next/image component
-jest.mock('next/image', () => ({
-  __esModule: true,
-  default: (props: any) => {
-    // eslint-disable-next-line jsx-a11y/alt-text, @next/next/no-img-element
-    const { loader, ...imgProps } = props;
-    return <img {...imgProps} data-testid={`image-${imgProps.src.split('/').pop()}`} />;
-  },
-}));
+// Mock Next.js Image component
+jest.mock('next/image', () => {
+  const MockImage = ({ src, alt, className }: { src: string; alt: string; className?: string }) => (
+    <img src={src} alt={alt} className={className} />
+  );
+  MockImage.displayName = 'MockImage';
+  return MockImage;
+});
 
 // Mock the next/link component
 jest.mock('next/link', () => {
-  return function MockLink({ children, ...props }: any) {
-    return <a {...props} data-testid={props.href ? `link-${props.href.replace(/\//g, '-')}` : undefined}>{children}</a>;
-  };
+  const MockLink = ({ href, children }: { href: string; children: any }) => (
+    <a href={href}>{children}</a>
+  );
+  MockLink.displayName = 'MockLink';
+  return MockLink;
 });
 
 // Mock the customImageLoader
@@ -173,21 +174,6 @@ describe('ProductClient Component', () => {
     });
   });
 
-  it('renders social media buttons', () => {
-    render(
-      <ProductClient 
-        product={mockProduct} 
-        relatedProducts={mockRelatedProducts}
-        categoryDisplayName="Rings"
-      />
-    );
-    
-    // Find the Add to Cart button
-    const addToCartButton = screen.getByRole('button', { name: /Add to Cart/i });
-    
-    expect(addToCartButton).toBeInTheDocument();
-  });
-
   it('renders related products', () => {
     render(
       <ProductClient 
@@ -198,7 +184,7 @@ describe('ProductClient Component', () => {
     );
     
     // Find the related products section
-    const relatedProductsSection = screen.getByRole('heading', { name: /You may also like/i }).parentElement;
+    const relatedProductsSection = screen.getByRole('heading', { name: /You May Also Like/i }).parentElement;
     
     // Check for related products by their names within that section
     mockRelatedProducts.forEach(product => {
@@ -218,12 +204,13 @@ describe('ProductClient Component', () => {
     // Find the navigation element
     const nav = screen.getByRole('navigation');
     
-    // Use within to search within the navigation element
-    const homeLink = within(nav).getByTestId('link--');
-    expect(homeLink).toHaveTextContent('Home');
+    // Check for Home link
+    const homeLink = within(nav).getByRole('link', { name: 'Home' });
+    expect(homeLink).toHaveAttribute('href', '/');
     
-    const categoryLink = within(nav).getByTestId('link--category-rings');
-    expect(categoryLink).toHaveTextContent('Rings');
+    // Check for category link
+    const categoryLink = within(nav).getByRole('link', { name: 'Rings' });
+    expect(categoryLink).toHaveAttribute('href', '/category/rings');
     
     // The product name should be in the last breadcrumb item
     const breadcrumbItems = within(nav).getAllByRole('listitem');
@@ -253,59 +240,6 @@ describe('ProductClient Component', () => {
     // Check if the main image has been updated
     const mainImage = screen.getAllByRole('img')[0];
     expect(mainImage).toHaveAttribute('src', '/images/rings/additional-1.jpg');
-  });
-
-  it('changes quantity when dropdown is changed', () => {
-    render(
-      <ProductClient 
-        product={mockProduct} 
-        relatedProducts={mockRelatedProducts}
-        categoryDisplayName="Rings"
-      />
-    );
-    
-    // Find the quantity dropdown
-    const quantitySelect = screen.getByLabelText('Quantity:');
-    
-    // Change the quantity to 3
-    fireEvent.change(quantitySelect, { target: { value: '3' } });
-    
-    // Check if the quantity has been updated
-    expect(quantitySelect).toHaveValue('3');
-  });
-
-  it('opens WhatsApp with correct message when WhatsApp button is clicked', () => {
-    // Mock window.open
-    const mockOpen = jest.fn();
-    window.open = mockOpen;
-    
-    render(<ProductClient product={mockProduct} relatedProducts={mockRelatedProducts} categoryDisplayName="Rings" />);
-    
-    // Find the WhatsApp button
-    const addToCartButton = screen.getByRole('button', { name: /Add to Cart/i });
-    
-    // Click the WhatsApp button
-    fireEvent.click(addToCartButton);
-    
-    // Check if window.open was called with the correct URL
-    expect(window.alert).toHaveBeenCalled();
-  });
-  
-  it('opens Instagram DM when Instagram button is clicked', () => {
-    // Mock window.open
-    const mockOpen = jest.fn();
-    window.open = mockOpen;
-    
-    render(<ProductClient product={mockProduct} relatedProducts={mockRelatedProducts} categoryDisplayName="Rings" />);
-    
-    // Find the Instagram button
-    const addToCartButton = screen.getByRole('button', { name: /Add to Cart/i });
-    
-    // Click the Instagram button
-    fireEvent.click(addToCartButton);
-    
-    // Check if window.open was called with the correct URL
-    expect(window.alert).toHaveBeenCalled();
   });
 
   it('allows navigation between tabs', () => {

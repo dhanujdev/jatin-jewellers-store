@@ -2,12 +2,17 @@ import allProducts from '../data/all-products.json';
 import productsByCategory from '../data/products-by-category.json';
 import categories from '../data/categories.json';
 
+export interface Material {
+  name: string;
+  description: string;
+}
+
 export interface Product {
   id: string;
   title: string;
   category: string;
   description: string;
-  materials: string[];
+  materials: (string | Material)[];
   features: string;
   colors: string[];
   occasions: string[];
@@ -41,14 +46,13 @@ export interface PaginatedResult<T> {
   };
 }
 
-export interface Material {
-  name: string;
-  description: string;
-}
-
 // Get all products
 export function getAllProducts(): Product[] {
-  return allProducts as Product[];
+  const products = allProducts as any[];
+  return products.map(p => ({
+    ...p,
+    slug: p.id // Ensure slug is set
+  }));
 }
 
 // Get products by category with pagination
@@ -57,7 +61,7 @@ export function getProductsByCategory(
   page: number = 1,
   perPage: number = 12
 ): PaginatedResult<Product> {
-  const products = (productsByCategory as any)[category] || [];
+  const products = ((productsByCategory as any)[category] || []) as Product[];
   const total = products.length;
   
   // Calculate pagination values
@@ -66,7 +70,10 @@ export function getProductsByCategory(
   const to = Math.min(from + perPage - 1, total - 1);
   
   // Get paginated data
-  const paginatedData = products.slice(from, to + 1);
+  const paginatedData = products.slice(from, to + 1).map(p => ({
+    ...p,
+    slug: p.id // Ensure slug is set
+  }));
   
   return {
     data: paginatedData,
@@ -84,7 +91,13 @@ export function getProductsByCategory(
 
 // Get product by ID
 export function getProductById(id: string): Product | null {
-  return getAllProducts().find(product => product.id === id) || null;
+  const product = getAllProducts().find(product => product.id === id);
+  if (!product) return null;
+  
+  return {
+    ...product,
+    slug: product.id // Ensure slug is set
+  };
 }
 
 // Get featured products (random selection from all categories)
@@ -139,15 +152,17 @@ export function searchProducts(
 }
 
 // Get related products (same category, excluding the current product)
-export function getRelatedProducts(productId: string, count: number = 4): Product[] {
-  const product = getProductById(productId);
-  if (!product) return [];
+export function getRelatedProducts(productId: string): Product[] {
+  const currentProduct = getProductById(productId);
+  if (!currentProduct) return [];
   
-  const sameCategory = (productsByCategory as any)[product.category]
-    .filter((p: Product) => p.id !== productId);
-  
-  const shuffled = [...sameCategory].sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, count);
+  const sameCategory = ((productsByCategory as any)[currentProduct.category] || []) as Product[];
+  const filtered = sameCategory.filter(p => p.id !== productId);
+  const shuffled = [...filtered].sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, 4).map(p => ({
+    ...p,
+    slug: p.id // Ensure slug is set
+  }));
 }
 
 // Helper function to create pagination metadata

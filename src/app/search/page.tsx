@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { getAllProducts } from '@/lib/products';
 import SearchClient from './client';
+import { SearchParams } from '@/types';
 
 // Function to generate a random price between 10000 and 200000
 function generateRandomPrice(): number {
@@ -30,7 +31,7 @@ function formatAllProducts(products: any[]) {
   });
 }
 
-export default function SearchPage() {
+export default function SearchPage({ searchParams }: { searchParams: SearchParams }) {
   // Get all products for client-side search
   const allProducts = getAllProducts();
   const formattedProducts = formatAllProducts(allProducts);
@@ -47,11 +48,15 @@ export default function SearchPage() {
   };
   
   return (
-    <Suspense fallback={<div className="container mx-auto px-4 py-12 text-center">Loading search...</div>}>
-      <SearchClient 
-        allProducts={formattedProducts}
-        initialPagination={paginationData}
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-8">Search Products</h1>
+      <SearchClient
+        initialQuery={searchParams.q || ''}
+        results={formattedProducts}
+        pagination={paginationData}
       />
-    </Suspense>
+    </div>
   );
-} 
+}
+
+export const dynamic = 'force-dynamic'; 

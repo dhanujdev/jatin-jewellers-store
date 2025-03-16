@@ -6,6 +6,7 @@
     "dev": "next dev -H 0.0.0.0 --turbopack",
     "dev:redis": "docker-compose up -d && next dev -H 0.0.0.0 --turbopack",
     "build": "next build && mkdir -p dist && cp -r build/* dist/",
+    "type-check": "tsc --noEmit",
     "export": "next export",
     "start": "next start",
     "lint": "next lint",
@@ -36,15 +37,15 @@
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^14.6.1",
     "@types/jest": "^29.5.14",
-    "@types/node": "^20.17.22",
-    "@types/react": "^18.3.18",
-    "@types/react-dom": "^18.3.5",
+    "@types/node": "^22.13.10",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
     "eslint": "^9.21.0",
     "eslint-config-next": "15.1.7",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "postcss": "^8.5.3",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.2"
   }
 }

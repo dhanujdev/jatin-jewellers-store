@@ -6,16 +6,18 @@ import SearchPage from '@/app/search/page';
 // Mock the SearchClient component
 jest.mock('@/app/search/client', () => {
   return function MockSearchClient({ 
-    allProducts, 
-    initialPagination 
+    initialQuery,
+    results,
+    pagination
   }: { 
-    allProducts: any[];
-    initialPagination: any;
+    initialQuery: string;
+    results: any[];
+    pagination: any;
   }) {
     return (
       <div data-testid="search-client">
-        <div data-testid="products-count">{allProducts.length}</div>
-        <div data-testid="pagination-data">{JSON.stringify(initialPagination)}</div>
+        <div data-testid="products-count">{results.length}</div>
+        <div data-testid="pagination-data">{JSON.stringify(pagination)}</div>
       </div>
     );
   };
@@ -54,7 +56,7 @@ jest.mock('react', () => {
 
 describe('SearchPage Component', () => {
   it('renders the search page with correct props', () => {
-    const { getByTestId } = render(<SearchPage />);
+    const { getByTestId } = render(<SearchPage searchParams={{ q: '' }} />);
     
     // Check if SearchClient is rendered with correct props
     expect(getByTestId('search-client')).toBeInTheDocument();
@@ -67,7 +69,7 @@ describe('SearchPage Component', () => {
   });
   
   it('formats products correctly', () => {
-    const { getByTestId } = render(<SearchPage />);
+    const { getByTestId } = render(<SearchPage searchParams={{ q: '' }} />);
     
     // Get the products count to verify they were formatted
     expect(getByTestId('products-count')).toHaveTextContent('2');

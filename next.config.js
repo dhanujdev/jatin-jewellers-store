@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
   images: {
     // Configure image loader
     unoptimized: true,
@@ -13,15 +12,11 @@ const nextConfig = {
   basePath: '',
   trailingSlash: true,
   typescript: {
-    // !! WARN !!
-    // Dangerously allow production builds to successfully complete even if
-    // your project has type errors.
-    // !! WARN !!
+    // Disable type checking during builds
     ignoreBuildErrors: true,
   },
   eslint: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has ESLint errors.
+    // Disable ESLint checking during builds
     ignoreDuringBuilds: true,
   },
 };
