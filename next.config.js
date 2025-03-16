@@ -21,7 +21,7 @@ const nextConfig = {
   },
   // Add experimental features
   experimental: {
-    optimizeCss: true, // Enable CSS optimization now that we have critters
+    optimizeCss: true,
     scrollRestoration: true,
   },
   // Improve module resolution

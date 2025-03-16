@@ -57,7 +57,7 @@ export default function CategoryClient({
   ];
   
   // Handle sort change
-  const handleSortChange = (e: ChangeEvent<HTMLSelectElement>) => {
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSortValue(e.target.value);
     
     // Update URL with new sort parameter
@@ -113,9 +113,12 @@ export default function CategoryClient({
       {paginationData.totalPages > 1 && (
         <div className="mb-6" data-testid="pagination-top">
           <Pagination
-            totalPages={paginationData.totalPages}
             currentPage={paginationData.currentPage}
-            baseUrl={`/category/${categoryName}`}
+            totalPages={paginationData.totalPages}
+            basePath={`/category/${categoryName}`}
+            currentSort={sortValue}
+            totalItems={paginationData.totalItems}
+            pageSize={paginationData.pageSize}
           />
         </div>
       )}
@@ -153,13 +156,16 @@ export default function CategoryClient({
         )}
       </div>
       
-      {/* Pagination */}
+      {/* Bottom Pagination */}
       {paginationData.totalPages > 1 && (
         <div data-testid="pagination">
           <Pagination
-            totalPages={paginationData.totalPages}
             currentPage={paginationData.currentPage}
-            baseUrl={`/category/${categoryName}`}
+            totalPages={paginationData.totalPages}
+            basePath={`/category/${categoryName}`}
+            currentSort={sortValue}
+            totalItems={paginationData.totalItems}
+            pageSize={paginationData.pageSize}
           />
         </div>
       )}

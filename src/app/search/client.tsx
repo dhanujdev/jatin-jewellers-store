@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import customImageLoader from '@/lib/imageLoader';
+import { Pagination } from '@/components/ui/pagination';
 
 interface SearchResult {
   id: string;
@@ -218,7 +219,14 @@ export default function SearchClient({
           {/* Pagination */}
           {pagination.pageCount > 1 && (
             <div className="flex justify-center space-x-2">
-              {renderPaginationLinks()}
+              <Pagination
+                currentPage={pagination.currentPage}
+                totalPages={pagination.pageCount}
+                basePath="/search"
+                currentSort=""
+                totalItems={pagination.total}
+                pageSize={pagination.perPage}
+              />
             </div>
           )}
         </div>
