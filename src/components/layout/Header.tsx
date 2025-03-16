@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Menu, Search, ShoppingBag, User, Heart, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
