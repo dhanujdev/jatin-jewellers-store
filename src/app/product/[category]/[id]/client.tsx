@@ -8,7 +8,8 @@ import {
   Dialog, 
   DialogContent, 
   DialogTrigger,
-  DialogTitle 
+  DialogTitle,
+  DialogClose
 } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 import customImageLoader from '@/lib/imageLoader';
@@ -95,17 +96,15 @@ export default function ProductClient({
                 />
               </div>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-3xl">
+            <DialogContent className="sm:max-w-[90vw] w-[90vw] max-h-[90vh] overflow-auto">
               <DialogTitle className="sr-only">
                 {product.name} - Enlarged View
               </DialogTitle>
-              <div className="relative">
-                <button 
-                  onClick={() => setIsModalOpen(false)}
-                  className="absolute top-2 right-2 bg-white rounded-full p-1 shadow-md hover:bg-gray-100"
-                >
-                  <X className="h-5 w-5" />
-                </button>
+              <DialogClose className="absolute right-4 top-4 rounded-full bg-white p-2 shadow-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-400">
+                <X className="h-5 w-5" />
+                <span className="sr-only">Close</span>
+              </DialogClose>
+              <div className="relative pt-6">
                 <Image
                   src={productImage}
                   alt={product.name}
