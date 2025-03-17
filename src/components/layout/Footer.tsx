@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 
 export default function Footer() {
@@ -31,9 +32,16 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {/* Column 1: About */}
           <div className="text-center">
-            <div className="mb-6">
+            <div className="mb-6 flex flex-col items-center">
+              <Image
+                src="/products/logo.png"
+                alt="Jatin Jewellers"
+                width={60}
+                height={60}
+                className="object-contain mb-3"
+              />
               <span className="text-xl md:text-2xl font-bold text-white font-serif">
-                JATIN JEWELLERS
+                Jatin Jewellers
               </span>
             </div>
           </div>

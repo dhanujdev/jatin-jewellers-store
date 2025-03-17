@@ -78,7 +78,7 @@ describe('Header Component', () => {
     render(<Header />);
     
     // Check if the logo text is rendered - use a more specific selector
-    const logoContainer = screen.getByRole('link', { name: 'JATIN JEWELLERS' });
+    const logoContainer = screen.getByRole('link', { name: 'Jatin Jewellers Jatin Jewellers' });
     expect(logoContainer).toBeInTheDocument();
     expect(logoContainer).toHaveAttribute('href', '/');
     
@@ -143,7 +143,7 @@ describe('Header Component', () => {
     
     // Check if mobile menu has the correct title
     const sheetTitle = screen.getByTestId('mock-sheet-title');
-    expect(sheetTitle).toHaveTextContent('JATIN JEWELLERS');
+    expect(sheetTitle).toHaveTextContent('Jatin Jewellers');
   });
   
   it('has the correct accessibility attributes', () => {

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, Search, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { getCategoryInfo } from "@/lib/products";
@@ -54,7 +55,7 @@ export default function Header() {
                 <div className="flex flex-col h-full">
                   <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-black text-white">
                     <SheetTitle className="text-xl font-serif font-bold text-white">
-                      JATIN JEWELLERS
+                      Jatin Jewellers
                     </SheetTitle>
                     <SheetClose className="rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-700">
                       <X size={18} />
@@ -107,9 +108,17 @@ export default function Header() {
             </Sheet>
 
             {/* Logo */}
-            <Link href="/" className="flex items-center justify-center">
+            <Link href="/" className="flex items-center justify-center space-x-2">
+              <Image
+                src="/products/logo.png"
+                alt="Jatin Jewellers"
+                width={50}
+                height={50}
+                className="object-contain"
+                priority
+              />
               <span className="text-xl md:text-3xl font-bold text-gold font-serif">
-                JATIN JEWELLERS
+                Jatin Jewellers
               </span>
             </Link>
 

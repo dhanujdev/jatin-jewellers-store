@@ -27,7 +27,7 @@ describe('Footer Component', () => {
     render(<Footer />);
     
     // Check if the company name is rendered
-    expect(screen.getByText('JATIN JEWELLERS')).toBeInTheDocument();
+    expect(screen.getByText('Jatin Jewellers')).toBeInTheDocument();
   });
   
   it('renders the Instagram section', () => {
