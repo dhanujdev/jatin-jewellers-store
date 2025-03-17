@@ -93,11 +93,12 @@ export default async function ProductPage({
       notFound();
     }
     
-    // At this point, we know the product exists
-    const product: Product = maybeProduct;
+    // After notFound() is called, TypeScript doesn't know that maybeProduct is not null
+    // But we know it's safe to use it directly since notFound() would have redirected
+    // if maybeProduct was null, so we can use a type assertion
     
     // Format product for display
-    const formattedProduct = formatProductForDisplay(product);
+    const formattedProduct = formatProductForDisplay(maybeProduct as Product);
     
     // Get related products (products from the same category)
     const allProducts = await getAllProductsFromFS();
