@@ -1,9 +1,11 @@
-import { getCategories } from '@/lib/products';
 import { getCategoriesFromFS, getProductsByCategoryFromFS } from '@/lib/server/products';
 import type { Product } from '@/types/product';
 import CategoryClient from './client';
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
+
+// Enable Incremental Static Regeneration
+export const revalidate = 3600; // Revalidate pages every hour
 
 // Function to generate a random price between 10000 and 200000
 function generateRandomPrice(): number {
@@ -43,47 +45,29 @@ const categoryDisplayNames: Record<string, string> = {
 
 export async function generateStaticParams() {
   try {
-    // Use server-side function to get categories directly from the file system
+    // Get all categories
     const categories = await getCategoriesFromFS();
-    return categories.map((category: string) => ({
-      category: category.toLowerCase(),
+    
+    console.log(`Generating static params for ${categories.length} categories`);
+    
+    // Generate params for each category
+    return categories.map(category => ({
+      category: category.toLowerCase()
     }));
   } catch (error) {
-    console.error('Error generating static params:', error);
+    console.error('Error generating static params for categories:', error);
     return [];
   }
 }
 
-// Sort products based on sort parameter
-function sortProducts(products: any[], sortBy: string = 'default') {
-  const sortedProducts = [...products];
-  
-  switch (sortBy) {
-    case 'price-asc':
-      return sortedProducts.sort((a, b) => a.price - b.price);
-    case 'price-desc':
-      return sortedProducts.sort((a, b) => b.price - a.price);
-    case 'name-asc':
-      return sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
-    case 'name-desc':
-      return sortedProducts.sort((a, b) => b.name.localeCompare(a.name));
-    default:
-      return sortedProducts;
-  }
-}
-
 export default async function CategoryPage({ 
-  params,
-  searchParams
+  params
 }: { 
-  params: { category: string },
-  searchParams: { page?: string, sort?: string }
+  params: { category: string }
 }) {
   try {
-    // Await the dynamic route parameters
-    const category = await params.category;
-    const pageParam = await searchParams.page;
-    const sortParam = await searchParams.sort;
+    // Get category from params
+    const category = params.category;
     
     // Validate category exists
     const categories = await getCategoriesFromFS();
@@ -94,10 +78,6 @@ export default async function CategoryPage({
     // Get products for this category using server-side function
     const products = await getProductsByCategoryFromFS(category);
     
-    // Parse page number and handle invalid values
-    const page = parseInt(pageParam || '1', 10);
-    const sort = sortParam || 'default';
-    
     // Get category display name
     const categoryName = categoryDisplayNames[category] || 
       category.charAt(0).toUpperCase() + category.slice(1);
@@ -105,37 +85,13 @@ export default async function CategoryPage({
     // Format products for display
     const formattedProducts = formatProductsForDisplay(products);
     
-    // Sort products
-    const sortedProducts = sortProducts(formattedProducts, sort);
-    
-    // Calculate pagination data
-    const pageSize = 12;
-    const totalProducts = sortedProducts.length;
-    const totalPages = Math.max(1, Math.ceil(totalProducts / pageSize));
-    
-    // Ensure page is within valid range
-    const validPage = Math.max(1, Math.min(page, totalPages));
-    
-    // Get products for current page
-    const startIndex = (validPage - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    const paginatedProducts = sortedProducts.slice(startIndex, endIndex);
-    
-    const paginationData = {
-      currentPage: validPage,
-      totalPages,
-      totalItems: totalProducts,
-      pageSize
-    };
-    
+    // Pass all products to the client component and let it handle pagination and sorting
     return (
       <Suspense fallback={<div className="container mx-auto px-4 py-12 text-center">Loading category...</div>}>
         <CategoryClient
           categoryName={category}
           categoryDisplayName={categoryName}
-          products={paginatedProducts}
-          paginationData={paginationData}
-          currentSort={sort}
+          products={formattedProducts}
         />
       </Suspense>
     );

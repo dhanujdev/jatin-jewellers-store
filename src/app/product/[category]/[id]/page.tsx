@@ -3,6 +3,9 @@ import { notFound } from 'next/navigation';
 import ProductClient from './client';
 import type { Product } from '@/types/product';
 
+// Enable Incremental Static Regeneration
+export const revalidate = 3600; // Revalidate pages every hour
+
 // Function to generate a random price between 10000 and 200000
 function generateRandomPrice(): number {
   return Math.floor(Math.random() * (200000 - 10000 + 1)) + 10000;
@@ -68,8 +71,14 @@ export async function generateStaticParams() {
     // Get all products from file system
     const products = await getAllProductsFromFS();
     
+    // Limit to a reasonable number (e.g., 100 most recent products)
+    // This helps prevent build timeouts while still pre-rendering important pages
+    const limitedProducts = products.slice(0, 100);
+    
+    console.log(`Generating static params for ${limitedProducts.length} products out of ${products.length} total`);
+    
     // Generate params for each product
-    return products.map(product => ({
+    return limitedProducts.map(product => ({
       category: product.category.toLowerCase(),
       id: product.id
     }));

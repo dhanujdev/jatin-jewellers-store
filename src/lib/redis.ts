@@ -160,6 +160,77 @@ export async function invalidateCache(key: string): Promise<void> {
   }
 }
 
+// Image cache functions
+export async function cacheImage(key: string, imageBuffer: Buffer): Promise<void> {
+  try {
+    if (typeof window !== 'undefined') {
+      console.error('cacheImage should not be called from client-side code');
+      return;
+    }
+
+    try {
+      // Use server-side Redis in Node.js
+      const redis = await getServerRedisClient();
+      await redis.set(key, imageBuffer.toString('base64'), {
+        EX: 86400 // 24 hours
+      });
+    } catch (error) {
+      console.error('Error using server Redis for image caching:', error);
+      // No fallback for images in local cache as they're too large
+    }
+  } catch (error) {
+    console.error(`Error caching image with key "${key}":`, error);
+  }
+}
+
+export async function getCachedImage(key: string): Promise<Buffer | null> {
+  try {
+    if (typeof window !== 'undefined') {
+      console.error('getCachedImage should not be called from client-side code');
+      return null;
+    }
+
+    try {
+      // Use server-side Redis in Node.js
+      const redis = await getServerRedisClient();
+      const cachedImage = await redis.get(key);
+      
+      if (cachedImage) {
+        return Buffer.from(cachedImage, 'base64');
+      }
+    } catch (error) {
+      console.error('Error using server Redis for image retrieval:', error);
+    }
+    
+    return null;
+  } catch (error) {
+    console.error(`Error getting cached image with key "${key}":`, error);
+    return null;
+  }
+}
+
+export async function isImageCached(key: string): Promise<boolean> {
+  try {
+    if (typeof window !== 'undefined') {
+      console.error('isImageCached should not be called from client-side code');
+      return false;
+    }
+
+    try {
+      // Use server-side Redis in Node.js
+      const redis = await getServerRedisClient();
+      const exists = await redis.exists(key);
+      return exists === 1;
+    } catch (error) {
+      console.error('Error checking if image is cached:', error);
+      return false;
+    }
+  } catch (error) {
+    console.error(`Error checking if image is cached with key "${key}":`, error);
+    return false;
+  }
+}
+
 // For testing - allows resetting the state
 export const resetCache = () => {
   localCache.clear();

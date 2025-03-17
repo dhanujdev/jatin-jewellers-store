@@ -3,6 +3,16 @@ import path from 'path';
 import type { Product } from '@/types/product';
 import { cacheData, getCachedData, invalidateCache } from '../redis';
 
+// Add a flag to disable logging during build
+const isBuildTime = process.env.NODE_ENV === 'production' && !process.env.NEXT_RUNTIME;
+
+// Helper function for conditional logging
+function log(message: string) {
+  if (!isBuildTime) {
+    console.log(message);
+  }
+}
+
 // Cache TTL in seconds
 const CACHE_TTL = {
   PRODUCTS: 3600, // 1 hour
@@ -55,12 +65,12 @@ export async function getAllProductsFromFS(): Promise<Product[]> {
     // Try to get from cache first
     const cachedProducts = await getCachedData<Product[]>(CACHE_KEYS.ALL_PRODUCTS);
     if (cachedProducts) {
-      console.log('Retrieved all products from cache');
+      log('Retrieved all products from cache');
       return cachedProducts;
     }
 
     // If not in cache, fetch from file system
-    console.log('Fetching all products from file system');
+    log('Fetching all products from file system');
     const productsDir = getProductsDir();
     const items = await fs.readdir(productsDir);
     const products: Product[] = [];
@@ -70,7 +80,7 @@ export async function getAllProductsFromFS(): Promise<Product[]> {
       const stats = await fs.stat(itemPath);
       
       if (stats.isDirectory() && !item.startsWith('.')) {
-        console.log(`Processing category directory: ${item}`);
+        log(`Processing category directory: ${item}`);
         const productDirs = await fs.readdir(itemPath);
         
         for (const productDir of productDirs) {
@@ -78,7 +88,7 @@ export async function getAllProductsFromFS(): Promise<Product[]> {
           if (await isProductDirectory(productPath)) {
             const product = await readProductData(itemPath, productDir);
             if (product) {
-              console.log(`Added product: ${item}/${productDir}`);
+              log(`Added product: ${item}/${productDir}`);
               products.push(product);
             }
           }
@@ -86,7 +96,7 @@ export async function getAllProductsFromFS(): Promise<Product[]> {
       }
     }
     
-    console.log(`Total products found: ${products.length}`);
+    log(`Total products found: ${products.length}`);
     
     // Cache the results
     await cacheData(CACHE_KEYS.ALL_PRODUCTS, products, CACHE_TTL.PRODUCTS);
@@ -105,12 +115,12 @@ export async function getProductsByCategoryFromFS(category: string): Promise<Pro
     const cacheKey = CACHE_KEYS.CATEGORY_PRODUCTS(category);
     const cachedProducts = await getCachedData<Product[]>(cacheKey);
     if (cachedProducts) {
-      console.log(`Retrieved products for category ${category} from cache`);
+      log(`Retrieved products for category ${category} from cache`);
       return cachedProducts;
     }
 
     // If not in cache, fetch from file system
-    console.log(`Fetching products for category ${category} from file system`);
+    log(`Fetching products for category ${category} from file system`);
     const categoryPath = path.join(getProductsDir(), category);
     const items = await fs.readdir(categoryPath);
     const products: Product[] = [];
@@ -120,13 +130,13 @@ export async function getProductsByCategoryFromFS(category: string): Promise<Pro
       if (await isProductDirectory(itemPath)) {
         const product = await readProductData(categoryPath, item);
         if (product) {
-          console.log(`Added product from category ${category}: ${item}`);
+          log(`Added product from category ${category}: ${item}`);
           products.push(product);
         }
       }
     }
     
-    console.log(`Total products found for category ${category}: ${products.length}`);
+    log(`Total products found for category ${category}: ${products.length}`);
     
     // Cache the results
     await cacheData(cacheKey, products, CACHE_TTL.PRODUCTS);
@@ -144,12 +154,12 @@ export async function getCategoriesFromFS(): Promise<string[]> {
     // Try to get from cache first
     const cachedCategories = await getCachedData<string[]>(CACHE_KEYS.CATEGORIES);
     if (cachedCategories) {
-      console.log('Retrieved categories from cache');
+      log('Retrieved categories from cache');
       return cachedCategories;
     }
 
     // If not in cache, fetch from file system
-    console.log('Fetching categories from file system');
+    log('Fetching categories from file system');
     const productsDir = getProductsDir();
     const items = await fs.readdir(productsDir);
     const categories: string[] = [];
@@ -164,7 +174,7 @@ export async function getCategoriesFromFS(): Promise<string[]> {
         // Check if any subdirectory is a product directory
         for (const dir of subDirs) {
           if (await isProductDirectory(path.join(itemPath, dir))) {
-            console.log(`Found category with products: ${item}`);
+            log(`Found category with products: ${item}`);
             categories.push(item);
             break; // Found at least one product, no need to check more
           }
@@ -172,8 +182,8 @@ export async function getCategoriesFromFS(): Promise<string[]> {
       }
     }
     
-    console.log(`Total categories found: ${categories.length}`);
-    console.log('Categories:', categories);
+    log(`Total categories found: ${categories.length}`);
+    log('Categories: ' + categories.join(', '));
     
     // Cache the results
     await cacheData(CACHE_KEYS.CATEGORIES, categories, CACHE_TTL.CATEGORIES);
@@ -193,15 +203,15 @@ export async function getProductFromFS(category: string, id: string, forceRefres
     if (!forceRefresh) {
       const cachedProduct = await getCachedData<Product>(cacheKey);
       if (cachedProduct) {
-        console.log(`Retrieved product ${id} from category ${category} from cache`);
+        log(`Retrieved product ${id} from category ${category} from cache`);
         return cachedProduct;
       }
     } else {
-      console.log(`Force refresh requested for product ${id} from category ${category}`);
+      log(`Force refresh requested for product ${id} from category ${category}`);
     }
 
     // If not in cache or force refresh, fetch from file system
-    console.log(`Fetching product ${id} from category ${category} from file system`);
+    log(`Fetching product ${id} from category ${category} from file system`);
     const productPath = path.join(getProductsDir(), category, id);
     if (await isProductDirectory(productPath)) {
       const product = await readProductData(path.dirname(productPath), path.basename(productPath));
@@ -209,7 +219,7 @@ export async function getProductFromFS(category: string, id: string, forceRefres
       // Cache the result if found
       if (product) {
         await cacheData(cacheKey, product, CACHE_TTL.PRODUCT);
-        console.log(`Product ${id} from category ${category} cached successfully`);
+        log(`Product ${id} from category ${category} cached successfully`);
       }
       
       return product;
@@ -233,7 +243,7 @@ export async function invalidateProductCache(category: string, id: string): Prom
     // Invalidate all products cache
     await invalidateCache(CACHE_KEYS.ALL_PRODUCTS);
     
-    console.log(`Invalidated cache for product ${id} in category ${category}`);
+    log(`Invalidated cache for product ${id} in category ${category}`);
   } catch (error) {
     console.error(`Error invalidating product cache for ${category}/${id}:`, error);
   }
@@ -251,7 +261,7 @@ export async function invalidateCategoryCache(category: string): Promise<void> {
     // Invalidate categories cache
     await invalidateCache(CACHE_KEYS.CATEGORIES);
     
-    console.log(`Invalidated cache for category ${category}`);
+    log(`Invalidated cache for category ${category}`);
   } catch (error) {
     console.error(`Error invalidating category cache for ${category}:`, error);
   }

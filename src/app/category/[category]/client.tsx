@@ -31,21 +31,30 @@ interface CategoryClientProps {
   categoryName: string;
   categoryDisplayName?: string;
   products?: FormattedProduct[];
-  paginationData: PaginationData;
-  currentSort?: string;
 }
 
 export default function CategoryClient({
   categoryName,
   categoryDisplayName = categoryName,
-  products = [],
-  paginationData,
-  currentSort = 'default'
+  products = []
 }: CategoryClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   
-  const [sortValue, setSortValue] = useState(currentSort);
+  // Get URL parameters
+  const pageParam = searchParams.get('page') || '1';
+  const sortParam = searchParams.get('sort') || 'default';
+  
+  // State for sorting and pagination
+  const [sortValue, setSortValue] = useState(sortParam);
+  const [currentPage, setCurrentPage] = useState(parseInt(pageParam, 10));
+  const [sortedProducts, setSortedProducts] = useState([]);
+  const [paginatedProducts, setPaginatedProducts] = useState([]);
+  
+  // Pagination settings
+  const pageSize = 12;
+  const totalItems = products.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
   
   // Sort options
   const sortOptions = [
@@ -56,16 +65,52 @@ export default function CategoryClient({
     { value: 'name-desc', label: 'Name: Z to A' }
   ];
   
+  // Sort products based on sort parameter
+  const sortProducts = (products: FormattedProduct[], sortBy: string = 'default') => {
+    const productsCopy = [...products];
+    
+    switch (sortBy) {
+      case 'price-asc':
+        return productsCopy.sort((a, b) => a.price - b.price);
+      case 'price-desc':
+        return productsCopy.sort((a, b) => b.price - a.price);
+      case 'name-asc':
+        return productsCopy.sort((a, b) => a.name.localeCompare(b.name));
+      case 'name-desc':
+        return productsCopy.sort((a, b) => b.name.localeCompare(a.name));
+      default:
+        return productsCopy;
+    }
+  };
+  
+  // Update sorted products when sort value changes
+  useEffect(() => {
+    const sorted = sortProducts(products, sortValue);
+    setSortedProducts(sorted);
+  }, [products, sortValue]);
+  
+  // Update paginated products when sorted products or page changes
+  useEffect(() => {
+    const validPage = Math.max(1, Math.min(currentPage, totalPages));
+    const startIndex = (validPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    setPaginatedProducts(sortedProducts.slice(startIndex, endIndex));
+  }, [sortedProducts, currentPage, totalPages]);
+  
+  // Update URL when page or sort changes
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('page', currentPage.toString());
+    params.set('sort', sortValue);
+    
+    // Use replace to avoid adding to history stack
+    router.replace(`/category/${categoryName}?${params.toString()}`, { scroll: false });
+  }, [currentPage, sortValue, router, categoryName, searchParams]);
+  
   // Handle sort change
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSortValue(e.target.value);
-    
-    // Update URL with new sort parameter
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('sort', e.target.value);
-    params.set('page', '1'); // Reset to page 1 when sorting changes
-    
-    router.replace(`/category/${categoryName}?${params.toString()}`);
+    setCurrentPage(1); // Reset to page 1 when sorting changes
   };
   
   // Breadcrumb items
@@ -73,6 +118,14 @@ export default function CategoryClient({
     { label: 'Home', href: '/' },
     { label: categoryDisplayName }
   ];
+  
+  // Create pagination data object for the Pagination component
+  const paginationData: PaginationData = {
+    currentPage,
+    totalPages,
+    pageSize,
+    totalItems
+  };
   
   return (
     <div className="container mx-auto px-4 py-12">
@@ -106,7 +159,7 @@ export default function CategoryClient({
       </div>
       
       {/* Top Pagination */}
-      {paginationData.totalPages > 1 && (
+      {totalPages > 1 && (
         <div className="mb-6" data-testid="pagination-top">
           <Pagination
             currentPage={paginationData.currentPage}
@@ -121,8 +174,8 @@ export default function CategoryClient({
       
       {/* Products Grid */}
       <div id="products-grid" className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8" data-testid="products-grid">
-        {products.length > 0 ? (
-          products.map((product: FormattedProduct) => (
+        {paginatedProducts.length > 0 ? (
+          paginatedProducts.map((product: FormattedProduct) => (
             <Link
               href={`/product/${product.category}/${product.slug}`}
               key={product.id}
@@ -153,7 +206,7 @@ export default function CategoryClient({
       </div>
       
       {/* Bottom Pagination */}
-      {paginationData.totalPages > 1 && (
+      {totalPages > 1 && (
         <div data-testid="pagination">
           <Pagination
             currentPage={paginationData.currentPage}
