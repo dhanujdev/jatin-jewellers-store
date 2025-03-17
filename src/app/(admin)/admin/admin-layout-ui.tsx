@@ -29,6 +29,12 @@ export default function AdminLayoutUI({ children }: AdminLayoutUIProps) {
   // Define admin features with their routes and status
   const adminFeatures = [
     {
+      title: "Dashboard",
+      icon: Boxes,
+      href: "/admin",
+      status: "active"
+    },
+    {
       title: "Manage Categories",
       icon: FolderTree,
       href: "/admin/categories",
