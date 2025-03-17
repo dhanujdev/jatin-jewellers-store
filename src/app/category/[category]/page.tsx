@@ -1,4 +1,6 @@
-import { getCategories, getProductsByCategory, Product } from '@/lib/products';
+import { getCategories, getProductsByCategory } from '@/lib/products';
+import { getCategoriesFromFS } from '@/lib/server/products';
+import type { Product } from '@/types/product';
 import CategoryClient from './client';
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
@@ -41,7 +43,8 @@ const categoryDisplayNames: Record<string, string> = {
 
 export async function generateStaticParams() {
   try {
-    const categories = await getCategories();
+    // Use server-side function to get categories directly from the file system
+    const categories = await getCategoriesFromFS();
     return categories.map((category: string) => ({
       category: category.toLowerCase(),
     }));

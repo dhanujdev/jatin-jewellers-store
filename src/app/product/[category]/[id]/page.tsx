@@ -1,4 +1,5 @@
 import { getProduct, getRelatedProducts, getAllProducts } from '@/lib/products';
+import { getAllProductsFromFS } from '@/lib/server/products';
 import type { Product } from '@/types/product';
 import ProductClient from './client';
 import { notFound } from 'next/navigation';
@@ -11,7 +12,8 @@ function formatPrice(price: number): string {
 
 // Generate static params for all products
 export async function generateStaticParams() {
-  const products = await getAllProducts();
+  // Use server-side function to get products directly from the file system
+  const products = await getAllProductsFromFS();
   
   return products.map((product) => ({
     category: product.category,
