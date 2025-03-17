@@ -17,22 +17,28 @@ export async function getServerRedisClient() {
 
   if (!redisClient) {
     try {
-      // Use Upstash Redis client
-      // This will automatically use UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN
-      // environment variables when deployed on Vercel with the Upstash integration
-      if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+      // Check for Vercel KV environment variables first
+      if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
+        redisClient = new Redis({
+          url: process.env.KV_REST_API_URL,
+          token: process.env.KV_REST_API_TOKEN,
+        });
+        console.log('Connected to Vercel KV');
+      } 
+      // Fall back to Upstash Redis environment variables
+      else if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
         redisClient = new Redis({
           url: process.env.UPSTASH_REDIS_REST_URL,
           token: process.env.UPSTASH_REDIS_REST_TOKEN,
         });
         console.log('Connected to Upstash Redis');
       } else {
-        // Fallback for local development if Upstash env vars aren't available
-        console.warn('Upstash Redis credentials not found, using mock Redis client');
+        // Fallback for local development if Redis env vars aren't available
+        console.warn('Redis credentials not found, using mock Redis client');
         return getMockRedisClient();
       }
     } catch (error) {
-      console.error('Failed to initialize Upstash Redis client:', error);
+      console.error('Failed to initialize Redis client:', error);
       // Return a mock client as fallback
       return getMockRedisClient();
     }

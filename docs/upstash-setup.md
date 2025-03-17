@@ -1,17 +1,54 @@
-# Setting Up Upstash Redis with Vercel
+# Setting Up Redis with Vercel
 
-This document provides step-by-step instructions for setting up Upstash Redis with your Vercel deployment.
+This document provides step-by-step instructions for setting up Redis with your Vercel deployment. You have two options:
 
-## Why Upstash Redis?
+1. **Vercel KV** (Recommended): Vercel's managed Redis service powered by Upstash
+2. **Upstash Redis**: Direct integration with Upstash Redis
 
-Upstash provides a serverless Redis database that is:
-- **Fully managed**: No infrastructure to maintain
-- **Serverless**: Pay only for what you use
-- **Globally distributed**: Low latency access from anywhere
-- **Durable**: Data is persisted to disk
-- **Compatible**: Redis API compatible
+## Option 1: Vercel KV (Recommended)
 
-## Setup Instructions
+Vercel KV is Vercel's managed Redis service, which is powered by Upstash but integrated directly into the Vercel platform.
+
+### Why Vercel KV?
+
+- **Native integration** with Vercel
+- **Simplified setup** through the Vercel dashboard
+- **Automatic environment variable** configuration
+- **Consistent pricing** with other Vercel services
+
+### Setup Instructions for Vercel KV
+
+1. Go to the [Vercel Dashboard](https://vercel.com/dashboard)
+2. Select your project
+3. Navigate to the "Storage" tab
+4. Click "Create" and select "KV Database"
+5. Follow the prompts to create a new KV database
+6. Once created, Vercel will automatically add the following environment variables to your project:
+   - `KV_REST_API_URL`
+   - `KV_REST_API_TOKEN`
+   - `KV_REST_API_READ_ONLY_TOKEN`
+   - `KV_URL`
+
+### Local Development with Vercel KV
+
+For local development, you'll need to add the Vercel KV credentials to your `.env.local` file:
+
+1. In your Vercel project, go to the "Storage" tab
+2. Select your KV database
+3. Click on ".env.local" to view the environment variables
+4. Copy these variables to your local `.env.local` file
+
+## Option 2: Upstash Redis Direct Integration
+
+If you prefer to use Upstash Redis directly, you can use the Upstash integration in the Vercel Marketplace.
+
+### Why Upstash Redis?
+
+- **More control** over your Redis configuration
+- **Direct access** to the Upstash dashboard
+- **Additional features** available through Upstash
+
+### Setup Instructions for Upstash Redis
 
 ### 1. Deploy Your Project to Vercel
 
@@ -82,4 +119,17 @@ For more help, refer to the [Upstash Documentation](https://docs.upstash.com/) o
 
 - [Upstash Redis Documentation](https://docs.upstash.com/redis)
 - [Vercel Integration Guide](https://vercel.com/integrations/upstash)
-- [Next.js with Upstash Redis Example](https://github.com/upstash/redis-examples/tree/master/nextjs-with-upstash-redis) 
+- [Next.js with Upstash Redis Example](https://github.com/upstash/redis-examples/tree/master/nextjs-with-upstash-redis)
+
+## Choosing Between Vercel KV and Upstash Redis
+
+Both options use Upstash's Redis service under the hood, but they differ in how they're integrated with Vercel:
+
+| Feature | Vercel KV | Upstash Redis |
+|---------|-----------|---------------|
+| Setup | Through Vercel Storage tab | Through Vercel Integrations |
+| Environment Variables | `KV_REST_API_*` | `UPSTASH_REDIS_*` |
+| Management | Vercel dashboard | Upstash dashboard |
+| Pricing | Vercel pricing | Upstash pricing |
+
+Our application is configured to work with both options, with Vercel KV taking precedence if both are configured. 
