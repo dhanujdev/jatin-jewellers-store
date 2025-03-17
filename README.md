@@ -2,6 +2,20 @@
 
 ## Recent Enhancements (March 2024)
 
+### Admin Dashboard (New)
+- **Secure Admin Interface**: 
+  - Token-based authentication for admin access
+  - Protected admin routes with middleware
+  - Dedicated admin layout with navigation
+- **Product Management**: 
+  - View and manage product listings
+  - Add, edit, and delete products (coming soon)
+  - Bulk operations support (coming soon)
+- **Category Management**: 
+  - Category overview with product counts
+  - Category editing functionality (coming soon)
+  - Subcategory support planned
+
 ### Performance and Stability Improvements
 - **Enhanced Pagination**: 
   - Added "First" and "Last" page navigation buttons with improved accessibility
@@ -79,6 +93,9 @@ A modern e-commerce platform for Jatin Jewellers, showcasing a wide range of jew
 - **Pagination**: Browse products with easy-to-use pagination controls
 - **Redis Caching**: Fast image loading with Redis-based caching system
 - **Advanced Pagination**: Intuitive navigation with First, Previous, Next, and Last page controls, along with page numbers and product count display
+- **Admin Dashboard**: Secure admin interface for managing products and categories
+- **Token Authentication**: Simple token-based authentication for admin access
+- **Protected Routes**: Middleware-based protection for admin routes
 
 ## 📱 Mobile View Enhancements (v1.1.0)
 
@@ -306,3 +323,23 @@ Custom hooks for responsive design:
 ## 📞 Contact
 
 For any inquiries, please reach out to [contact@jatinjewellers.com](mailto:contact@jatinjewellers.com)
+
+## 🔐 Admin Access
+
+The admin dashboard is accessible at `/admin` and requires authentication:
+
+1. **Login**: Visit `/admin/login` and enter the admin token
+2. **Protected Routes**: 
+   - `/admin/products`: Manage product listings
+   - `/admin/categories`: Manage categories (coming soon)
+3. **Authentication**: 
+   - Token-based authentication
+   - 7-day cookie persistence
+   - Secure middleware protection
+
+### Admin Features
+- View and manage products
+- Monitor product counts by category
+- Secure, separate admin layout
+- Protected routes with authentication
+- More features coming soon

@@ -3,8 +3,16 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  // Don't show footer in admin routes
+  if (pathname.startsWith("/admin")) {
+    return null;
+  }
+
   return (
     <footer className="bg-black text-white">
       {/* Social Media Section */}

@@ -6,6 +6,7 @@ import { Menu, Search, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { getCategoryInfo } from "@/lib/products";
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 // Get category information from our dataset
 const categoryInfo = getCategoryInfo();
@@ -26,6 +27,12 @@ const categories = categoryInfo.categories.map(categoryId =>
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const pathname = usePathname();
+
+  // Don't show header in admin routes
+  if (pathname.startsWith("/admin")) {
+    return null;
+  }
 
   // Handle scroll event to change header appearance
   useEffect(() => {
