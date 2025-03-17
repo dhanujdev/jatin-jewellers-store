@@ -13,8 +13,29 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import Link from "next/link"
+import Image from "next/image"
 
 export const columns: ColumnDef<Product>[] = [
+  {
+    id: "thumbnail",
+    header: "Image",
+    cell: ({ row }) => {
+      const product = row.original
+      const imagePath = `/products/${product.category}/${product.id}/image.jpg`
+      
+      return (
+        <div className="relative h-12 w-12 rounded overflow-hidden">
+          <Image
+            src={imagePath}
+            alt={product.title}
+            fill
+            className="object-cover"
+            sizes="48px"
+          />
+        </div>
+      )
+    },
+  },
   {
     accessorKey: "title",
     header: "Title",

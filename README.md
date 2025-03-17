@@ -1,6 +1,33 @@
 # Jatin Jewellers Store
 
-## Recent Enhancements (March 2024)
+## Recent Enhancements (April 2024)
+
+### Product System Improvements
+- **File-Based Product Management**:
+  - Migrated from JSON data to file-based product structure
+  - Products now stored in `/public/products/{category}/{id}/` directories
+  - Each product has its own `data.json` and `image.jpg` files
+  - Improved organization and easier product management
+- **Server-Side Optimizations**:
+  - Direct file system access for server components
+  - Eliminated ECONNREFUSED errors by bypassing internal API calls
+  - Improved error handling with proper logging
+  - Better category validation with 404 handling for invalid categories
+- **Enhanced Product Display**:
+  - Updated category section to show all available categories
+  - Improved featured products to include items from all categories
+  - Fixed product page rendering with proper type handling
+  - Better image path handling for product displays
+
+### Admin Interface Enhancements
+- **Admin Access Button**:
+  - Added admin button in the header for quick access
+  - Responsive design with icon-only view on mobile
+  - Consistent styling with the rest of the interface
+- **Admin Navigation**:
+  - Added admin link to mobile menu
+  - Improved admin dashboard layout
+  - Better separation between admin and customer interfaces
 
 ### Admin Dashboard (New)
 - **Secure Admin Interface**: 
@@ -108,9 +135,20 @@ A modern e-commerce platform for Jatin Jewellers, showcasing a wide range of jew
 - **Admin Dashboard**: 
   - Secure token-based authentication
   - Modern dashboard UI with feature cards
-  - Products and categories management
+  - Products and categories management with visual thumbnails
+  - Enhanced product editing with side-by-side layout
+  - Full-size image preview with accessible modal
   - Protected admin routes with middleware
   - Upcoming features: Media Library, Content Pages, Analytics, User Management, Settings
+- **File-Based Product System**:
+  - Organized product structure with individual product directories
+  - Separate data and image files for each product
+  - Improved product management and organization
+- **Accessibility Features**:
+  - ARIA-compliant components
+  - Screen reader support
+  - Keyboard navigation
+  - Visual indicators for interactive elements
 
 ## 📱 Mobile View Enhancements (v1.1.0)
 
@@ -124,18 +162,46 @@ The latest release includes significant improvements to the mobile experience:
 - **Responsive Typography**: Adjusted font sizes and spacing for better readability on small screens
 - **Performance Optimizations**: Improved loading and rendering for mobile devices
 
-## 🚀 New Features (v1.6.1)
+## 🚀 New Features (v1.8.0)
 
-The latest release includes significant improvements to navigation and user experience:
+The latest release includes significant improvements to the admin dashboard and product management:
 
-- **Enhanced Pagination**: 
-  - First and Last page navigation buttons for quick jumps
-  - Improved visual feedback for current page
-  - Product count display showing items per page
-  - Optimized for both desktop and mobile views
-- **Redis Image Caching**: Faster image loading with Redis-based caching system
-- **Improved Search**: Enhanced search functionality with pagination support
-- **Performance Optimizations**: Reduced page load times and improved overall responsiveness
+- **Enhanced Admin Dashboard**:
+  - Added product thumbnails to the admin products table
+  - Improved product editing experience with side-by-side layout
+  - Implemented full-size image preview with accessible modal
+  - Better visual feedback for interactive elements
+- **Accessibility Improvements**:
+  - Added ARIA-compliant components throughout the application
+  - Enhanced screen reader support with proper labeling
+  - Improved keyboard navigation for all interactive elements
+  - Added visually hidden elements for better accessibility
+- **UI Refinements**:
+  - Consistent styling across admin and customer interfaces
+  - Better visual hierarchy in product management
+  - Enhanced card components with improved spacing and typography
+  - Responsive layouts that adapt to different screen sizes
+
+## Previous Release (v1.7.0)
+
+This release included significant improvements to product management and admin features:
+
+- **File-Based Product System**: 
+  - Migrated from JSON data to file-based product structure
+  - Each product has its own directory with data and image files
+  - Improved organization and easier product management
+- **Enhanced Admin Interface**:
+  - Added admin button in the header for quick access
+  - Improved admin dashboard with feature cards
+  - Better navigation between admin and customer interfaces
+- **Server-Side Optimizations**:
+  - Direct file system access for server components
+  - Eliminated connection errors by bypassing internal API calls
+  - Improved error handling and logging
+- **Product Display Improvements**:
+  - Updated category section to show all available categories
+  - Improved featured products to include items from all categories
+  - Fixed product page rendering with proper type handling
 
 ## 🛠️ Tech Stack
 
@@ -145,8 +211,11 @@ The latest release includes significant improvements to navigation and user expe
 - **TypeScript**: Type-safe JavaScript
 - **Tailwind CSS**: Utility-first CSS framework
 - **Radix UI**: Unstyled, accessible UI components
+  - Dialog, VisuallyHidden, and other accessibility primitives
+  - ARIA-compliant interactive components
 - **Embla Carousel**: Lightweight carousel component
 - **Lucide React**: Beautiful & consistent icon set
+- **Shadcn/UI**: High-quality UI components built on Radix UI
 
 ### Backend & Infrastructure
 - **Redis**: In-memory data store for caching
@@ -165,21 +234,19 @@ The latest release includes significant improvements to navigation and user expe
 
 ## 📊 Data Structure
 
-The application uses JSON data files to store product information:
+The application uses a file-based system to store product information:
 
-- **Total Products**: 2,901 products across 5 categories
+- **Total Products**: 2,555 products across 5 categories
 - **Categories**:
-  - Bangles (394 products)
-  - Earrings (689 products)
-  - Necklaces (1,722 products)
-  - Rings (53 products)
-  - Waistbands (43 products)
+  - Bangles (331 products)
+  - Earrings (562 products)
+  - Necklaces (1,571 products)
+  - Rings (49 products)
+  - Waistbands (42 products)
 
-Data files:
-- `all-products.json`: Contains all product data
-- `products-by-category.json`: Products organized by category
-- `categories.json`: Category metadata
-- Individual category files (e.g., `bangles.json`, `earrings.json`, etc.)
+Data structure:
+- `/public/products/{category}/{id}/data.json`: Contains product metadata
+- `/public/products/{category}/{id}/image.jpg`: Product image
 
 ## 🚀 Getting Started
 
@@ -237,11 +304,20 @@ bun dev
 
 Note: For security reasons, please change the admin token in production.
 
-## �� Project Structure
+## 📋 Project Structure
 
 ```
 jatin-jewellers-store/
 ├── public/            # Static assets (images, fonts, etc.)
+│   ├── products/      # Product data and images
+│   │   ├── bangles/   # Bangles category
+│   │   │   ├── bangles-001/  # Individual product
+│   │   │   │   ├── data.json # Product metadata
+│   │   │   │   └── image.jpg # Product image
+│   │   ├── earrings/  # Earrings category
+│   │   ├── necklaces/ # Necklaces category
+│   │   ├── rings/     # Rings category
+│   │   └── waistbands/ # Waistbands category
 ├── src/
 │   ├── app/           # Next.js app router pages
 │   │   ├── page.tsx   # Home page
@@ -379,3 +455,12 @@ The admin dashboard is accessible at `/admin` and requires authentication:
 - Secure, separate admin layout
 - Protected routes with authentication
 - More features coming soon
+
+## Recent Enhancements (May 2024)
+
+### Admin Dashboard Improvements
+- **Enhanced Product Management**:
+  - Added product thumbnails in the admin products table for better visual identification
+  - Improved edit product page with side-by-side layout showing product image and edit form
+  - Implemented image modal for full-size product image viewing with accessibility support
+  - Better visual feedback with hover effects on clickable elements
