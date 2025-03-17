@@ -1,6 +1,5 @@
 {
-  "id": "bangles-001",
-  "title": "Radiant Diamond Bangles - Modern Kadas",
+  "title": "Test Radiant Diamond Bangles - Modern Kadas",
   "category": "bangles",
   "original_type": "Bangles",
   "materials": [
@@ -39,5 +38,6 @@
     "Jewellery"
   ],
   "original_id": "bangles_IMG-20240902-WA0003_1611",
-  "collection": "bangles"
+  "collection": "bangles",
+  "id": "bangles-001"
 }
