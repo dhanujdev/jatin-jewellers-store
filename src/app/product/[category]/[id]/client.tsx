@@ -47,10 +47,9 @@ export default function ProductClient({
   const [selectedImage, setSelectedImage] = useState(product.image);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Generate additional images for demo purposes
-  const additionalImages = [
-    product.image,
-  ];
+  // Generate additional images for demo purposes - for now, we'll just use the main image
+  // In a real implementation, you would fetch multiple images from the backend
+  const additionalImages: string[] = [];
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -81,7 +80,7 @@ export default function ProductClient({
             <DialogTrigger asChild>
               <div className="mb-4 bg-gray-50 rounded-lg overflow-hidden cursor-pointer">
                 <Image
-                  src={selectedImage}
+                  src={product.image}
                   alt={product.name}
                   width={600}
                   height={600}
@@ -98,7 +97,7 @@ export default function ProductClient({
                   <X className="h-5 w-5" />
                 </button>
                 <Image
-                  src={selectedImage}
+                  src={product.image}
                   alt={product.name}
                   width={1200}
                   height={1200}
@@ -107,25 +106,29 @@ export default function ProductClient({
               </div>
             </DialogContent>
           </Dialog>
-          <div className="grid grid-cols-3 gap-4">
-            {additionalImages.map((img, index) => (
-              <button
-                key={index}
-                onClick={() => setSelectedImage(img)}
-                className={`bg-gray-50 rounded-lg overflow-hidden border-2 ${
-                  selectedImage === img ? 'border-gold' : 'border-transparent'
-                }`}
-              >
-                <Image
-                  src={img}
-                  alt={`${product.name} view ${index + 1}`}
-                  width={100}
-                  height={100}
-                  className="w-full h-auto object-contain"
-                />
-              </button>
-            ))}
-          </div>
+          
+          {/* Only show thumbnails if we have additional images */}
+          {additionalImages.length > 0 && (
+            <div className="grid grid-cols-3 gap-4">
+              {additionalImages.map((img, index) => (
+                <button
+                  key={index}
+                  onClick={() => setSelectedImage(img)}
+                  className={`bg-gray-50 rounded-lg overflow-hidden border-2 ${
+                    selectedImage === img ? 'border-gold' : 'border-transparent'
+                  }`}
+                >
+                  <Image
+                    src={img}
+                    alt={`${product.name} view ${index + 1}`}
+                    width={100}
+                    height={100}
+                    className="w-full h-auto object-contain"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Product Info */}
