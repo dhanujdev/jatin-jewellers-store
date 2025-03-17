@@ -46,6 +46,28 @@ export async function GET() {
   }
 }
 
+// Helper function to revalidate paths
+async function revalidatePaths(paths: string[]) {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/revalidate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Cookie': `admin-token=jatinjewellersadmin`
+      },
+      body: JSON.stringify({ paths })
+    });
+
+    if (!response.ok) {
+      console.error('Failed to revalidate paths:', await response.text());
+    } else {
+      console.log('Successfully revalidated paths:', await response.json());
+    }
+  } catch (error) {
+    console.error('Error calling revalidation API:', error);
+  }
+}
+
 export async function POST(request: Request) {
   // Check admin authentication
   const cookieStore = await cookies();
@@ -89,11 +111,15 @@ export async function POST(request: Request) {
     const dataPath = path.join(productDir, 'data.json');
     await fs.writeFile(dataPath, JSON.stringify(productData, null, 2), 'utf-8');
     
-    // Invalidate cache for this category
+    // Invalidate category cache
     try {
-      console.log(`Invalidating cache for category ${productData.category} after adding new product ${productData.id}`);
       await invalidateCategoryCache(productData.category);
-      console.log('Cache invalidated successfully');
+      console.log(`Invalidated cache for category ${productData.category}`);
+      
+      // Revalidate the category page
+      await revalidatePaths([
+        `/category/${productData.category}`
+      ]);
     } catch (cacheError) {
       console.error('Failed to invalidate cache:', cacheError);
       // Continue with the response even if cache invalidation fails

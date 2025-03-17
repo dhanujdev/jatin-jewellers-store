@@ -3,8 +3,7 @@ import { notFound } from 'next/navigation';
 import ProductClient from './client';
 import type { Product } from '@/types/product';
 
-// Enable Incremental Static Regeneration
-export const revalidate = 3600; // Revalidate pages every hour
+// Remove time-based revalidation - we'll use on-demand revalidation instead
 
 // Function to generate a random price between 10000 and 200000
 function generateRandomPrice(): number {

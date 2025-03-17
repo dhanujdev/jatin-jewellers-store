@@ -4,9 +4,6 @@ import CategoryClient from './client';
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 
-// Enable Incremental Static Regeneration
-export const revalidate = 3600; // Revalidate pages every hour
-
 // Function to generate a random price between 10000 and 200000
 function generateRandomPrice(): number {
   return Math.floor(Math.random() * (200000 - 10000 + 1)) + 10000;
