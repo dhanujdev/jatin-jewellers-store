@@ -65,10 +65,8 @@ describe('Footer Component', () => {
     render(<Footer />);
     
     // Check if contact information is rendered
-    expect(screen.getByText('+91 98765 43210')).toBeInTheDocument();
-    expect(screen.getByText('info@jatinjewellers.com')).toBeInTheDocument();
-    expect(screen.getByText(/Mon - Sat: 10:00 AM - 8:00 PM/)).toBeInTheDocument();
-    expect(screen.getByText(/Sunday: 11:00 AM - 6:00 PM/)).toBeInTheDocument();
+    expect(screen.getByText('+91 98661 86960')).toBeInTheDocument();
+    expect(screen.getByText('jatinjewellershyd@gmail.com')).toBeInTheDocument();
   });
   
   it('has the correct accessibility attributes', () => {

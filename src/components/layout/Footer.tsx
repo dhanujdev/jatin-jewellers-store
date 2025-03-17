@@ -43,7 +43,7 @@ export default function Footer() {
             <h3 className="text-lg font-medium mb-6 relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-12 after:h-0.5 after:bg-gold">
               Quick Links
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-3 text-left flex flex-col items-start">
               <li>
                 <Link href="/about" className="text-white/80 hover:text-gold transition-colors">
                   About Us
@@ -77,33 +77,31 @@ export default function Footer() {
             <h3 className="text-lg font-medium mb-6 relative pb-2 after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-12 after:h-0.5 after:bg-gold">
               Visit Our Store
             </h3>
-            <ul className="space-y-4">
-              <li className="flex items-start justify-center">
+            <ul className="space-y-4 text-left">
+              <li className="flex items-start">
                 <MapPin size={20} className="text-gold mr-3 mt-1 flex-shrink-0" />
-                <span className="text-white/80">
+                <a 
+                  href="https://maps.app.goo.gl/S84vSu7"
+                  target="_blank"
+                  rel="noopener noreferrer" 
+                  className="text-white/80 hover:text-gold transition-colors"
+                >
                   Jatin Jewellers, Road No.36,<br />
                   Jubilee Hills Checkpost,<br />
                   Hyderabad, Telangana, 500033
-                </span>
+                </a>
               </li>
-              <li className="flex items-center justify-center">
+              <li className="flex items-center">
                 <Phone size={20} className="text-gold mr-3 flex-shrink-0" />
-                <a href="tel:+919876543210" className="text-white/80 hover:text-gold transition-colors">
-                  +91 98765 43210
+                <a href="tel:+919866186960" className="text-white/80 hover:text-gold transition-colors">
+                  +91 98661 86960
                 </a>
               </li>
-              <li className="flex items-center justify-center">
+              <li className="flex items-center">
                 <Mail size={20} className="text-gold mr-3 flex-shrink-0" />
-                <a href="mailto:info@jatinjewellers.com" className="text-white/80 hover:text-gold transition-colors">
-                  info@jatinjewellers.com
+                <a href="mailto:jatinjewellershyd@gmail.com" className="text-white/80 hover:text-gold transition-colors">
+                  jatinjewellershyd@gmail.com
                 </a>
-              </li>
-              <li className="flex items-start justify-center">
-                <Clock size={20} className="text-gold mr-3 mt-1 flex-shrink-0" />
-                <span className="text-white/80">
-                  Mon - Sat: 10:00 AM - 8:00 PM<br />
-                  Sunday: 11:00 AM - 6:00 PM
-                </span>
               </li>
             </ul>
           </div>
