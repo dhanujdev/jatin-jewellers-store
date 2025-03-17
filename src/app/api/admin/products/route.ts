@@ -3,6 +3,12 @@ import { cookies } from 'next/headers';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { invalidateProductCache, invalidateCategoryCache } from '@/lib/server/products';
+import { cacheData } from '@/lib/redis';
+
+// Redis key for storing product data
+const PRODUCT_DATA_KEY = (category: string, id: string) => `product_data_${category}_${id}`;
+const ALL_PRODUCTS_KEY = 'all_products_data';
+const CATEGORY_PRODUCTS_KEY = (category: string) => `category_products_data_${category}`;
 
 export async function GET() {
   // Check admin authentication
@@ -88,28 +94,42 @@ export async function POST(request: Request) {
       );
     }
     
-    // Create product directory
-    const productDir = path.join(
-      process.cwd(),
-      'public',
-      'products',
-      productData.category,
-      productData.id
-    );
-    
-    try {
-      await fs.mkdir(productDir, { recursive: true });
-    } catch (error) {
-      console.error('Failed to create product directory:', error);
-      return NextResponse.json(
-        { error: 'Failed to create product directory' },
-        { status: 500 }
-      );
+    // In development environment, still create the directory structure
+    if (process.env.NODE_ENV === 'development') {
+      try {
+        // Create product directory
+        const productDir = path.join(
+          process.cwd(),
+          'public',
+          'products',
+          productData.category,
+          productData.id
+        );
+        
+        await fs.mkdir(productDir, { recursive: true });
+        
+        // Write product data to file system in development
+        const dataPath = path.join(productDir, 'data.json');
+        await fs.writeFile(dataPath, JSON.stringify(productData, null, 2), 'utf-8');
+      } catch (error) {
+        console.error('Failed to create product directory or file in development:', error);
+        // Continue execution since we'll still store in Redis
+      }
     }
     
-    // Write product data
-    const dataPath = path.join(productDir, 'data.json');
-    await fs.writeFile(dataPath, JSON.stringify(productData, null, 2), 'utf-8');
+    // Store product data in Redis
+    await cacheData(PRODUCT_DATA_KEY(productData.category, productData.id), productData);
+    
+    // Update category products in Redis
+    const redis = await import('@/lib/redis');
+    const categoryProducts = await redis.getCachedData<any[]>(CATEGORY_PRODUCTS_KEY(productData.category)) || [];
+    categoryProducts.push(productData);
+    await cacheData(CATEGORY_PRODUCTS_KEY(productData.category), categoryProducts);
+    
+    // Update all products in Redis
+    const allProducts = await redis.getCachedData<any[]>(ALL_PRODUCTS_KEY) || [];
+    allProducts.push(productData);
+    await cacheData(ALL_PRODUCTS_KEY, allProducts);
     
     // Invalidate category cache
     try {

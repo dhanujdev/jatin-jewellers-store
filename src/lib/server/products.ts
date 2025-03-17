@@ -28,6 +28,9 @@ const CACHE_KEYS = {
   PRODUCT: (category: string, id: string) => `product_${category}_${id}`
 };
 
+// Redis key for storing product data
+const PRODUCT_DATA_KEY = (category: string, id: string) => `product_data_${category}_${id}`;
+
 // Helper function to get products directory
 function getProductsDir() {
   return path.join(process.cwd(), 'public', 'products');
@@ -210,7 +213,20 @@ export async function getProductFromFS(category: string, id: string, forceRefres
       log(`Force refresh requested for product ${id} from category ${category}`);
     }
 
-    // If not in cache or force refresh, fetch from file system
+    // Check Redis for product data
+    const redis = await import('../redis');
+    const redisProduct = await redis.getCachedData<Product>(PRODUCT_DATA_KEY(category, id));
+    if (redisProduct) {
+      log(`Retrieved product ${id} from category ${category} from Redis`);
+      
+      // Cache the result
+      await cacheData(cacheKey, redisProduct, CACHE_TTL.PRODUCT);
+      log(`Product ${id} from category ${category} cached successfully`);
+      
+      return redisProduct;
+    }
+
+    // If not in Redis, fetch from file system
     log(`Fetching product ${id} from category ${category} from file system`);
     const productPath = path.join(getProductsDir(), category, id);
     if (await isProductDirectory(productPath)) {
@@ -220,6 +236,9 @@ export async function getProductFromFS(category: string, id: string, forceRefres
       if (product) {
         await cacheData(cacheKey, product, CACHE_TTL.PRODUCT);
         log(`Product ${id} from category ${category} cached successfully`);
+        
+        // Also store in Redis for future use
+        await redis.cacheData(PRODUCT_DATA_KEY(category, id), product);
       }
       
       return product;
