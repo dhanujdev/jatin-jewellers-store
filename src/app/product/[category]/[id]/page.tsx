@@ -1,34 +1,17 @@
-import { getProduct, getRelatedProducts } from '@/lib/products';
-import { getAllProductsFromFS, getProductFromFS } from '@/lib/server/products';
-import type { Product } from '@/types/product';
-import ProductClient from './client';
+import { getProductFromFS, getAllProductsFromFS } from '@/lib/server/products';
 import { notFound } from 'next/navigation';
-import { generateRandomPrice } from "@/lib/utils";
+import ProductClient from './client';
+import type { Product } from '@/types/product';
 
-// Function to format price with currency symbol
+// Function to generate a random price between 10000 and 200000
+function generateRandomPrice(): number {
+  return Math.floor(Math.random() * (200000 - 10000 + 1)) + 10000;
+}
+
+// Function to format price with commas and currency symbol
 function formatPrice(price: number): string {
-  return `₹${price.toLocaleString('en-IN')}`;
+  return `₹${price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
 }
-
-// Generate static params for all products
-export async function generateStaticParams() {
-  // Use server-side function to get products directly from the file system
-  const products = await getAllProductsFromFS();
-  
-  return products.map((product) => ({
-    category: product.category,
-    id: product.id,
-  }));
-}
-
-// Define category display names
-const categoryDisplayNames: Record<string, string> = {
-  'rings': 'Rings',
-  'necklaces': 'Necklaces',
-  'earrings': 'Earrings',
-  'bangles': 'Bangles',
-  'waistbands': 'Waistbands',
-};
 
 interface Material {
   name: string;
@@ -47,85 +30,95 @@ interface FormattedProduct {
   slug: string;
 }
 
-interface FormattedRelatedProduct {
-  id: string;
-  name: string;
-  price: number;
-  formattedPrice: string;
-  image: string;
-  category: string;
-  slug: string;
+// Define category display names
+const categoryDisplayNames: Record<string, string> = {
+  'rings': 'Rings',
+  'necklaces': 'Necklaces',
+  'earrings': 'Earrings',
+  'bangles': 'Bangles',
+  'waistbands': 'Waistbands',
+};
+
+// Format product for display
+function formatProductForDisplay(product: Product): FormattedProduct {
+  const price = generateRandomPrice();
+  return {
+    id: product.id,
+    name: product.title,
+    description: product.description || '',
+    price,
+    formattedPrice: formatPrice(price),
+    image: `/products/${product.category}/${product.id}/image.jpg`,
+    category: product.category,
+    materials: product.materials.map((material) => {
+      if (typeof material === 'string') {
+        return {
+          name: material,
+          description: `High quality ${material}`
+        };
+      }
+      return material as Material;
+    }),
+    slug: product.id
+  };
 }
 
-export default async function ProductPage({
-  params,
-}: {
-  params: { category: string; id: string };
+export async function generateStaticParams() {
+  try {
+    // Get all products from file system
+    const products = await getAllProductsFromFS();
+    
+    // Generate params for each product
+    return products.map(product => ({
+      category: product.category.toLowerCase(),
+      id: product.id
+    }));
+  } catch (error) {
+    console.error('Error generating static params:', error);
+    return [];
+  }
+}
+
+export default async function ProductPage({ 
+  params 
+}: { 
+  params: { category: string; id: string } 
 }) {
   try {
-    // Use server-side function to get product directly from the file system
+    // Get product from file system
     const maybeProduct = await getProductFromFS(params.category, params.id);
-
+    
+    // If product not found, show 404
     if (!maybeProduct) {
       notFound();
     }
-
-    // After notFound(), we know the product exists
-    const product = maybeProduct as Product;
-
-    const price = generateRandomPrice();
-    const formattedProduct: FormattedProduct = {
-      id: product.id,
-      name: product.title,
-      description: product.description,
-      price,
-      formattedPrice: formatPrice(price),
-      image: `/products/${product.category}/${product.id}/image.jpg`,
-      category: product.category,
-      materials: product.materials.map((material) => {
-        if (typeof material === 'string') {
-          return {
-            name: material,
-            description: `High quality ${material}`
-          };
-        }
-        return material;
-      }),
-      slug: product.id,
-    };
-
-    // Get related products from the same category
-    const allProductsInCategory = await getAllProductsFromFS();
-    const relatedProducts = allProductsInCategory
-      .filter(p => p.category === product.category && p.id !== product.id)
-      .slice(0, 4); // Get up to 4 related products
-
-    const formattedRelatedProducts: FormattedRelatedProduct[] = relatedProducts.map(
-      (relatedProduct) => {
-        const relatedPrice = generateRandomPrice();
-        return {
-          id: relatedProduct.id,
-          name: relatedProduct.title,
-          price: relatedPrice,
-          formattedPrice: formatPrice(relatedPrice),
-          image: `/products/${relatedProduct.category}/${relatedProduct.id}/image.jpg`,
-          category: relatedProduct.category,
-          slug: relatedProduct.id,
-        };
-      }
-    );
-
-    const categoryDisplayName = categoryDisplayNames[product.category] || product.category;
-
+    
+    // At this point, we know the product exists
+    const product: Product = maybeProduct;
+    
+    // Format product for display
+    const formattedProduct = formatProductForDisplay(product);
+    
+    // Get related products (products from the same category)
+    const allProducts = await getAllProductsFromFS();
+    const relatedProducts = allProducts
+      .filter(p => p.category === params.category && p.id !== params.id)
+      .slice(0, 4)
+      .map(formatProductForDisplay);
+    
+    // Get category display name
+    const categoryDisplayName = categoryDisplayNames[params.category] || 
+      params.category.charAt(0).toUpperCase() + params.category.slice(1);
+    
     return (
-      <ProductClient
-        product={formattedProduct}
-        relatedProducts={formattedRelatedProducts}
+      <ProductClient 
+        product={formattedProduct} 
+        relatedProducts={relatedProducts} 
         categoryDisplayName={categoryDisplayName}
       />
     );
   } catch (error) {
-    console.error(`Error in ProductPage for ${params.category}/${params.id}:`, error);
-    notFound();
+    console.error('Error in ProductPage:', error);
+    throw error; // Let Next.js error boundary handle it
   }
 } 
