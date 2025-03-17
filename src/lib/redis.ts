@@ -1,12 +1,13 @@
 // Server-side Redis implementation
 import { promises as fs } from 'fs';
 import path from 'path';
+import { Redis } from '@upstash/redis';
 
 // For testing purposes
 let localCache: Map<string, { data: string; expiry: number | null }> = new Map();
 
 // Server-side Redis client
-let redisClient: any = null;
+let redisClient: Redis | null = null;
 
 // Initialize Redis client for server-side
 export async function getServerRedisClient() {
@@ -16,23 +17,22 @@ export async function getServerRedisClient() {
 
   if (!redisClient) {
     try {
-      // Dynamically import Redis to avoid issues with client-side builds
-      const redis = await import('redis');
-      
-      // Use environment variables for Redis connection
-      const url = process.env.REDIS_URL || 'redis://localhost:6379';
-      
-      redisClient = redis.createClient({
-        url,
-      });
-
-      redisClient.on('error', (err: Error) => {
-        console.error('Redis Client Error:', err);
-      });
-
-      await redisClient.connect();
+      // Use Upstash Redis client
+      // This will automatically use UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN
+      // environment variables when deployed on Vercel with the Upstash integration
+      if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+        redisClient = new Redis({
+          url: process.env.UPSTASH_REDIS_REST_URL,
+          token: process.env.UPSTASH_REDIS_REST_TOKEN,
+        });
+        console.log('Connected to Upstash Redis');
+      } else {
+        // Fallback for local development if Upstash env vars aren't available
+        console.warn('Upstash Redis credentials not found, using mock Redis client');
+        return getMockRedisClient();
+      }
     } catch (error) {
-      console.error('Failed to initialize Redis client:', error);
+      console.error('Failed to initialize Upstash Redis client:', error);
       // Return a mock client as fallback
       return getMockRedisClient();
     }
@@ -45,7 +45,7 @@ export async function getServerRedisClient() {
 function getMockRedisClient() {
   return {
     set: async (key: string, value: string, options?: any) => {
-      const expiry = options?.EX ? Date.now() + options.EX * 1000 : null;
+      const expiry = options?.ex ? Date.now() + options.ex * 1000 : null;
       localCache.set(key, { data: value, expiry });
       return 'OK';
     },
@@ -80,7 +80,7 @@ export async function cacheData(key: string, data: any, ttl = 3600): Promise<voi
       // Use server-side Redis in Node.js
       const redis = await getServerRedisClient();
       await redis.set(key, JSON.stringify(data), {
-        EX: ttl
+        ex: ttl
       });
     } catch (error) {
       console.error('Error using server Redis, falling back to local cache:', error);
@@ -107,7 +107,7 @@ export async function getCachedData<T>(key: string): Promise<T | null> {
       
       if (cachedData) {
         try {
-          return JSON.parse(cachedData) as T;
+          return JSON.parse(cachedData as string) as T;
         } catch (error) {
           console.error(`Error parsing cached data for key "${key}":`, error);
           await redis.del(key);
@@ -172,7 +172,7 @@ export async function cacheImage(key: string, imageBuffer: Buffer): Promise<void
       // Use server-side Redis in Node.js
       const redis = await getServerRedisClient();
       await redis.set(key, imageBuffer.toString('base64'), {
-        EX: 86400 // 24 hours
+        ex: 86400 // 24 hours
       });
     } catch (error) {
       console.error('Error using server Redis for image caching:', error);
@@ -196,7 +196,7 @@ export async function getCachedImage(key: string): Promise<Buffer | null> {
       const cachedImage = await redis.get(key);
       
       if (cachedImage) {
-        return Buffer.from(cachedImage, 'base64');
+        return Buffer.from(cachedImage as string, 'base64');
       }
     } catch (error) {
       console.error('Error using server Redis for image retrieval:', error);

@@ -2,6 +2,18 @@
 
 ## Recent Enhancements (April 2024)
 
+### Upstash Redis Integration (New)
+- **Serverless Redis with Upstash**:
+  - Migrated from self-hosted Redis to Upstash serverless Redis
+  - Seamless integration with Vercel deployment
+  - Improved reliability with globally distributed Redis instances
+  - Automatic scaling with pay-per-use pricing model
+- **Enhanced Caching**:
+  - Optimized image and data caching with Upstash Redis
+  - Improved fallback mechanisms for local development
+  - Better error handling and logging for Redis operations
+  - Simplified Redis client implementation with Upstash SDK
+
 ### On-Demand Revalidation System (New)
 - **Improved Cache Management**:
   - Implemented on-demand revalidation for admin product operations
@@ -236,7 +248,7 @@ This release included significant improvements to product management and admin f
 - **Shadcn/UI**: High-quality UI components built on Radix UI
 
 ### Backend & Infrastructure
-- **Redis**: In-memory data store for caching
+- **Upstash Redis**: Serverless Redis database for caching
 - **Docker**: Containerization for development environment
 - **Docker Compose**: Multi-container Docker applications
 
