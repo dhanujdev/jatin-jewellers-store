@@ -186,17 +186,21 @@ export async function getCategoriesFromFS(): Promise<string[]> {
 }
 
 // Get product by ID from file system with caching
-export async function getProductFromFS(category: string, id: string): Promise<Product | null> {
+export async function getProductFromFS(category: string, id: string, forceRefresh = false): Promise<Product | null> {
   try {
-    // Try to get from cache first
+    // Try to get from cache first (unless force refresh is requested)
     const cacheKey = CACHE_KEYS.PRODUCT(category, id);
-    const cachedProduct = await getCachedData<Product>(cacheKey);
-    if (cachedProduct) {
-      console.log(`Retrieved product ${id} from category ${category} from cache`);
-      return cachedProduct;
+    if (!forceRefresh) {
+      const cachedProduct = await getCachedData<Product>(cacheKey);
+      if (cachedProduct) {
+        console.log(`Retrieved product ${id} from category ${category} from cache`);
+        return cachedProduct;
+      }
+    } else {
+      console.log(`Force refresh requested for product ${id} from category ${category}`);
     }
 
-    // If not in cache, fetch from file system
+    // If not in cache or force refresh, fetch from file system
     console.log(`Fetching product ${id} from category ${category} from file system`);
     const productPath = path.join(getProductsDir(), category, id);
     if (await isProductDirectory(productPath)) {
@@ -205,6 +209,7 @@ export async function getProductFromFS(category: string, id: string): Promise<Pr
       // Cache the result if found
       if (product) {
         await cacheData(cacheKey, product, CACHE_TTL.PRODUCT);
+        console.log(`Product ${id} from category ${category} cached successfully`);
       }
       
       return product;

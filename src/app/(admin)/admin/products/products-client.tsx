@@ -5,42 +5,67 @@ import { Product } from "@/types/product"
 import { columns } from "./columns"
 import { DataTable } from "./data-table"
 import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
+import { Plus, RefreshCw } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import Link from "next/link"
 
 export default function ProductsClient() {
-  const [products, setProducts] = useState([] as Product[])
-  const [isLoading, setIsLoading] = useState(true)
+  const [products, setProducts] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
   const { toast } = useToast()
 
-  useEffect(() => {
-    async function loadProducts() {
-      try {
-        const response = await fetch('/api/products')
-        if (!response.ok) {
-          throw new Error('Failed to fetch products')
-        }
-        const data = await response.json()
-        setProducts(data)
-      } catch (error) {
-        console.error("Failed to load products:", error)
-        toast({
-          title: "Error",
-          description: "Failed to load products. Please try again.",
-          variant: "destructive",
-        })
-      } finally {
-        setIsLoading(false)
+  const fetchProducts = async () => {
+    try {
+      setLoading(true)
+      const response = await fetch('/api/admin/products')
+      if (!response.ok) {
+        throw new Error('Failed to fetch products')
       }
+      const data = await response.json()
+      setProducts(data)
+    } catch (error) {
+      console.error('Error fetching products:', error)
+      toast({
+        title: "Error",
+        description: "Failed to fetch products. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
+      setLoading(false)
     }
-
-    loadProducts()
-  }, [toast])
-
-  if (isLoading) {
-    return <div>Loading...</div>
   }
+
+  const handleRefresh = async () => {
+    setRefreshing(true)
+    try {
+      // Clear cache by adding a timestamp to the URL
+      const timestamp = new Date().getTime()
+      const response = await fetch(`/api/admin/products?t=${timestamp}`)
+      if (!response.ok) {
+        throw new Error('Failed to refresh products')
+      }
+      const data = await response.json()
+      setProducts(data)
+      toast({
+        title: "Success",
+        description: "Products refreshed successfully",
+      })
+    } catch (error) {
+      console.error('Error refreshing products:', error)
+      toast({
+        title: "Error",
+        description: "Failed to refresh products. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
+      setRefreshing(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchProducts()
+  }, [])
 
   return (
     <div className="container mx-auto py-10">
@@ -59,12 +84,32 @@ export default function ProductsClient() {
               Manage your product listings here.
             </p>
           </div>
-          <Button>
-            <Plus className="mr-2 h-4 w-4" /> Add Product
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              onClick={handleRefresh} 
+              variant="outline" 
+              disabled={refreshing}
+              className="flex items-center gap-1"
+            >
+              <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+              {refreshing ? 'Refreshing...' : 'Refresh'}
+            </Button>
+            <Link href="/admin/products/new">
+              <Button className="flex items-center gap-1">
+                <Plus className="h-4 w-4" />
+                Add Product
+              </Button>
+            </Link>
+          </div>
         </div>
         <div className="rounded-lg border">
-          <DataTable columns={columns} data={products} />
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+            </div>
+          ) : (
+            <DataTable columns={columns} data={products} />
+          )}
         </div>
       </div>
     </div>

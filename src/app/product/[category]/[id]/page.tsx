@@ -80,22 +80,23 @@ export async function generateStaticParams() {
 }
 
 export default async function ProductPage({ 
-  params 
+  params: paramsPromise 
 }: { 
   params: { category: string; id: string } 
 }) {
   try {
+    // Await the dynamic route parameters
+    const params = await Promise.resolve(paramsPromise);
+    const category = params.category;
+    const id = params.id;
+    
     // Get product from file system
-    const maybeProduct = await getProductFromFS(params.category, params.id);
+    const maybeProduct = await getProductFromFS(category, id);
     
     // If product not found, show 404
     if (!maybeProduct) {
       notFound();
     }
-    
-    // After notFound() is called, TypeScript doesn't know that maybeProduct is not null
-    // But we know it's safe to use it directly since notFound() would have redirected
-    // if maybeProduct was null, so we can use a type assertion
     
     // Format product for display
     const formattedProduct = formatProductForDisplay(maybeProduct as Product);
@@ -103,13 +104,13 @@ export default async function ProductPage({
     // Get related products (products from the same category)
     const allProducts = await getAllProductsFromFS();
     const relatedProducts = allProducts
-      .filter(p => p.category === params.category && p.id !== params.id)
+      .filter(p => p.category === category && p.id !== id)
       .slice(0, 4)
       .map(formatProductForDisplay);
     
     // Get category display name
-    const categoryDisplayName = categoryDisplayNames[params.category] || 
-      params.category.charAt(0).toUpperCase() + params.category.slice(1);
+    const categoryDisplayName = categoryDisplayNames[category] || 
+      category.charAt(0).toUpperCase() + category.slice(1);
     
     return (
       <ProductClient 
