@@ -1,7 +1,5 @@
 "use client";
 
-import { createClient } from 'redis';
-
 // Mock Redis implementation for static export
 // In a real production environment, you would use a serverless Redis service
 // or implement a different caching strategy
@@ -49,7 +47,7 @@ export const injectDependencies = (deps: {
 };
 
 // Server-side Redis client
-let redisClient: ReturnType<typeof createClient> | null = null;
+let redisClient: any = null;
 
 // Initialize Redis client for server-side
 export async function getServerRedisClient() {
@@ -58,21 +56,57 @@ export async function getServerRedisClient() {
   }
 
   if (!redisClient) {
-    // Use environment variables for Redis connection
-    const url = process.env.REDIS_URL || 'redis://localhost:6379';
-    
-    redisClient = createClient({
-      url,
-    });
+    try {
+      // Dynamically import Redis to avoid issues with client-side builds
+      const redis = await import('redis');
+      
+      // Use environment variables for Redis connection
+      const url = process.env.REDIS_URL || 'redis://localhost:6379';
+      
+      redisClient = redis.createClient({
+        url,
+      });
 
-    redisClient.on('error', (err) => {
-      console.error('Redis Client Error:', err);
-    });
+      redisClient.on('error', (err: Error) => {
+        console.error('Redis Client Error:', err);
+      });
 
-    await redisClient.connect();
+      await redisClient.connect();
+    } catch (error) {
+      console.error('Failed to initialize Redis client:', error);
+      // Return a mock client as fallback
+      return getMockRedisClient();
+    }
   }
 
   return redisClient;
+}
+
+// Get a mock Redis client for fallback
+function getMockRedisClient() {
+  return {
+    set: async (key: string, value: string, options?: any) => {
+      const expiry = options?.EX ? Date.now() + options.EX * 1000 : null;
+      localCache.set(key, { data: value, expiry });
+      return 'OK';
+    },
+    get: async (key: string) => {
+      const cached = localCache.get(key);
+      if (!cached) return null;
+      if (cached.expiry && cached.expiry < Date.now()) {
+        localCache.delete(key);
+        return null;
+      }
+      return cached.data;
+    },
+    exists: async (key: string) => {
+      return localCache.has(key) ? 1 : 0;
+    },
+    del: async (key: string) => {
+      localCache.delete(key);
+      return 1;
+    }
+  };
 }
 
 // Initialize Redis client (mock for client-side)
@@ -302,11 +336,18 @@ export async function cacheData(key: string, data: any, ttl = 3600): Promise<voi
       return;
     }
 
-    // Use server-side Redis in Node.js
-    const redis = await getServerRedisClient();
-    await redis.set(key, JSON.stringify(data), {
-      EX: ttl
-    });
+    try {
+      // Use server-side Redis in Node.js
+      const redis = await getServerRedisClient();
+      await redis.set(key, JSON.stringify(data), {
+        EX: ttl
+      });
+    } catch (error) {
+      console.error('Error using server Redis, falling back to local cache:', error);
+      // Fallback to local cache
+      const expiry = ttl ? Date.now() + ttl * 1000 : null;
+      localCache.set(key, { data: JSON.stringify(data), expiry });
+    }
   } catch (error) {
     console.error(`Error caching data with key "${key}":`, error);
   }
@@ -332,17 +373,35 @@ export async function getCachedData<T>(key: string): Promise<T | null> {
       return null;
     }
 
-    // Use server-side Redis in Node.js
-    const redis = await getServerRedisClient();
-    const cachedData = await redis.get(key);
-    
-    if (cachedData) {
-      try {
-        return JSON.parse(cachedData) as T;
-      } catch (error) {
-        console.error(`Error parsing cached data for key "${key}":`, error);
-        await redis.del(key);
-        return null;
+    try {
+      // Use server-side Redis in Node.js
+      const redis = await getServerRedisClient();
+      const cachedData = await redis.get(key);
+      
+      if (cachedData) {
+        try {
+          return JSON.parse(cachedData) as T;
+        } catch (error) {
+          console.error(`Error parsing cached data for key "${key}":`, error);
+          await redis.del(key);
+          return null;
+        }
+      }
+    } catch (error) {
+      console.error('Error using server Redis, falling back to local cache:', error);
+      // Fallback to local cache
+      const cached = localCache.get(key);
+      if (cached) {
+        if (cached.expiry && cached.expiry < Date.now()) {
+          localCache.delete(key);
+          return null;
+        }
+        try {
+          return JSON.parse(cached.data) as T;
+        } catch (error) {
+          console.error(`Error parsing cached data from local cache for key "${key}":`, error);
+          localCache.delete(key);
+        }
       }
     }
     
@@ -362,9 +421,15 @@ export async function invalidateCache(key: string): Promise<void> {
       return;
     }
 
-    // Use server-side Redis in Node.js
-    const redis = await getServerRedisClient();
-    await redis.del(key);
+    try {
+      // Use server-side Redis in Node.js
+      const redis = await getServerRedisClient();
+      await redis.del(key);
+    } catch (error) {
+      console.error('Error using server Redis, falling back to local cache:', error);
+      // Fallback to local cache
+      localCache.delete(key);
+    }
   } catch (error) {
     console.error(`Error invalidating cache for key "${key}":`, error);
   }

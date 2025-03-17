@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: true,
   images: {
     remotePatterns: [
       {
@@ -7,6 +8,7 @@ const nextConfig = {
         hostname: '**',
       },
     ],
+    domains: ['localhost'],
   },
   // Fix deployment paths
   basePath: '',
@@ -26,7 +28,17 @@ const nextConfig = {
   },
   // Improve module resolution
   webpack: (config, { isServer }) => {
-    // Add any necessary webpack configurations
+    // Handle Redis module in browser environment
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        net: false,
+        tls: false,
+        fs: false,
+        dns: false,
+      };
+    }
+    
     return config;
   },
 };
