@@ -2,6 +2,23 @@
 
 ## Recent Enhancements (April 2024)
 
+### On-Demand Revalidation System (New)
+- **Improved Cache Management**:
+  - Implemented on-demand revalidation for admin product operations
+  - Replaced time-based revalidation with targeted path revalidation
+  - Created secure revalidation API endpoint with admin authentication
+  - Added revalidation hooks to product create, update, and delete operations
+- **Performance Benefits**:
+  - Faster initial page loads with static generation
+  - Immediate content updates after admin edits
+  - Reduced unnecessary page regeneration
+  - Optimized build times with selective revalidation
+- **Developer Experience**:
+  - Simplified cache management with consistent revalidation pattern
+  - Improved debugging with detailed revalidation logs
+  - Enhanced error handling for failed revalidation attempts
+  - Secure token-based external revalidation support
+
 ### Product System Improvements
 - **File-Based Product Management**:
   - Migrated from JSON data to file-based product structure
@@ -132,6 +149,7 @@ A modern e-commerce platform for Jatin Jewellers, showcasing a wide range of jew
 - **Pagination**: Browse products with easy-to-use pagination controls
 - **Redis Caching**: Fast image loading with Redis-based caching system
 - **Advanced Pagination**: Intuitive navigation with First, Previous, Next, and Last page controls, along with page numbers and product count display
+- **On-Demand Revalidation**: Smart cache management with instant updates after admin edits while maintaining fast static page delivery
 - **Admin Dashboard**: 
   - Secure token-based authentication
   - Modern dashboard UI with feature cards
