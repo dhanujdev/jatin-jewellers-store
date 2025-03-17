@@ -1,5 +1,5 @@
-import { getCategories, getProductsByCategory } from '@/lib/products';
-import { getCategoriesFromFS } from '@/lib/server/products';
+import { getCategories } from '@/lib/products';
+import { getCategoriesFromFS, getProductsByCategoryFromFS } from '@/lib/server/products';
 import type { Product } from '@/types/product';
 import CategoryClient from './client';
 import { Suspense } from 'react';
@@ -81,13 +81,13 @@ export default async function CategoryPage({
 }) {
   try {
     // Validate category exists
-    const categories = await getCategories();
+    const categories = await getCategoriesFromFS();
     if (!categories.map(c => c.toLowerCase()).includes(params.category.toLowerCase())) {
       notFound();
     }
     
-    // Get products for this category
-    const products = await getProductsByCategory(params.category);
+    // Get products for this category using server-side function
+    const products = await getProductsByCategoryFromFS(params.category);
     
     // Parse page number and handle invalid values
     const page = parseInt(searchParams.page || '1', 10);
