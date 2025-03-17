@@ -49,8 +49,11 @@ export default function ProductClient({
   relatedProducts,
   categoryDisplayName
 }: ProductClientProps) {
-  const [selectedImage, setSelectedImage] = useState(product.image);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Generate a smaller thumbnail version of the image
+  const thumbnailImage = product.image;
+  const largeImage = product.image;
 
   // Generate additional images for demo purposes - for now, we'll just use the main image
   // In a real implementation, you would fetch multiple images from the backend
@@ -80,63 +83,54 @@ export default function ProductClient({
       {/* Product Details */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
         {/* Product Images */}
-        <div>
-          <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-            <DialogTrigger asChild>
-              <div className="mb-4 bg-gray-50 rounded-lg overflow-hidden cursor-pointer">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  width={600}
-                  height={600}
-                  className="w-full h-auto object-contain transition-transform hover:scale-105"
-                />
-              </div>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-3xl">
-              <DialogTitle className="sr-only">
-                {product.name} - Enlarged View
-              </DialogTitle>
-              <div className="relative">
-                <button 
-                  onClick={() => setIsModalOpen(false)}
-                  className="absolute top-2 right-2 bg-white rounded-full p-1 shadow-md hover:bg-gray-100"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  width={1200}
-                  height={1200}
-                  className="w-full h-auto object-contain"
-                />
-              </div>
-            </DialogContent>
-          </Dialog>
-          
-          {/* Only show thumbnails if we have additional images */}
-          {additionalImages.length > 0 && (
-            <div className="grid grid-cols-3 gap-4">
-              {additionalImages.map((img, index) => (
-                <button
-                  key={index}
-                  onClick={() => setSelectedImage(img)}
-                  className={`bg-gray-50 rounded-lg overflow-hidden border-2 ${
-                    selectedImage === img ? 'border-gold' : 'border-transparent'
-                  }`}
-                >
+        <div className="flex flex-col md:flex-row gap-4">
+          {/* Thumbnail (smaller image) */}
+          <div className="md:w-1/4">
+            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+              <DialogTrigger asChild>
+                <div className="bg-gray-50 rounded-lg overflow-hidden cursor-pointer border border-gray-200 hover:border-gold transition-colors">
                   <Image
-                    src={img}
-                    alt={`${product.name} view ${index + 1}`}
-                    width={100}
-                    height={100}
+                    src={thumbnailImage}
+                    alt={`${product.name} thumbnail`}
+                    width={150}
+                    height={150}
+                    className="w-full h-auto object-contain transition-transform hover:scale-105"
+                  />
+                </div>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-3xl">
+                <DialogTitle className="sr-only">
+                  {product.name} - Enlarged View
+                </DialogTitle>
+                <div className="relative">
+                  <button 
+                    onClick={() => setIsModalOpen(false)}
+                    className="absolute top-2 right-2 bg-white rounded-full p-1 shadow-md hover:bg-gray-100"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                  <Image
+                    src={largeImage}
+                    alt={product.name}
+                    width={1200}
+                    height={1200}
                     className="w-full h-auto object-contain"
                   />
-                </button>
-              ))}
-            </div>
-          )}
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+          
+          {/* Main product image (larger) */}
+          <div className="md:w-3/4 bg-gray-50 rounded-lg overflow-hidden">
+            <Image
+              src={largeImage}
+              alt={product.name}
+              width={600}
+              height={600}
+              className="w-full h-auto object-contain"
+            />
+          </div>
         </div>
 
         {/* Product Info */}
