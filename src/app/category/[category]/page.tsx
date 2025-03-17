@@ -80,22 +80,27 @@ export default async function CategoryPage({
   searchParams: { page?: string, sort?: string }
 }) {
   try {
+    // Await the dynamic route parameters
+    const category = await params.category;
+    const pageParam = await searchParams.page;
+    const sortParam = await searchParams.sort;
+    
     // Validate category exists
     const categories = await getCategoriesFromFS();
-    if (!categories.map(c => c.toLowerCase()).includes(params.category.toLowerCase())) {
+    if (!categories.map(c => c.toLowerCase()).includes(category.toLowerCase())) {
       notFound();
     }
     
     // Get products for this category using server-side function
-    const products = await getProductsByCategoryFromFS(params.category);
+    const products = await getProductsByCategoryFromFS(category);
     
     // Parse page number and handle invalid values
-    const page = parseInt(searchParams.page || '1', 10);
-    const sort = searchParams.sort || 'default';
+    const page = parseInt(pageParam || '1', 10);
+    const sort = sortParam || 'default';
     
     // Get category display name
-    const categoryName = categoryDisplayNames[params.category] || 
-      params.category.charAt(0).toUpperCase() + params.category.slice(1);
+    const categoryName = categoryDisplayNames[category] || 
+      category.charAt(0).toUpperCase() + category.slice(1);
     
     // Format products for display
     const formattedProducts = formatProductsForDisplay(products);
@@ -126,7 +131,7 @@ export default async function CategoryPage({
     return (
       <Suspense fallback={<div className="container mx-auto px-4 py-12 text-center">Loading category...</div>}>
         <CategoryClient
-          categoryName={params.category}
+          categoryName={category}
           categoryDisplayName={categoryName}
           products={paginatedProducts}
           paginationData={paginationData}
