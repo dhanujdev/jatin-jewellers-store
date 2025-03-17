@@ -1,5 +1,7 @@
 "use client";
 
+import { createClient } from 'redis';
+
 // Mock Redis implementation for static export
 // In a real production environment, you would use a serverless Redis service
 // or implement a different caching strategy
@@ -46,7 +48,34 @@ export const injectDependencies = (deps: {
   if (deps.storage) localStorage = deps.storage;
 };
 
-// Initialize Redis client (mock for static export)
+// Server-side Redis client
+let redisClient: ReturnType<typeof createClient> | null = null;
+
+// Initialize Redis client for server-side
+export async function getServerRedisClient() {
+  if (typeof window !== 'undefined') {
+    throw new Error('Server Redis client should not be used in browser');
+  }
+
+  if (!redisClient) {
+    // Use environment variables for Redis connection
+    const url = process.env.REDIS_URL || 'redis://localhost:6379';
+    
+    redisClient = createClient({
+      url,
+    });
+
+    redisClient.on('error', (err) => {
+      console.error('Redis Client Error:', err);
+    });
+
+    await redisClient.connect();
+  }
+
+  return redisClient;
+}
+
+// Initialize Redis client (mock for client-side)
 export function getRedisClient() {
   return {
     set: async (key: string, value: string, expiryMode?: string, time?: number) => {
@@ -260,5 +289,83 @@ export async function clearCache(key: string): Promise<void> {
     await redis.del(key);
   } catch (error) {
     console.error(`Error clearing cache for key "${key}":`, error);
+  }
+}
+
+// Server-side cache functions
+export async function cacheData(key: string, data: any, ttl = 3600): Promise<void> {
+  try {
+    if (typeof window !== 'undefined') {
+      // Use client-side caching in browser
+      const redis = getRedisClient();
+      await redis.set(key, JSON.stringify(data), 'EX', ttl);
+      return;
+    }
+
+    // Use server-side Redis in Node.js
+    const redis = await getServerRedisClient();
+    await redis.set(key, JSON.stringify(data), {
+      EX: ttl
+    });
+  } catch (error) {
+    console.error(`Error caching data with key "${key}":`, error);
+  }
+}
+
+export async function getCachedData<T>(key: string): Promise<T | null> {
+  try {
+    if (typeof window !== 'undefined') {
+      // Use client-side caching in browser
+      const redis = getRedisClient();
+      const cachedData = await redis.get(key);
+      
+      if (cachedData) {
+        try {
+          return JSON.parse(cachedData) as T;
+        } catch (error) {
+          console.error(`Error parsing cached data for key "${key}":`, error);
+          await redis.del(key);
+          return null;
+        }
+      }
+      
+      return null;
+    }
+
+    // Use server-side Redis in Node.js
+    const redis = await getServerRedisClient();
+    const cachedData = await redis.get(key);
+    
+    if (cachedData) {
+      try {
+        return JSON.parse(cachedData) as T;
+      } catch (error) {
+        console.error(`Error parsing cached data for key "${key}":`, error);
+        await redis.del(key);
+        return null;
+      }
+    }
+    
+    return null;
+  } catch (error) {
+    console.error(`Error getting cached data with key "${key}":`, error);
+    return null;
+  }
+}
+
+export async function invalidateCache(key: string): Promise<void> {
+  try {
+    if (typeof window !== 'undefined') {
+      // Use client-side caching in browser
+      const redis = getRedisClient();
+      await redis.del(key);
+      return;
+    }
+
+    // Use server-side Redis in Node.js
+    const redis = await getServerRedisClient();
+    await redis.del(key);
+  } catch (error) {
+    console.error(`Error invalidating cache for key "${key}":`, error);
   }
 } 
