@@ -4,6 +4,8 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { X } from "lucide-react";
 import customImageLoader from '@/lib/imageLoader';
 
 interface Material {
@@ -43,6 +45,7 @@ export default function ProductClient({
   categoryDisplayName
 }: ProductClientProps) {
   const [selectedImage, setSelectedImage] = useState(product.image);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Generate additional images for demo purposes
   const additionalImages = [
@@ -74,15 +77,36 @@ export default function ProductClient({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
         {/* Product Images */}
         <div>
-          <div className="mb-4 bg-gray-50 rounded-lg overflow-hidden">
-            <Image
-              src={selectedImage}
-              alt={product.name}
-              width={600}
-              height={600}
-              className="w-full h-auto object-contain"
-            />
-          </div>
+          <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+            <DialogTrigger asChild>
+              <div className="mb-4 bg-gray-50 rounded-lg overflow-hidden cursor-pointer">
+                <Image
+                  src={selectedImage}
+                  alt={product.name}
+                  width={600}
+                  height={600}
+                  className="w-full h-auto object-contain transition-transform hover:scale-105"
+                />
+              </div>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-3xl">
+              <div className="relative">
+                <button 
+                  onClick={() => setIsModalOpen(false)}
+                  className="absolute top-2 right-2 bg-white rounded-full p-1 shadow-md hover:bg-gray-100"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+                <Image
+                  src={selectedImage}
+                  alt={product.name}
+                  width={1200}
+                  height={1200}
+                  className="w-full h-auto object-contain"
+                />
+              </div>
+            </DialogContent>
+          </Dialog>
           <div className="grid grid-cols-3 gap-4">
             {additionalImages.map((img, index) => (
               <button
