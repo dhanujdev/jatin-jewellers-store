@@ -4,7 +4,12 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogTrigger,
+  DialogTitle 
+} from "@/components/ui/dialog";
 import { X } from "lucide-react";
 import customImageLoader from '@/lib/imageLoader';
 
@@ -89,6 +94,9 @@ export default function ProductClient({
               </div>
             </DialogTrigger>
             <DialogContent className="sm:max-w-3xl">
+              <DialogTitle className="sr-only">
+                {product.name} - Enlarged View
+              </DialogTitle>
               <div className="relative">
                 <button 
                   onClick={() => setIsModalOpen(false)}
