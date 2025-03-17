@@ -7,11 +7,13 @@ import Cookies from "js-cookie"
 export default function LoginPage() {
   const [token, setToken] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
   const router = useRouter()
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setIsLoading(true)
+    setError("")
 
     try {
       // For now, just check if the token matches
@@ -20,20 +22,18 @@ export default function LoginPage() {
         Cookies.set("admin-token", token, { 
           expires: 7, // 7 days
           path: "/",
-          secure: process.env.NODE_ENV === "production"
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict"
         })
         
-        // Force a router refresh to update auth state
-        router.refresh()
-        
-        // Redirect to products page
-        router.push("/admin/products")
+        // Redirect to admin dashboard without refresh
+        router.push("/admin")
       } else {
-        alert("Invalid token")
+        setError("Invalid token. Please try again.")
       }
     } catch (error) {
       console.error("Login failed:", error)
-      alert("Login failed. Please try again.")
+      setError("An unexpected error occurred. Please try again.")
     } finally {
       setIsLoading(false)
     }
@@ -70,11 +70,23 @@ export default function LoginPage() {
             </div>
           </div>
 
+          {error && (
+            <div className="rounded-md bg-red-50 p-4">
+              <div className="flex">
+                <div className="ml-3">
+                  <h3 className="text-sm font-medium text-red-800">
+                    {error}
+                  </h3>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div>
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? "Signing in..." : "Sign in"}
             </button>

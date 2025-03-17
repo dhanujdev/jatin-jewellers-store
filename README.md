@@ -4,17 +4,29 @@
 
 ### Admin Dashboard (New)
 - **Secure Admin Interface**: 
-  - Token-based authentication for admin access
+  - Token-based authentication for admin access (`jatinjewellersadmin`)
   - Protected admin routes with middleware
-  - Dedicated admin layout with navigation
-- **Product Management**: 
-  - View and manage product listings
-  - Add, edit, and delete products (coming soon)
-  - Bulk operations support (coming soon)
-- **Category Management**: 
-  - Category overview with product counts
-  - Category editing functionality (coming soon)
-  - Subcategory support planned
+  - Dedicated admin layout with dynamic navigation
+  - Separate layout for admin pages (no header/footer)
+- **Dashboard Overview**:
+  - Clean, modern dashboard UI
+  - Quick access to all admin features
+  - Status indicators for available and upcoming features
+  - Responsive grid layout for feature cards
+- **Feature Management**: 
+  - Products Management (Active)
+  - Categories Management (Active)
+  - Media Library (Coming Soon)
+  - Content Pages (Coming Soon)
+  - Analytics (Coming Soon)
+  - User Management (Coming Soon)
+  - Settings (Coming Soon)
+- **Enhanced Security**:
+  - Strict cookie-based authentication
+  - Protected route middleware
+  - Secure token validation
+  - CSRF protection with SameSite cookies
+  - Production-ready security configurations
 
 ### Performance and Stability Improvements
 - **Enhanced Pagination**: 
@@ -93,9 +105,12 @@ A modern e-commerce platform for Jatin Jewellers, showcasing a wide range of jew
 - **Pagination**: Browse products with easy-to-use pagination controls
 - **Redis Caching**: Fast image loading with Redis-based caching system
 - **Advanced Pagination**: Intuitive navigation with First, Previous, Next, and Last page controls, along with page numbers and product count display
-- **Admin Dashboard**: Secure admin interface for managing products and categories
-- **Token Authentication**: Simple token-based authentication for admin access
-- **Protected Routes**: Middleware-based protection for admin routes
+- **Admin Dashboard**: 
+  - Secure token-based authentication
+  - Modern dashboard UI with feature cards
+  - Products and categories management
+  - Protected admin routes with middleware
+  - Upcoming features: Media Library, Content Pages, Analytics, User Management, Settings
 
 ## 📱 Mobile View Enhancements (v1.1.0)
 
@@ -210,7 +225,19 @@ bun dev
 
 5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## 📁 Project Structure
+### Accessing Admin Dashboard
+
+1. Navigate to `/admin` or `/admin/login`
+2. Enter the admin token: `jatinjewellersadmin`
+3. You'll be redirected to the admin dashboard
+4. Access various features through the sidebar navigation:
+   - Products Management
+   - Categories Management
+   - More features coming soon
+
+Note: For security reasons, please change the admin token in production.
+
+## �� Project Structure
 
 ```
 jatin-jewellers-store/
@@ -218,11 +245,18 @@ jatin-jewellers-store/
 ├── src/
 │   ├── app/           # Next.js app router pages
 │   │   ├── page.tsx   # Home page
+│   │   ├── (admin)/   # Admin routes with custom layout
+│   │   │   ├── admin/
+│   │   │   │   ├── page.tsx      # Admin dashboard
+│   │   │   │   ├── login/        # Admin login
+│   │   │   │   ├── products/     # Products management
+│   │   │   │   └── categories/   # Categories management
 │   │   ├── product/   # Product pages
 │   │   ├── category/  # Category pages
 │   │   ├── search/    # Search functionality
 │   │   ├── api/       # API routes
-│   │   │   └── image/ # Image caching API
+│   │   │   ├── image/ # Image caching API
+│   │   │   └── admin/ # Admin API routes
 │   │   └── layout.tsx # Root layout
 │   ├── components/    # React components
 │   │   ├── home/      # Homepage-specific components
@@ -232,7 +266,9 @@ jatin-jewellers-store/
 │   ├── lib/           # Utility functions
 │   │   ├── redis.ts   # Redis client and caching utilities
 │   │   ├── imageLoader.ts # Custom image loader with caching
-│   │   └── products.ts # Product data utilities with pagination
+│   │   ├── products.ts # Product data utilities with pagination
+│   │   └── services/  # Service layer
+│   │       └── admin-service.ts # Admin functionality
 │   └── types/         # TypeScript type definitions
 ├── docker-compose.yml # Docker Compose configuration for Redis
 ├── .env.local         # Environment variables

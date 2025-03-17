@@ -7,10 +7,25 @@ export function middleware(request: NextRequest) {
   console.log("DEBUG: Current path (normalized):", pathname)
 
   // Define admin routes that require protection
-  const protectedRoutes = ["/admin", "/admin/products", "/admin/categories"]
+  const protectedRoutes = [
+    "/admin",
+    "/admin/products",
+    "/admin/categories",
+    "/admin/media",
+    "/admin/pages",
+    "/admin/analytics",
+    "/admin/users",
+    "/admin/settings"
+  ]
   
   // Always allow access to login page
   if (pathname === "/admin/login") {
+    // If user is already logged in, redirect to dashboard
+    const token = request.cookies.get("admin-token")
+    if (token?.value === "jatinjewellersadmin") {
+      console.log("DEBUG: User already logged in, redirecting to dashboard")
+      return NextResponse.redirect(new URL("/admin", request.url))
+    }
     console.log("DEBUG: Login page accessed")
     return NextResponse.next()
   }
@@ -45,6 +60,16 @@ export const config = {
     "/admin/products",
     "/admin/products/",
     "/admin/categories",
-    "/admin/categories/"
+    "/admin/categories/",
+    "/admin/media",
+    "/admin/media/",
+    "/admin/pages",
+    "/admin/pages/",
+    "/admin/analytics",
+    "/admin/analytics/",
+    "/admin/users",
+    "/admin/users/",
+    "/admin/settings",
+    "/admin/settings/"
   ]
 } 
