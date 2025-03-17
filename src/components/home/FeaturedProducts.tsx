@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { getFeaturedProducts } from '@/lib/products';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useEffect, useState } from 'react';
+import type { Product } from '@/types/product';
 
 // Format price to Indian Rupees
 function formatPrice(price: number) {
@@ -20,34 +21,54 @@ function generateRandomPrice(min: number = 45000, max: number = 450000) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+interface ProductDisplay {
+  id: string;
+  name: string;
+  price: number;
+  category: string;
+  slug: string;
+}
+
 export default function FeaturedProducts() {
   // State to track if we're on mobile
   const [isMounted, setIsMounted] = useState(false);
+  const [products, setProducts] = useState([] as ProductDisplay[]);
+  const [isLoading, setIsLoading] = useState(true);
   
-  // Mount state for client-side rendering
+  // Mount state for client-side rendering and fetch products
   useEffect(() => {
     setIsMounted(true);
+    
+    async function loadProducts() {
+      try {
+        const featuredProducts = await getFeaturedProducts(8);
+        const formattedProducts = featuredProducts.map((product: Product) => ({
+          id: product.id,
+          name: product.title,
+          price: generateRandomPrice(),
+          category: product.category,
+          slug: product.id,
+        }));
+        setProducts(formattedProducts);
+      } catch (error) {
+        console.error('Failed to load featured products:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadProducts();
   }, []);
-  
-  // Get 8 featured products from our dataset
-  const featuredProducts = getFeaturedProducts(8).map(product => ({
-    id: product.id,
-    name: product.title,
-    price: generateRandomPrice(), // Generate a random price since our dataset doesn't have prices
-    image: product.imagePath,
-    category: product.category,
-    slug: product.id,
-  }));
 
   // Product card component to avoid duplication
-  const ProductCard = ({ product }: { product: typeof featuredProducts[0] }) => (
+  const ProductCard = ({ product }: { product: ProductDisplay }) => (
     <Link
       href={`/product/${product.category}/${product.slug}`}
       className="product-card group text-center"
     >
       <div className="product-card-image">
         <Image
-          src={product.image}
+          src={`/products/${product.category}/${product.slug}/image.jpg`}
           alt={product.name}
           width={300}
           height={300}
@@ -61,6 +82,24 @@ export default function FeaturedProducts() {
     </Link>
   );
 
+  if (!isMounted || isLoading) {
+    return (
+      <section className="py-16 md:py-24 bg-cream-light text-center">
+        <div className="container mx-auto px-4">
+          <h2 className="section-title text-center">Featured Products</h2>
+          <p className="text-gray-600 max-w-2xl mx-auto text-center mb-12">
+            Discover our most popular and exquisite jewelry pieces
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {Array(4).fill(0).map((_, i) => (
+              <div key={i} className="bg-gray-100 h-80 rounded-lg animate-pulse"></div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-16 md:py-24 bg-cream-light text-center">
       <div className="container mx-auto px-4">
@@ -71,40 +110,29 @@ export default function FeaturedProducts() {
           Discover our most popular and exquisite jewelry pieces
         </p>
 
-        {isMounted ? (
-          <>
-            {/* Mobile Carousel View */}
-            <div className="block md:hidden">
-              <Carousel className="w-full" opts={{ loop: true }}>
-                <CarouselContent>
-                  {featuredProducts.map((product) => (
-                    <CarouselItem key={product.id} className="basis-full sm:basis-1/2">
-                      <ProductCard product={product} />
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <div className="flex justify-center mt-6 gap-2">
-                  <CarouselPrevious className="static relative transform-none mx-1" />
-                  <CarouselNext className="static relative transform-none mx-1" />
-                </div>
-              </Carousel>
-            </div>
-
-            {/* Desktop Grid View */}
-            <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {featuredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
+        {/* Mobile Carousel View */}
+        <div className="block md:hidden">
+          <Carousel className="w-full" opts={{ loop: true }}>
+            <CarouselContent>
+              {products.map((product: ProductDisplay) => (
+                <CarouselItem key={product.id} className="basis-full sm:basis-1/2">
+                  <ProductCard product={product} />
+                </CarouselItem>
               ))}
+            </CarouselContent>
+            <div className="flex justify-center mt-6 gap-2">
+              <CarouselPrevious className="static relative transform-none mx-1" />
+              <CarouselNext className="static relative transform-none mx-1" />
             </div>
-          </>
-        ) : (
-          // Placeholder for SSR
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {Array(4).fill(0).map((_, i) => (
-              <div key={i} className="bg-gray-100 h-80 rounded-lg animate-pulse"></div>
-            ))}
-          </div>
-        )}
+          </Carousel>
+        </div>
+
+        {/* Desktop Grid View */}
+        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {products.map((product: ProductDisplay) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
 
         <div className="mt-12 text-center">
           <Link 

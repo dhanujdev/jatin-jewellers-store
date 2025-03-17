@@ -1,7 +1,7 @@
-import { getCategoryInfo, getProductsByCategory, Product, getAllProducts } from '@/lib/products';
+import { getCategories, getProductsByCategory, Product } from '@/lib/products';
 import CategoryClient from './client';
-import productsByCategory from '@/data/products-by-category.json';
 import { Suspense } from 'react';
+import { notFound } from 'next/navigation';
 
 // Function to generate a random price between 10000 and 200000
 function generateRandomPrice(): number {
@@ -23,7 +23,7 @@ function formatProductsForDisplay(products: Product[]) {
       description: product.description || '',
       price,
       formattedPrice: formatPrice(price),
-      image: product.imagePath,
+      image: `/products/${product.category}/${product.id}/image.jpg`,
       category: product.category,
       slug: product.id
     };
@@ -39,12 +39,16 @@ const categoryDisplayNames: Record<string, string> = {
   waistbands: "Waistbands"
 };
 
-export function generateStaticParams() {
-  const categoryInfo = getCategoryInfo();
-  
-  return categoryInfo.categories.map((category: string) => ({
-    category,
-  }));
+export async function generateStaticParams() {
+  try {
+    const categories = await getCategories();
+    return categories.map((category: string) => ({
+      category: category.toLowerCase(),
+    }));
+  } catch (error) {
+    console.error('Error generating static params:', error);
+    return [];
+  }
 }
 
 // Sort products based on sort parameter
@@ -72,56 +76,63 @@ export default async function CategoryPage({
   params: { category: string },
   searchParams: { page?: string, sort?: string }
 }) {
-  // Properly await the parameters
-  const { category } = await Promise.resolve(params);
-  const { page: pageParam = '1', sort: sortParam = 'default' } = await Promise.resolve(searchParams);
-  
-  // Parse page number after awaiting and handle invalid values
-  const parsedPage = parseInt(pageParam, 10);
-  const page = isNaN(parsedPage) ? 1 : parsedPage;
-  const sort = sortParam;
-  
-  // Get category display name
-  const categoryName = categoryDisplayNames[category] || category.charAt(0).toUpperCase() + category.slice(1);
-  
-  // Get ALL products for this category
-  const allCategoryProducts = (productsByCategory as any)[category] || [];
-  
-  // Format all products for display
-  const formattedProducts = formatProductsForDisplay(allCategoryProducts);
-  
-  // Sort products
-  const sortedProducts = sortProducts(formattedProducts, sort);
-  
-  // Calculate pagination data
-  const pageSize = 12;
-  const totalProducts = sortedProducts.length;
-  const totalPages = Math.max(1, Math.ceil(totalProducts / pageSize));
-  
-  // Ensure page is within valid range
-  const validPage = Math.max(1, Math.min(page, totalPages));
-  
-  // Get products for current page
-  const startIndex = (validPage - 1) * pageSize;
-  const endIndex = startIndex + pageSize;
-  const paginatedProducts = sortedProducts.slice(startIndex, endIndex);
-  
-  const paginationData = {
-    currentPage: validPage,
-    totalPages,
-    totalItems: totalProducts,
-    pageSize
-  };
-  
-  return (
-    <Suspense fallback={<div className="container mx-auto px-4 py-12 text-center">Loading category...</div>}>
-      <CategoryClient
-        categoryName={category}
-        categoryDisplayName={categoryName}
-        products={paginatedProducts}
-        paginationData={paginationData}
-        currentSort={sort}
-      />
-    </Suspense>
-  );
+  try {
+    // Validate category exists
+    const categories = await getCategories();
+    if (!categories.map(c => c.toLowerCase()).includes(params.category.toLowerCase())) {
+      notFound();
+    }
+    
+    // Get products for this category
+    const products = await getProductsByCategory(params.category);
+    
+    // Parse page number and handle invalid values
+    const page = parseInt(searchParams.page || '1', 10);
+    const sort = searchParams.sort || 'default';
+    
+    // Get category display name
+    const categoryName = categoryDisplayNames[params.category] || 
+      params.category.charAt(0).toUpperCase() + params.category.slice(1);
+    
+    // Format products for display
+    const formattedProducts = formatProductsForDisplay(products);
+    
+    // Sort products
+    const sortedProducts = sortProducts(formattedProducts, sort);
+    
+    // Calculate pagination data
+    const pageSize = 12;
+    const totalProducts = sortedProducts.length;
+    const totalPages = Math.max(1, Math.ceil(totalProducts / pageSize));
+    
+    // Ensure page is within valid range
+    const validPage = Math.max(1, Math.min(page, totalPages));
+    
+    // Get products for current page
+    const startIndex = (validPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    const paginatedProducts = sortedProducts.slice(startIndex, endIndex);
+    
+    const paginationData = {
+      currentPage: validPage,
+      totalPages,
+      totalItems: totalProducts,
+      pageSize
+    };
+    
+    return (
+      <Suspense fallback={<div className="container mx-auto px-4 py-12 text-center">Loading category...</div>}>
+        <CategoryClient
+          categoryName={params.category}
+          categoryDisplayName={categoryName}
+          products={paginatedProducts}
+          paginationData={paginationData}
+          currentSort={sort}
+        />
+      </Suspense>
+    );
+  } catch (error) {
+    console.error('Error in CategoryPage:', error);
+    throw error; // Let Next.js error boundary handle it
+  }
 } 

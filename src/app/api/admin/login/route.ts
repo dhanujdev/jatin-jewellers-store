@@ -3,37 +3,34 @@ import { cookies } from "next/headers"
 
 export async function POST(request: Request) {
   try {
-    const formData = await request.formData()
-    const token = formData.get("token")
-    const validToken = process.env.ADMIN_TOKEN
+    const body = await request.json()
+    const { username, password } = body
 
-    if (token === validToken) {
-      // Set the admin token cookie
-      const cookieStore = cookies()
-      cookieStore.set("admin_token", token as string, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-      })
+    // Replace with your actual admin credentials check
+    const isValidCredentials = 
+      username === process.env.ADMIN_USERNAME && 
+      password === process.env.ADMIN_PASSWORD
 
-      return NextResponse.redirect(new URL("/admin", request.url), {
-        status: 303
-      })
+    if (!isValidCredentials) {
+      return new NextResponse("Invalid credentials", { status: 401 })
     }
 
-    // Redirect back to login with error
-    const loginUrl = new URL("/admin/login", request.url)
-    loginUrl.searchParams.set("error", "Invalid token")
-    return NextResponse.redirect(loginUrl, {
-      status: 303
+    // Set the session token in cookies
+    cookies().set("session_token", process.env.ADMIN_SESSION_TOKEN!, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/",
+      // Expire in 24 hours
+      maxAge: 60 * 60 * 24,
     })
+
+    return new NextResponse("Login successful", { status: 200 })
   } catch (error) {
     console.error("Login error:", error)
-    const loginUrl = new URL("/admin/login", request.url)
-    loginUrl.searchParams.set("error", "Server error")
-    return NextResponse.redirect(loginUrl, {
-      status: 303
-    })
+    return new NextResponse(
+      error instanceof Error ? error.message : "Login failed",
+      { status: 500 }
+    )
   }
 } 

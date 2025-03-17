@@ -1,28 +1,8 @@
-import allProducts from '../data/all-products.json';
-import productsByCategory from '../data/products-by-category.json';
-import categories from '../data/categories.json';
+import type { Product } from '@/types/product';
 
 export interface Material {
   name: string;
   description: string;
-}
-
-export interface Product {
-  id: string;
-  title: string;
-  category: string;
-  description: string;
-  materials: (string | Material)[];
-  features: string;
-  colors: string[];
-  occasions: string[];
-  tags: string[];
-  imagePath: string;
-  thumbnailPath: string;
-  original_id?: string;
-  collection?: string;
-  original_type?: string;
-  slug: string;
 }
 
 export interface CategoryInfo {
@@ -46,97 +26,102 @@ export interface PaginatedResult<T> {
   };
 }
 
-// Get all products
-export function getAllProducts(): Product[] {
-  const products = allProducts as any[];
-  return products.map(p => ({
-    ...p,
-    slug: p.id // Ensure slug is set
-  }));
+// Helper function to get base URL
+function getBaseUrl() {
+  if (typeof window !== 'undefined') {
+    // Client-side
+    return '';
+  }
+  // Server-side
+  return process.env.NEXT_PUBLIC_BASE_URL || `http://localhost:${process.env.PORT || 3000}`;
 }
 
-// Get products by category with pagination
-export function getProductsByCategory(
-  category: string,
-  page: number = 1,
-  perPage: number = 12
-): PaginatedResult<Product> {
-  const products = ((productsByCategory as any)[category] || []) as Product[];
-  const total = products.length;
-  
-  // Calculate pagination values
-  const pageCount = Math.ceil(total / perPage);
-  const from = (page - 1) * perPage;
-  const to = Math.min(from + perPage - 1, total - 1);
-  
-  // Get paginated data
-  const paginatedData = products.slice(from, to + 1).map(p => ({
-    ...p,
-    slug: p.id // Ensure slug is set
-  }));
-  
-  return {
-    data: paginatedData,
-    pagination: {
-      total,
-      pageCount,
-      currentPage: page,
-      perPage,
-      from: from + 1,
-      to: to + 1,
-      hasMorePages: page < pageCount,
-    },
-  };
+// Get all products
+export async function getAllProducts(): Promise<Product[]> {
+  const response = await fetch(`${getBaseUrl()}/api/products`);
+  if (!response.ok) {
+    console.error('Error fetching products:', response.statusText);
+    return [];
+  }
+  return response.json();
+}
+
+// Get products by category
+export async function getProductsByCategory(category: string): Promise<Product[]> {
+  const response = await fetch(`${getBaseUrl()}/api/products?category=${encodeURIComponent(category)}`);
+  if (!response.ok) {
+    console.error(`Error fetching products for category ${category}:`, response.statusText);
+    return [];
+  }
+  return response.json();
 }
 
 // Get product by ID
-export function getProductById(id: string): Product | null {
-  const product = getAllProducts().find(product => product.id === id);
-  if (!product) return null;
-  
-  return {
-    ...product,
-    slug: product.id // Ensure slug is set
-  };
+export async function getProduct(category: string, id: string): Promise<Product | null> {
+  const response = await fetch(`${getBaseUrl()}/api/products/${category}/${id}`);
+  if (!response.ok) {
+    console.error(`Error fetching product ${id}:`, response.statusText);
+    return null;
+  }
+  return response.json();
 }
 
-// Get featured products (random selection from all categories)
-export function getFeaturedProducts(count: number = 8): Product[] {
-  const products = getAllProducts();
-  const shuffled = [...products].sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, count);
+// Get featured products
+export async function getFeaturedProducts(limit: number = 8): Promise<Product[]> {
+  const response = await fetch(`${getBaseUrl()}/api/products?featured=true&limit=${limit}`);
+  if (!response.ok) {
+    console.error('Error fetching featured products:', response.statusText);
+    return [];
+  }
+  return response.json();
 }
 
 // Get category information
-export function getCategoryInfo(): CategoryInfo {
-  return categories as CategoryInfo;
+export async function getCategoryInfo(): Promise<CategoryInfo> {
+  try {
+    const products = await getAllProducts();
+    const categories = products.map(p => p.category);
+    const categoryCounts = categories.reduce((counts: { [key: string]: number }, category: string) => {
+      counts[category] = (counts[category] || 0) + 1;
+      return counts;
+    }, {});
+    
+    return {
+      categories: Object.keys(categoryCounts),
+      total_products: products.length,
+      category_counts: categoryCounts
+    };
+  } catch (error) {
+    console.error('Error getting category info:', error);
+    return {
+      categories: [],
+      total_products: 0,
+      category_counts: {}
+    };
+  }
 }
 
-// Search products by query with pagination
-export function searchProducts(
+// Search products
+export async function searchProducts(
   query: string,
   page: number = 1,
   perPage: number = 12
-): PaginatedResult<Product> {
+): Promise<PaginatedResult<Product>> {
+  const allProducts = await getAllProducts();
   const searchTerm = query.toLowerCase();
-  const allMatchingProducts = getAllProducts().filter(product => {
-    return (
-      product.title.toLowerCase().includes(searchTerm) ||
-      product.description.toLowerCase().includes(searchTerm) ||
-      product.tags.some(tag => tag.toLowerCase().includes(searchTerm))
-    );
-  });
   
-  const total = allMatchingProducts.length;
-  
-  // Calculate pagination values
+  const matchingProducts = allProducts.filter(product => 
+    product.title.toLowerCase().includes(searchTerm) ||
+    product.description.toLowerCase().includes(searchTerm) ||
+    product.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+  );
+
+  const total = matchingProducts.length;
   const pageCount = Math.ceil(total / perPage);
   const from = (page - 1) * perPage;
   const to = Math.min(from + perPage - 1, total - 1);
-  
-  // Get paginated data
-  const paginatedData = allMatchingProducts.slice(from, to + 1);
-  
+  const paginatedData = matchingProducts.slice(from, to + 1);
+
   return {
     data: paginatedData,
     pagination: {
@@ -151,37 +136,20 @@ export function searchProducts(
   };
 }
 
-// Get related products (same category, excluding the current product)
-export function getRelatedProducts(productId: string): Product[] {
-  const currentProduct = getProductById(productId);
-  if (!currentProduct) return [];
-  
-  const sameCategory = ((productsByCategory as any)[currentProduct.category] || []) as Product[];
-  const filtered = sameCategory.filter(p => p.id !== productId);
+// Get related products
+export async function getRelatedProducts(category: string, productId: string, limit: number = 4): Promise<Product[]> {
+  const products = await getProductsByCategory(category);
+  const filtered = products.filter(product => product.id !== productId);
   const shuffled = [...filtered].sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, 4).map(p => ({
-    ...p,
-    slug: p.id // Ensure slug is set
-  }));
+  return shuffled.slice(0, limit);
 }
 
-// Helper function to create pagination metadata
-export function createPaginationMetadata(
-  total: number,
-  page: number,
-  perPage: number
-) {
-  const pageCount = Math.ceil(total / perPage);
-  const from = (page - 1) * perPage;
-  const to = Math.min(from + perPage - 1, total - 1);
-  
-  return {
-    total,
-    pageCount,
-    currentPage: page,
-    perPage,
-    from: from + 1,
-    to: to + 1,
-    hasMorePages: page < pageCount,
-  };
+// Get categories
+export async function getCategories(): Promise<string[]> {
+  const response = await fetch(`${getBaseUrl()}/api/categories`);
+  if (!response.ok) {
+    console.error('Error fetching categories:', response.statusText);
+    return [];
+  }
+  return response.json();
 } 

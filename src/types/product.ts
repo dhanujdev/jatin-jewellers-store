@@ -1,18 +1,16 @@
 export interface Product {
   id: string;
-  name: string;
-  description?: string;
-  price: number;
+  title: string;
   category: string;
-  subCategory?: string;
-  imageUrl: string;
-  weight?: number;
-  dimensions?: {
-    length: number;
-    width: number;
-    height: number;
-  };
-  metadata?: Record<string, any>;
+  original_type: string;
+  materials: string[];
+  features: string;
+  colors: string[];
+  occasions: string[];
+  description: string;
+  tags: string[];
+  original_id: string;
+  collection: string;
 }
 
 export interface Category {

@@ -25,11 +25,18 @@ const categories = [
     link: '/category/earrings',
   },
   {
-    id: 'bracelets',
-    name: 'Bracelets',
-    description: 'Elegant bangles and tennis bracelets',
+    id: 'bangles',
+    name: 'Bangles',
+    description: 'Elegant bangles and bracelets',
     image: '/products/bangles/bangles-001/image.jpg',
-    link: '/category/bracelets',
+    link: '/category/bangles',
+  },
+  {
+    id: 'waistbands',
+    name: 'Waistbands',
+    description: 'Traditional waistbands and belts',
+    image: '/products/waistbands/waistbands-001/image.jpg',
+    link: '/category/waistbands',
   },
 ];
 
@@ -45,10 +52,10 @@ export default function CategorySection() {
           Shop by Category
         </h2>
         <p className="text-gray-600 max-w-2xl mx-auto text-center mb-12">
-          Explore our curated collections of fine diamond jewelry for every occasion
+          Explore our curated collections of fine jewelry for every occasion
         </p>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
           {categories.map((category) => (
             <Link 
               key={category.id}

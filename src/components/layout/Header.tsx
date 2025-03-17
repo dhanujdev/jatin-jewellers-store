@@ -2,37 +2,22 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, Search, X } from "lucide-react";
+import { Menu, Search, X, Settings } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetTitle, SheetDescription } from "@/components/ui/sheet";
-import { getCategoryInfo } from "@/lib/products";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
-// Get category information from our dataset
-const categoryInfo = getCategoryInfo();
+// Helper function to capitalize first letter
+function capitalizeFirstLetter(string: string): string {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
-// Map category IDs to display names and links
-const categoryMap = {
-  rings: { name: "Rings", href: "/category/rings" },
-  earrings: { name: "Earrings", href: "/category/earrings" },
-  necklaces: { name: "Necklaces", href: "/category/necklaces" },
-  bangles: { name: "Bangles", href: "/category/bangles" },
-  waistbands: { name: "Waistbands", href: "/category/waistbands" },
-};
-
-// Create categories array from our dataset categories
-const categories = categoryInfo.categories.map(categoryId => 
-  categoryMap[categoryId as keyof typeof categoryMap]
-);
-
-export default function Header() {
+export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
-
-  // Don't show header in admin routes
-  if (pathname.startsWith("/admin")) {
-    return null;
-  }
+  const [categories, setCategories] = useState<string[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   // Handle scroll event to change header appearance
   useEffect(() => {
@@ -44,6 +29,30 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const response = await fetch('/api/categories');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log('Fetched categories:', data);
+        setCategories(data);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        setError(error instanceof Error ? error.message : 'Failed to fetch categories');
+      }
+    }
+
+    fetchCategories();
+  }, []);
+
+  // Don't show header in admin routes
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
+
   return (
     <>
       {/* Main Header */}
@@ -54,11 +63,12 @@ export default function Header() {
             {/* Mobile Menu Trigger - Left side */}
             <Sheet>
               <SheetTrigger asChild className="md:hidden">
-                <button className="w-8 h-8 flex items-center justify-center text-black">
-                  <Menu size={24} />
-                </button>
+                <Button variant="ghost" className="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0">
+                  <Menu className="h-6 w-6" />
+                  <span className="sr-only">Toggle Menu</span>
+                </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[85%] sm:w-[350px] p-0" aria-label="Navigation Menu">
+              <SheetContent side="left" className="pr-0">
                 <div className="flex flex-col h-full">
                   <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-black text-white">
                     <SheetTitle className="text-xl font-serif font-bold text-white">
@@ -89,14 +99,17 @@ export default function Header() {
                   <nav className="flex-1 overflow-y-auto">
                     <div className="py-2">
                       <h3 className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Categories</h3>
-                      <div className="space-y-1">
-                        {categories.map((category) => (
-                          <SheetClose asChild key={category.name}>
+                      <div className="space-y-1 px-4">
+                        <Link href="/" className={`block py-2 text-sm font-medium ${pathname === "/" ? "text-foreground" : "text-foreground/60"} transition-colors hover:text-foreground/80`}>
+                          Home
+                        </Link>
+                        {categories.map((category: string) => (
+                          <SheetClose asChild key={category}>
                             <Link
-                              href={category.href}
-                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                              href={`/category/${category.toLowerCase()}`}
+                              className={`block py-2 text-sm font-medium ${pathname === `/category/${category.toLowerCase()}` ? "text-foreground" : "text-foreground/60"} transition-colors hover:text-foreground/80`}
                             >
-                              {category.name}
+                              {capitalizeFirstLetter(category)}
                             </Link>
                           </SheetClose>
                         ))}
@@ -106,9 +119,14 @@ export default function Header() {
                   
                   {/* Footer */}
                   <div className="p-4 border-t border-gray-200">
-                    <Link href="/" className="block w-full py-3 px-4 bg-black text-white text-center font-medium">
-                      Home
-                    </Link>
+                    <div className="flex flex-col space-y-2">
+                      <Link href="/" className="block w-full py-3 px-4 bg-black text-white text-center font-medium">
+                        Home
+                      </Link>
+                      <Link href="/admin" className="block w-full py-3 px-4 bg-gray-800 text-white text-center font-medium">
+                        Admin
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </SheetContent>
@@ -129,29 +147,37 @@ export default function Header() {
               </span>
             </Link>
 
-            {/* Search Button - Right side */}
-            <div>
+            {/* Search and Admin Buttons - Right side */}
+            <div className="flex items-center space-x-2">
               <Link 
                 href="/search" 
-                className="px-4 py-2 bg-black text-white text-sm hover:bg-gold transition-colors duration-300"
+                className="px-4 py-2 bg-black text-white text-sm hover:bg-gold transition-colors duration-300 flex items-center"
               >
-                Search
+                <Search size={16} className="mr-1" />
+                <span className="hidden sm:inline">Search</span>
+              </Link>
+              <Link 
+                href="/admin" 
+                className="px-4 py-2 bg-gray-800 text-white text-sm hover:bg-gray-700 transition-colors duration-300 flex items-center"
+              >
+                <Settings size={16} className="mr-1" />
+                <span className="hidden sm:inline">Admin</span>
               </Link>
             </div>
           </div>
           
           {/* Desktop Categories Navigation */}
           <div className="hidden md:flex justify-center space-x-8 mt-4">
-            <Link href="/" className="text-gray-700 hover:text-gold transition-colors py-2">
+            <Link href="/" className={`transition-colors hover:text-foreground/80 ${pathname === "/" ? "text-foreground" : "text-foreground/60"}`}>
               Home
             </Link>
-            {categories.map((category) => (
+            {categories.map((category: string) => (
               <Link
-                key={category.name}
-                href={category.href}
-                className="text-gray-700 hover:text-gold transition-colors py-2"
+                key={category}
+                href={`/category/${category.toLowerCase()}`}
+                className={`transition-colors hover:text-foreground/80 ${pathname === `/category/${category.toLowerCase()}` ? "text-foreground" : "text-foreground/60"}`}
               >
-                {category.name}
+                {capitalizeFirstLetter(category)}
               </Link>
             ))}
           </div>

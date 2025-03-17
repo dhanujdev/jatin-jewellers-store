@@ -1,7 +1,9 @@
-import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+"use client"
 
+import { ColumnDef } from "@tanstack/react-table"
+import { Product } from "@/types/product"
 import { Button } from "@/components/ui/button"
+import { MoreHorizontal } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,42 +12,24 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Product } from "@/types/product"
+import Link from "next/link"
 
 export const columns: ColumnDef<Product>[] = [
   {
-    accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
+    accessorKey: "title",
+    header: "Title",
   },
   {
     accessorKey: "category",
     header: "Category",
   },
   {
-    accessorKey: "subCategory",
-    header: "Sub Category",
+    accessorKey: "original_type",
+    header: "Type",
   },
   {
-    accessorKey: "price",
-    header: "Price",
-    cell: ({ row }) => {
-      const price = parseFloat(row.getValue("price"))
-      const formatted = new Intl.NumberFormat("en-IN", {
-        style: "currency",
-        currency: "INR",
-      }).format(price)
-      return formatted
-    },
+    accessorKey: "collection",
+    header: "Collection",
   },
   {
     id: "actions",
@@ -62,13 +46,15 @@ export const columns: ColumnDef<Product>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(product.id)}
-            >
-              Copy product ID
+            <DropdownMenuItem asChild>
+              <Link href={`/admin/products/${product.category}/${product.id}`}>
+                Edit
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit product</DropdownMenuItem>
+            <DropdownMenuItem className="text-red-600">
+              Delete
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
